@@ -33,6 +33,7 @@ html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--
 #krysha.on{color:#d9b56a}
 #krysha.wanted{color:#ff7a6a}
 #tick{font-size:11px;color:var(--dim)}
+#ill{font-size:11px;color:#ff9a7a}
 #goal{font-family:var(--f-body);font-size:13px;line-height:1.2;color:#ffd98a;border-top:1px solid var(--line);padding-top:5px}
 #goal:empty{display:none}
 #clock{left:50%;transform:translateX(-50%);top:calc(8px + env(safe-area-inset-top,0px));background:var(--panel);
@@ -134,6 +135,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
   <div id="money"><span>Рубли</span><b id="cash">0</b></div>
   <div id="krysha">Крыша: нет</div>
   <div id="tick">Билет: —</div>
+  <div id="ill" hidden></div>
   <div id="goal"></div>
 </div>
 <div class="hud" id="clock"><span id="clockT">День 1 · 07:30</span><small id="clockS">Северобайкальск</small></div>
@@ -182,17 +184,19 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 
 <script>
 'use strict';
-const BUILD='G001.005';
+const BUILD='G001.007';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
 const low=document.createElement('canvas'),lctx=low.getContext('2d');
 let W=320,H=180,F=180,img,buf,zbuf,zl,yl,mark,stampN=1,DPR=1;
+let QUAL='med';try{QUAL=localStorage.getItem('gansta_q')||'med'}catch(e){}
+const QF={low:1.7,med:1,high:.72},QN={low:'низкое',med:'среднее',high:'высокое'};
 function resize(){
   DPR=Math.min(2,window.devicePixelRatio||1);
   const iw=innerWidth,ih=innerHeight;
   cv.width=Math.round(iw*DPR);cv.height=Math.round(ih*DPR);
-  const p=Math.max(2,Math.round(Math.max(iw,ih)/340));
+  const p=Math.max(1,Math.round(Math.max(iw,ih)/340*(QF[QUAL]||1)));
   W=Math.max(80,Math.ceil(iw/p));H=Math.max(80,Math.ceil(ih/p));F=Math.min(H*1.05,W*0.8);
   low.width=W;low.height=H;img=lctx.createImageData(W,H);buf=new Uint32Array(img.data.buffer);
   zbuf=new Float32Array(W);zl=new Float32Array(W);yl=new Float32Array(W);mark=new Uint32Array(H);
@@ -440,13 +444,12 @@ TX.doorTall=mkTexH(FH,(g,e,R,h)=>{wallpaper(g,R,h);const y0=24;g.fillStyle='#d9d
   g.fillStyle='#d9b56a';for(let y=y0+8;y<h-12;y+=14)for(let x=17;x<50;x+=10)g.fillRect(x-.5,y+6.5,1.5,1.5);
   g.fillStyle='#c9c9c9';g.fillRect(46,y0+66,4,10);ell(g,32,y0+30,1.8,1.8,'#222');g.fillStyle='#e8e1cc';g.fillRect(27,y0+10,10,6);txt(g,'17',32,y0+13.4,5,'#222');
   g.fillStyle='#6e4a2c';g.fillRect(0,h-6,6,6);g.fillRect(58,h-6,6,6)},704);
-TX.fridge=mkTex((g,e,R)=>{g.fillStyle='#ecebe5';g.beginPath();if(g.roundRect)g.roundRect(14,10,36,54,5);else g.rect(14,10,36,54);g.fill();
-  g.fillStyle='#d4d2ca';g.fillRect(14,30,36,1);g.fillRect(46,12,2,52);g.fillStyle='#b8b8b8';g.fillRect(17,22,3,14);g.fillStyle='#9a9a9a';g.fillRect(17,22,1,14);
-  g.font='italic bold 6px sans-serif';g.textAlign='center';g.fillStyle='#8a1e1e';g.fillText('Бирюса',32,18);g.fillStyle='#2a2a2a';g.fillRect(16,62,32,2)},711);
-TX.stove=mkTex((g,e,R)=>{g.fillStyle='#e8e6de';g.fillRect(3,28,58,36);g.fillStyle='#c9c6bc';g.fillRect(3,28,58,3);
-  for(let i=0;i<5;i++)ell(g,12+i*10,34,2.2,1.6,'#2a2a2a');g.fillStyle='#2a2a2a';g.fillRect(9,39,46,20);g.fillStyle='#4a3a2a';g.fillRect(11,41,42,16);g.fillStyle='#b8b8b8';g.fillRect(11,38,42,1.5);
-  g.fillStyle='rgba(255,170,60,.35)';g.fillRect(13,47,38,8);g.fillStyle='#6a6a70';g.fillRect(14,18,20,10);ell(g,24,18,10,2,'#8a8a90');g.fillStyle='#4a4a50';g.fillRect(33,20,6,2);
-  g.fillStyle='rgba(255,255,255,.5)';g.fillRect(19,10,2,6);g.fillRect(25,7,2,8)},712);
+TX.fridge=mkTex((g,e,R)=>{const gr=g.createLinearGradient(12,0,52,0);gr.addColorStop(0,'#f6f5f0');gr.addColorStop(1,'#d8d6ce');g.fillStyle=gr;g.beginPath();if(g.roundRect)g.roundRect(12,10,40,54,6);else g.rect(12,10,40,54);g.fill();
+  g.fillStyle='#c9c6bc';g.fillRect(12,28,40,1.5);g.fillStyle='#a8a8a8';g.fillRect(15,18,2.5,8);g.fillRect(15,33,2.5,16);g.fillStyle='#ffffff';g.fillRect(16,34,1,14);
+  g.font='italic bold 6px sans-serif';g.textAlign='center';g.fillStyle='#8a1e1e';g.fillText('Бирюса',35,17);g.fillStyle='#e8c84a';g.fillRect(40,40,6,6);g.fillStyle='#3a6a3a';g.fillRect(24,44,5,7);g.fillStyle='#2a2a2a';g.fillRect(14,62,36,2)},711);
+TX.stove=mkTex((g,e,R)=>{g.fillStyle='#ecebe4';g.fillRect(6,30,52,34);g.fillStyle='#d8d6ce';g.fillRect(6,30,52,4);
+  for(let i=0;i<4;i++){ell(g,14+i*12,37,3,3,'#e8e6de');ell(g,14+i*12,37,1.8,1.8,'#2a2a2a');g.fillStyle='#bbb';g.fillRect(13.5+i*12,34,1,2)}
+  g.fillStyle='#2a2a2a';g.fillRect(11,43,42,17);g.fillStyle='#5a4632';g.fillRect(13,45,38,13);g.fillStyle='rgba(255,180,90,.25)';g.fillRect(14,49,36,8);g.fillStyle='#cfcfcf';g.fillRect(14,42,36,2);g.fillStyle='#2a2a2a';g.fillRect(6,62,52,2)},712);
 TX.sofaOld=mkTex((g,e,R)=>{g.fillStyle='#5e3f2c';g.fillRect(0,36,64,16);for(let x=2;x<64;x+=21){g.fillStyle='#74503a';g.fillRect(x,38,19,12);g.fillStyle='rgba(0,0,0,.15)';g.fillRect(x+9,38,1,12)}
   g.fillStyle='#7c5a40';g.fillRect(0,50,64,8);g.fillStyle='#8a6a4a';g.fillRect(0,50,64,2);g.fillStyle='#4a3020';g.fillRect(0,58,64,3);
   g.fillStyle='#2a1a10';g.fillRect(3,61,4,3);g.fillRect(57,61,4,3);g.fillStyle='#9a3a2a';g.fillRect(8,42,14,9);g.fillStyle='#c9a24a';g.fillRect(10,45,10,1)},713);
@@ -466,9 +469,9 @@ TX.stenka=mkTex((g,e,R)=>{g.fillStyle='#5a3220';g.fillRect(0,1,64,63);g.fillStyl
   g.fillStyle='#3a2a20';g.fillRect(34,6,24,30);const bc=['#7a2a2a','#2a4a6a','#2a5a3a','#8a6a2a','#5a2a5a'];for(let i=0;i<10;i++){g.fillStyle=bc[R()*5|0];g.fillRect(35+i*2.3,10,2,12)}
   for(let i=0;i<10;i++){g.fillStyle=bc[R()*5|0];g.fillRect(35+i*2.3,24,2,11)}
   g.fillStyle='#5a3220';g.fillRect(6,40,24,20);g.fillRect(34,40,24,20);g.fillStyle='#4a2a18';g.fillRect(17,40,1,20);g.fillRect(45,40,1,20);g.fillStyle='#c9a24a';g.fillRect(15,48,1,4);g.fillRect(19,48,1,4);g.fillRect(43,48,1,4);g.fillRect(47,48,1,4)},714);
-TX.table=mkTex((g,e,R)=>{g.fillStyle='#e9e2d0';g.fillRect(0,34,64,30);for(let y=34;y<64;y+=6)for(let x=(y/6%2)*6;x<64;x+=12){g.fillStyle='rgba(181,58,42,.75)';g.fillRect(x,y,6,6)}
-  g.fillStyle='rgba(0,0,0,.12)';for(let x=4;x<64;x+=10)g.fillRect(x,40,2,24);g.fillStyle='#f4efe2';g.fillRect(0,34,64,2);
-  ell(g,22,32,6,2,'#e9e9e9');g.fillStyle='#e9e9e9';g.fillRect(16,26,12,6);g.fillStyle='#8a5a2a';g.fillRect(17,26,10,1);ell(g,44,32,5,1.6,'#c9d6dc');g.fillStyle='#c9d6dc';g.fillRect(40,24,8,8)},715);
+TX.table=mkTex((g,e,R)=>{for(let y=34;y<54;y+=4)for(let x=0;x<64;x+=4){g.fillStyle=((x+y)/4%2)?'#c8463a':'#f2ece0';g.fillRect(x,y,4,4)}
+  g.fillStyle='rgba(0,0,0,.12)';for(let x=3;x<64;x+=9)g.fillRect(x,38,1,16);g.fillStyle='#f6f1e6';g.fillRect(0,34,64,1.5);
+  g.fillStyle='#5a3a24';g.fillRect(4,54,4,10);g.fillRect(56,54,4,10);g.fillStyle='#3a2414';g.fillRect(4,54,56,2)},715);
 function tvBody(g,e,R,scr){const H0=96;
   g.strokeStyle='#8a8a8a';g.lineWidth=1.2;g.beginPath();g.moveTo(31,20);g.lineTo(20,2);g.moveTo(33,20);g.lineTo(46,3);g.stroke();ell(g,20,2,1.6,1.6,'#c9c9c9');ell(g,46,3,1.6,1.6,'#c9c9c9');ell(g,32,20,4,2,'#3a3a3a');
   g.fillStyle='#f2efe6';g.fillRect(8,20,48,3);for(let x=8;x<56;x+=3)ell(g,x+1.5,23.2,1.5,1.2,'#f2efe6');
@@ -493,10 +496,10 @@ const TVF=[
     ell(g,x+9,y+11,4,5,'#e8c0a0');g.fillStyle='#e8d06a';g.fillRect(x+5,y+6,8,4);g.fillStyle='#3a2a4a';g.fillRect(x+4,y+16,10,h-16);ell(g,x+20,y+10,4,5,'#d8a888');g.fillStyle='#2a1a10';g.fillRect(x+16,y+5,8,3);g.fillStyle='#e8e8e8';g.fillRect(x+15,y+15,10,h-15)}),403),
   mkTexH(96,(g,e,R)=>tvBody(g,e,R,(g,x,y,w,h)=>{const c=['#e8e8e8','#e8e85a','#5ae8e8','#5ae85a','#e85ae8','#e85a5a','#5a5ae8'];for(let i=0;i<7;i++){g.fillStyle=c[i];g.fillRect(x+i*w/7,y,w/7+1,h*.7)}g.fillStyle='#222';g.fillRect(x,y+h*.7,w,h*.3);ell(g,x+w/2,y+h/2,8,8,'rgba(255,255,255,.25)')}),404)];
 TX.tv=TVF[0];
-TX.bath=mkTex((g,e,R)=>{g.fillStyle='#f2f1ec';g.fillRect(2,42,60,18);g.fillStyle='#dcdad2';g.fillRect(2,42,60,3);g.fillStyle='#c9c6bc';g.fillRect(4,60,4,4);g.fillRect(56,60,4,4)},717);
-TX.sink=mkTex((g,e,R)=>{g.fillStyle='#d9d2bd';g.fillRect(2,24,60,40);g.fillStyle='#bfb59a';g.fillRect(2,24,60,4);g.fillStyle='#9aa4a8';g.fillRect(14,24,36,3);
-  g.fillStyle='#c9c0a6';g.fillRect(5,32,26,28);g.fillRect(33,32,26,28);g.fillStyle='#8a7a5a';g.fillRect(27,44,2,6);g.fillRect(35,44,2,6);
-  g.fillStyle='#b8b8b8';g.fillRect(30,12,3,13);g.fillRect(30,12,9,3);g.fillStyle='#7a6a4a';g.fillRect(2,62,60,2)},718);
+TX.bath=mkTex((g,e,R)=>{const gr=g.createLinearGradient(0,40,0,62);gr.addColorStop(0,'#fbfaf6');gr.addColorStop(1,'#d8d6ce');g.fillStyle=gr;g.fillRect(0,41,64,19);g.fillStyle='#ffffff';g.fillRect(0,40,64,2);
+  g.fillStyle='#b8b6ae';g.fillRect(4,60,5,4);g.fillRect(55,60,5,4);g.fillStyle='rgba(0,0,0,.08)';g.fillRect(0,56,64,4)},717);
+TX.sink=mkTex((g,e,R)=>{g.fillStyle='#e2dcc8';g.fillRect(3,26,58,38);g.fillStyle='#c9c0a6';g.fillRect(2,24,60,4);g.fillStyle='#d4ccb4';g.fillRect(6,31,25,29);g.fillRect(33,31,25,29);
+  g.fillStyle='rgba(0,0,0,.12)';g.fillRect(31,31,2,29);g.fillStyle='#9a8a6a';g.fillRect(27,42,2,7);g.fillRect(35,42,2,7);g.fillStyle='#6a5a3a';g.fillRect(3,61,58,3)},718);
 TX.lino=mkTex((g,e,R)=>{g.fillStyle='#8a6a48';g.fillRect(0,0,64,64);for(let y=0;y<64;y+=16)for(let x=0;x<64;x+=16){g.fillStyle=(x+y)%32?'#7a5a3c':'#946f4a';g.fillRect(x,y,16,16);g.fillStyle='rgba(60,40,20,.3)';g.fillRect(x+6,y+6,4,4)}noise(g,R,200,['#6a4a30','#a07a52'],.4)},721);
 TX.parquet=mkTex((g,e,R)=>{g.fillStyle='#9a6a3a';g.fillRect(0,0,64,64);for(let y=0;y<64;y+=8)for(let x=0;x<80;x+=16){const o=(y/8%2)*8;const v=R()*30-15|0;g.fillStyle=`rgb(${150+v},${100+v},${55+v})`;g.fillRect(x+o-8,y,15,7)}noise(g,R,200,['#6a4a2a','#b88a5a'],.35)},722);
 TX.tile=mkTex((g,e,R)=>{g.fillStyle='#8a8f92';g.fillRect(0,0,64,64);for(let y=0;y<64;y+=8)for(let x=0;x<64;x+=8){g.fillStyle=((x+y)/8%2)?'#c9cbc4':'#a33a2a';g.fillRect(x+1,y+1,7,7)}},723);
@@ -541,6 +544,39 @@ TX.cafeTable=mkTex((g,e,R)=>{g.fillStyle='#f0ece2';g.fillRect(2,28,60,22);g.fill
   ell(g,22,27,5,1.5,'#e8e8e8');g.fillStyle='#c8c8c8';g.fillRect(18,22,8,5);ell(g,42,27,3,1,'#8a8a8a')},1617);
 TX.stage=mkTex((g,e,R)=>{g.fillStyle='#5a3a24';g.fillRect(0,28,64,36);for(let x=0;x<64;x+=8){g.fillStyle='rgba(0,0,0,.25)';g.fillRect(x,30,1,34)}g.fillStyle='#7a5234';g.fillRect(0,28,64,4);g.fillStyle='#e8d27a';g.fillRect(0,32,64,1)},1618);
 TX.tvBig=mkTexH(96,(g,e,R)=>tvBody(g,e,R,(g,x,y,w,h)=>{g.fillStyle='#3a5a2a';g.fillRect(x,y,w,h);g.fillStyle='#e8c84a';ell(g,x+w/2,y+h-4,14,3,'#5a3a2a');g.fillStyle='#2a2a2a';g.fillRect(x+8,y+8,5,14);g.fillRect(x+18,y+6,5,16);ell(g,x+10,y+6,2.5,2.5,'#d8a888');ell(g,x+20,y+4,2.5,2.5,'#d8a888');g.fillStyle='#ffd84a';g.fillRect(x+13,y+12,4,1)}),1619);
+/* боковины и крышки мебели */
+const plainSide=(top,col,col2,bot)=>(g,e,R)=>{const gr=g.createLinearGradient(0,top,64,0);gr.addColorStop(0,col);gr.addColorStop(1,col2);g.fillStyle=gr;g.fillRect(3,top,58,64-top-(bot||0));noise(g,R,120,['rgba(0,0,0,.05)','rgba(255,255,255,.08)'],1,3,top,58,64-top)};
+TX.fridgeSide=mkTex((g,e,R)=>{plainSide(10,'#eeede8','#d4d2ca')(g,e,R);g.fillStyle='#c9c6bc';g.fillRect(3,28,58,1);g.fillStyle='#2a2a2a';g.fillRect(3,62,58,2)},1701);
+TX.stoveSide=mkTex((g,e,R)=>{plainSide(30,'#ecebe4','#d0cec6')(g,e,R);g.fillStyle='#2a2a2a';g.fillRect(3,62,58,2);g.fillStyle='#c9c6bc';g.fillRect(3,30,58,3)},1702);
+TX.cabSide=mkTex((g,e,R)=>{plainSide(24,'#ddd6c0','#c4bca4')(g,e,R);g.fillStyle='#c9c0a6';g.fillRect(2,24,60,4);g.fillStyle='#6a5a3a';g.fillRect(3,61,58,3)},1703);
+TX.bathSide=mkTex((g,e,R)=>{const gr=g.createLinearGradient(0,40,0,62);gr.addColorStop(0,'#f6f5f0');gr.addColorStop(1,'#d4d2ca');g.fillStyle=gr;g.fillRect(2,41,60,19);g.fillStyle='#fff';g.fillRect(2,40,60,2);g.fillStyle='#b8b6ae';g.fillRect(6,60,5,4);g.fillRect(53,60,5,4)},1704);
+TX.tvSide=mkTexH(96,(g,e,R)=>{g.fillStyle='#6a4024';g.fillRect(8,24,48,40);g.fillStyle='rgba(255,255,255,.1)';for(let y=26;y<62;y+=3)g.fillRect(9,y,46,1);
+  g.fillStyle='#2a1a10';for(let y=34;y<58;y+=4)g.fillRect(40,y,12,1.5);g.fillStyle='#f2efe6';g.fillRect(6,20,52,3);for(let x=6;x<58;x+=3)ell(g,x+1.5,23.2,1.4,1.2,'#f2efe6');
+  g.fillStyle='#4a2c18';g.fillRect(6,64,52,26);g.fillStyle='rgba(255,255,255,.08)';g.fillRect(8,66,48,1);g.fillStyle='#2a1a10';g.beginPath();g.moveTo(9,90);g.lineTo(6,96);g.lineTo(10,96);g.lineTo(12,90);g.fill();g.beginPath();g.moveTo(52,90);g.lineTo(54,96);g.lineTo(58,96);g.lineTo(55,90);g.fill()},1705);
+TX.sofaSide=mkTexH(96,(g,e,R)=>{g.fillStyle='#5a3420';g.fillRect(6,54,52,34);g.fillStyle='#7a4a2c';g.fillRect(6,54,52,5);g.fillStyle='rgba(255,255,255,.12)';g.fillRect(8,56,48,1);
+  g.fillStyle='#6e4630';g.fillRect(12,62,40,22);for(let y=64;y<84;y+=6)for(let x=14+((y-64)/6%2)*4;x<50;x+=8){g.fillStyle='rgba(230,200,140,.35)';g.fillRect(x,y,3,3)}
+  g.fillStyle='#3a2416';g.fillRect(4,88,56,6);g.fillStyle='#2a1a0e';g.fillRect(8,92,4,4);g.fillRect(52,92,4,4)},1706);
+TX.stenkaSide=mkTex((g,e,R)=>{g.fillStyle='#5a3220';g.fillRect(2,1,60,63);for(let y=2;y<64;y+=3){g.fillStyle='rgba(255,220,180,.06)';g.fillRect(3,y,58,1)}g.fillStyle='#4a2818';g.fillRect(2,1,60,2);g.fillRect(2,40,60,1)},1707);
+TX.cntSide=mkTex((g,e,R)=>{g.fillStyle='#7a5a3c';g.fillRect(2,18,60,46);g.fillStyle='#5a3a24';g.fillRect(2,18,60,3);for(let x=2;x<64;x+=10){g.fillStyle='rgba(0,0,0,.15)';g.fillRect(x,22,1,42)}},1708);
+const topTex=(base,fn,seed)=>mkTex((g,e,R)=>{g.fillStyle=base;g.fillRect(0,0,64,64);fn(g,e,R)},seed);
+TX.topWhite=topTex('#ecebe5',(g,e,R)=>{noise(g,R,80,['#dcdad2','#f8f8f4'],.5);ell(g,32,32,18,14,'#f4efe2');for(let a=0;a<6.28;a+=.4)ell(g,32+Math.cos(a)*18,32+Math.sin(a)*14,2.4,2.4,'#f4efe2');ell(g,32,32,6,6,'#7a8a9a');ell(g,32,32,4,4,'#9aaaba')},1711);
+TX.topStove=topTex('#ecebe4',(g,e,R)=>{for(const[x,y]of[[18,18],[46,18],[18,46],[46,46]]){ell(g,x,y,10,10,'#2a2a2a');ell(g,x,y,6.5,6.5,'#3a3a3a');ell(g,x,y,3,3,'#1a1a1a')}
+  ell(g,46,46,11,11,'#7a7a82');ell(g,46,46,9,9,'#9a9aa2');ell(g,46,46,7,7,'#c8b07a');ell(g,18,18,8,8,'#b82a2a');ell(g,18,18,5,5,'#d84a3a');g.fillStyle='#2a2a2a';g.fillRect(24,16,8,3)},1712);
+TX.topSink=topTex('#c9c0a6',(g,e,R)=>{noise(g,R,120,['#b8ae94','#d8d0b8'],.5);g.fillStyle='#a8adb2';g.beginPath();if(g.roundRect)g.roundRect(14,10,36,30,6);else g.rect(14,10,36,30);g.fill();g.fillStyle='#8a9096';g.beginPath();if(g.roundRect)g.roundRect(17,13,30,24,5);else g.rect(17,13,30,24);g.fill();
+  ell(g,32,25,2,2,'#3a3a3a');g.fillStyle='#d8dce0';g.fillRect(30,40,4,10);ell(g,32,40,3,2,'#e8ecf0');g.fillStyle='#e8e8e8';g.fillRect(8,44,10,14);g.fillStyle='#5a7aa8';g.fillRect(10,46,6,10)},1713);
+TX.topBath=topTex('#f6f5f0',(g,e,R)=>{g.fillStyle='#fbfaf6';g.fillRect(0,0,64,64);g.fillStyle='#e4e2da';g.fillRect(5,0,54,64);g.fillStyle='#9ac4d8';g.fillRect(8,0,48,64);g.fillStyle='rgba(255,255,255,.35)';for(let i=0;i<8;i++)g.fillRect(12+R()*36|0,R()*60|0,6+R()*8|0,1);ell(g,20,10,2.5,2.5,'#6a7078')},1714);
+TX.topCloth=topTex('#f2ece0',(g,e,R)=>{for(let y=0;y<64;y+=8)for(let x=0;x<64;x+=8){g.fillStyle=((x+y)/8%2)?'#c8463a':'#f2ece0';g.fillRect(x,y,8,8)}
+  ell(g,22,22,9,9,'#f8f8f8');ell(g,22,22,6.5,6.5,'#e8e8e8');g.fillStyle='#b8783a';g.fillRect(17,19,10,6);g.fillStyle='#d8a060';g.fillRect(18,20,8,1);
+  ell(g,44,42,5,5,'#e8e8f0');ell(g,44,42,3.5,3.5,'#6a3a1a');g.fillStyle='#e8e8f0';g.fillRect(48,40,3,3);ell(g,44,20,4,4,'#d8d8e8');ell(g,44,20,2.5,2.5,'#f8f8f8');ell(g,22,46,4,4,'#e8c84a')},1715);
+TX.topSofa=topTex('#6e4630',(g,e,R)=>{for(let y=2;y<64;y+=6)for(let x=(y/6%2)*4;x<64;x+=8){g.fillStyle='rgba(230,200,140,.35)';g.fillRect(x,y,3,3)}g.fillStyle='#5a3420';g.fillRect(0,48,64,16);g.fillStyle='rgba(0,0,0,.25)';g.fillRect(0,46,64,2);g.fillRect(31,0,2,46)},1716);
+TX.topTV=topTex('#6a4024',(g,e,R)=>{for(let y=0;y<64;y+=3){g.fillStyle='rgba(255,220,180,.07)';g.fillRect(0,y,64,1)}ell(g,32,32,22,20,'#f4efe2');for(let a=0;a<6.28;a+=.35)ell(g,32+Math.cos(a)*22,32+Math.sin(a)*20,2.6,2.6,'#f4efe2');
+  ell(g,32,32,14,12,'rgba(200,180,150,.3)');ell(g,40,28,4,6,'#e8e2d4');ell(g,40,24,3,3,'#f0ece0');ell(g,22,36,5,5,'#3a3a3a');g.fillStyle='#8a8a8a';g.fillRect(21,20,2,12)},1717);
+TX.topWood=topTex('#7a5234',(g,e,R)=>{for(let y=0;y<64;y+=8){g.fillStyle='rgba(0,0,0,.15)';g.fillRect(0,y,64,1)}noise(g,R,150,['#6a4428','#8a6040'],.5)},1718);
+TX.topBench=topTex('#3a3a3a',(g,e,R)=>{for(let y=4;y<64;y+=12){g.fillStyle='#7a4a2a';g.fillRect(0,y,64,8);g.fillStyle='rgba(255,255,255,.1)';g.fillRect(0,y,64,1)}},1719);
+TX.topCafe=topTex('#f0ece2',(g,e,R)=>{g.fillStyle='#d8d2c4';for(let x=4;x<64;x+=8)g.fillRect(x,0,1,64);ell(g,22,24,6,6,'#e8e8e8');ell(g,22,24,4,4,'#c8a868');ell(g,44,40,4,3,'#8a8a8a');ell(g,44,40,2,1.5,'#4a4a4a')},1720);
+TX.topStage=topTex('#5a3a24',(g,e,R)=>{for(let x=0;x<64;x+=8){g.fillStyle='rgba(0,0,0,.25)';g.fillRect(x,0,1,64)}noise(g,R,150,['#4a2a18','#6a4a30'],.5)},1721);
+TX.barsTall=mkTexH(FH,(g,e,R,h)=>{g.fillStyle='#3a3c3e';g.fillRect(0,0,64,h);g.fillStyle='#4f7a5e';g.fillRect(0,h-50,64,50);g.fillStyle='#2a2c2e';g.fillRect(0,h-8,64,8);
+  for(let x=3;x<64;x+=8){g.fillStyle='#1a1a1c';g.fillRect(x,0,3,h);g.fillStyle='#6a6e72';g.fillRect(x,0,1,h)}for(const y of[20,h/2,h-20]){g.fillStyle='#1a1a1c';g.fillRect(0,y,64,3);g.fillStyle='#6a6e72';g.fillRect(0,y,64,1)}},1801);
 TX.tilesPub=mkTex((g,e,R)=>{g.fillStyle='#9a958a';g.fillRect(0,0,64,64);for(let y=0;y<64;y+=16)for(let x=0;x<64;x+=16){g.fillStyle=((x+y)/16%2)?'#b8b2a4':'#8a5a48';g.beginPath();g.moveTo(x+8,y);g.lineTo(x+16,y+8);g.lineTo(x+8,y+16);g.lineTo(x,y+8);g.closePath();g.fill()}noise(g,R,200,['#7a756a','#c8c2b4'],.4)},1620);
 TX.concrete=mkTex((g,e,R)=>{g.fillStyle='#8a8880';g.fillRect(0,0,64,64);noise(g,R,600,['#7a786f','#9a988e','#6a685f'],.6);g.strokeStyle='rgba(50,50,45,.4)';g.beginPath();g.moveTo(5,10);g.lineTo(30,26);g.lineTo(38,60);g.stroke();for(let i=0;i<4;i++){g.fillStyle='#e8e2c8';g.fillRect(R()*60|0,R()*60|0,3,1)}},1621);
 
@@ -566,29 +602,34 @@ const T={
   47:{h:5.2,segs:['sail5'],stretch:true,trans:true,act:'station'},53:{h:1.45,segs:['hall5','vokWingTop'],act:'station'},
   26:{h:1.3,segs:['wagon','wagonTop']},55:{h:2.3,segs:['dkLow','dkUp','dkTop']},56:{h:2.3,segs:['dkDoor','dkSign','dkTop'],act:'dk'},27:{h:.55,segs:['hummock'],stretch:true,trans:true},
   30:{h:2.4,segs:['wpBase','wp'],stop:true},31:{h:2.4,segs:['winTall'],stretch:true,stop:true,act:'window'},32:{h:2.4,segs:['carpetTall'],stretch:true,stop:true},
-  33:{h:2.4,segs:['doorTall'],stretch:true,stop:true,act:'exitflat'},34:{h:1.62,vh:1.36,segs:['fridge'],stretch:true,act:'fridge',trans:true},35:{h:1.38,vh:.8,segs:['stove'],stretch:true,act:'stove',trans:true},
-  79:{h:1.9,vh:.83,segs:['sofa0'],stretch:true,act:'sofa',trans:true,grp:'sofa'},80:{h:1.9,vh:.83,segs:['sofa1'],stretch:true,act:'sofa',trans:true,grp:'sofa'},81:{h:1.9,vh:.83,segs:['sofa2'],stretch:true,act:'sofa',trans:true,grp:'sofa'},37:{h:1.92,vh:1.9,segs:['stenka'],stretch:true,act:'stenka'},38:{h:1.25,vh:.7,segs:['table'],stretch:true,trans:true,grp:'tbl'},
+  33:{h:2.4,segs:['doorTall'],stretch:true,stop:true,act:'exitflat'},34:{h:1.62,vh:1.36,segs:['fridge'],stretch:true,act:'fridge',trans:true,side:'fridgeSide',top:'topWhite'},35:{h:1.38,vh:.8,segs:['stove'],stretch:true,act:'stove',trans:true,side:'stoveSide',top:'topStove'},
+  79:{h:1.9,vh:.83,segs:['sofa0'],stretch:true,act:'sofa',trans:true,grp:'sofa',side:'sofaSide',top:'topSofa'},80:{h:1.9,vh:.83,segs:['sofa1'],stretch:true,act:'sofa',trans:true,grp:'sofa',side:'sofaSide',top:'topSofa'},81:{h:1.9,vh:.83,segs:['sofa2'],stretch:true,act:'sofa',trans:true,grp:'sofa',side:'sofaSide',top:'topSofa'},37:{h:1.92,vh:1.9,segs:['stenka'],stretch:true,act:'stenka',side:'stenkaSide'},38:{h:1.25,vh:.7,segs:['table'],stretch:true,trans:true,grp:'tbl',top:'topCloth'},
   60:{h:2.4,segs:['pubLow','pubUp'],stop:true},61:{h:2.4,segs:['doorOut'],stretch:true,stop:true,act:'exit'},62:{h:2.4,segs:['doorTall'],stretch:true,stop:true,act:'toflat'},
-  63:{h:1.4,vh:1.0,segs:['counterShop'],stretch:true,act:'tbc',trans:true,grp:'cnt'},64:{h:1.4,vh:1.05,segs:['counterBar'],stretch:true,act:'cafe',trans:true,grp:'bar'},
+  63:{h:1.4,vh:1.0,segs:['counterShop'],stretch:true,act:'tbc',trans:true,grp:'cnt',side:'cntSide',top:'topWood'},64:{h:1.4,vh:1.05,segs:['counterBar'],stretch:true,act:'cafe',trans:true,grp:'bar',side:'cntSide',top:'topWood'},
   65:{h:2.4,segs:['cassaTall'],stretch:true,stop:true,act:'station'},66:{h:2.4,segs:['boardTall'],stretch:true,stop:true,act:'board'},67:{h:2.4,segs:['mailTall'],stretch:true,stop:true,act:'mail'},
-  68:{h:2.4,segs:['stairsTall'],stretch:true,stop:true,act:'stairs'},69:{h:1.2,vh:.5,segs:['bench'],stretch:true,trans:true,grp:'bench'},70:{h:1.25,vh:.75,segs:['cafeTable'],stretch:true,trans:true},
-  71:{h:.55,segs:['stage'],grp:'stage'},72:{h:2.4,segs:['columnTall'],stretch:true,stop:true},73:{h:2.4,segs:['posterTall'],stretch:true,stop:true,act:'dk'},74:{h:2.4,segs:['winBig'],stretch:true,stop:true,act:'window'},
-  75:{h:1.7,vh:1.5,segs:['tvBig'],stretch:true,act:'dk',trans:true},76:{h:2.4,segs:['shelfTall'],stretch:true,stop:true,act:'tbc'},77:{h:2.4,segs:['backdrop'],stretch:true,stop:true},
-  78:{h:1.4,vh:1.0,segs:['counterDk'],stretch:true,act:'dk',trans:true,grp:'dkc'},
-  39:{h:1.3,vh:1.15,segs:['tv'],stretch:true,act:'tv',trans:true},40:{h:1.6,vh:.55,segs:['bath'],stretch:true,act:'bath',trans:true},41:{h:1.23,vh:.85,segs:['sink'],stretch:true,trans:true,act:'sink'}
+  68:{h:2.4,segs:['stairsTall'],stretch:true,stop:true,act:'stairs'},69:{h:1.2,vh:.5,segs:['bench'],stretch:true,trans:true,grp:'bench',top:'topBench'},70:{h:1.25,vh:.75,segs:['cafeTable'],stretch:true,trans:true,top:'topCafe'},
+  71:{h:.55,segs:['stage'],grp:'stage',top:'topStage'},72:{h:2.4,segs:['columnTall'],stretch:true,stop:true},73:{h:2.4,segs:['posterTall'],stretch:true,stop:true,act:'dk'},74:{h:2.4,segs:['winBig'],stretch:true,stop:true,act:'window'},
+  75:{h:1.7,vh:1.5,segs:['tvBig'],stretch:true,act:'dk',trans:true,side:'tvSide',top:'topTV'},76:{h:2.4,segs:['shelfTall'],stretch:true,stop:true,act:'tbc'},77:{h:2.4,segs:['backdrop'],stretch:true,stop:true},
+  82:{h:2.4,segs:['barsTall'],stretch:true,stop:true},
+  78:{h:1.4,vh:1.0,segs:['counterDk'],stretch:true,act:'dk',trans:true,grp:'dkc',side:'cntSide',top:'topWood'},
+  39:{h:1.3,vh:1.15,segs:['tv'],stretch:true,act:'tv',trans:true,side:'tvSide',top:'topTV'},40:{h:1.6,vh:.55,segs:['bath'],stretch:true,act:'bath',trans:true,side:'bathSide',top:'topBath',grp:'bath'},41:{h:1.23,vh:.85,segs:['sink'],stretch:true,trans:true,act:'sink',side:'cabSide',top:'topSink'}
 };
 for(let i=0;i<6;i++){TX['sail'+i]=TX.sail[i];TX['hall'+i]=TX.hall[i]}for(let i=0;i<3;i++)TX['sofa'+i]=TX.sofaS[i];
 const FLOORS=['snow','road','ice','rails','path','lino','parquet','tile','snow','beach','tilesPub','concrete'].map(n=>TX[n]);
 
 /* ---------- уровни ---------- */
-function mkLevel(id,w,h,o){return Object.assign({id,w,h,map:new Uint8Array(w*h),fl:new Uint8Array(w*h),pv:new Uint8Array(w*h),enemies:[],items:[],props:[]},o)}
+function mkLevel(id,w,h,o){return Object.assign({id,w,h,ori:new Uint8Array(w*h),map:new Uint8Array(w*h),fl:new Uint8Array(w*h),pv:new Uint8Array(w*h),enemies:[],items:[],props:[]},o)}
 function rect(L,x,y,w,h,t){for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++)if(i>=0&&j>=0&&i<L.w&&j<L.h)L.map[j*L.w+i]=t}
 function frect(L,x,y,w,h,f){for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++)if(i>=0&&j>=0&&i<L.w&&j<L.h)L.fl[j*L.w+i]=f}
 const CW=60,CH=46;
+function cityF(fx,fy){const s=fx+fy,b=fx+.5*fy;if(b>=67)return 2;if(b>=63.5)return 9;if(s>=70&&s<73)return 8;
+  if(fy<39&&s>=57.2&&s<59.8)return 1;if(fy>=27&&s>=77.1&&s<78.9)return 1;if(fy<=13&&s>=17.1&&s<18.9)return 1;if(fy>=9&&fy<19&&s>=43.1&&s<44.9)return 1;
+  if(fy>=29&&fy<33&&Math.abs(fx-fy+5)<.8)return 1;return-1}
 const isBaikal=(x,y)=>x+.5*y>=67,isBeach=(x,y)=>!isBaikal(x,y)&&x+.5*y>=63.5;
 function buildCity(){
   const L=mkLevel('city',CW,CH,{outdoor:true,camz:.62});
   // пол: Байкал, пляж, ж/д по диагонали, проспект 60 лет СССР по диагонали
+  L.fb=new Uint8Array(CW*CH);L.dg=new Uint8Array(CW*CH);
   for(let y=0;y<CH;y++)for(let x=0;x<CW;x++){const s=x+y,i=y*CW+x;let f=0;
     if(isBaikal(x,y))f=2;else if(isBeach(x,y))f=9;else if(s>=70&&s<=72)f=8;
     else if((s===57||s===58)&&y<=38)f=1;else if(s===77&&y>=27)f=1;else if(s===17&&y<=12)f=1;else if(s===43&&y>=9&&y<=18)f=1;
@@ -600,6 +641,9 @@ function buildCity(){
   for(let k=0;k<4;k++)L.fl[(29+k)*CW+24+k]=1; // Парковая
   frect(L,31,23,12,5,1);                      // привокзальная площадь
   frect(L,7,10,16,1,4);frect(L,15,4,1,14,4);  // аллеи парка
+  { const AX=[[1,37,20,2,1],[24,1,1,19,1],[5,19,33,2,1],[1,24,33,1,1],[9,20,1,18,1],[10,30,18,1,1],[31,23,12,5,1],[7,10,16,1,4],[15,4,1,14,4],[1,41,21,1,4],[8,39,1,6,4],[15,39,1,6,4]];
+    for(const[x,y,w,h,f]of AX)for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++)L.fb[j*CW+i]=f;
+    for(let y=0;y<CH;y++)for(let x=0;x<CW;x++){let hit=false;for(const[a,b]of[[.1,.1],[.9,.1],[.1,.9],[.9,.9],[.5,.5]])if(cityF(x+a,y+b)>=0){hit=true;break}L.dg[y*CW+x]=hit?1:0} }
   frect(L,1,41,21,1,4);frect(L,8,39,1,6,4);frect(L,15,39,1,6,4); // тропинки Шанхая
   // границы: тайга и торосы
   for(let x=0;x<CW;x++){L.map[x]=9;L.map[(CH-1)*CW+x]=isBaikal(x,CH-1)?27:9}
@@ -634,6 +678,7 @@ function buildCity(){
   L.lights=P.filter(p=>p.k==='lamp').map(p=>({x:p.x+.15,y:p.y,r:4.6,c:[1,.62,.28],i:1.15})).concat(P.filter(p=>p.k==='barrel').map(p=>({x:p.x,y:p.y,r:3.4,c:[1,.5,.18],i:1.25,fire:1})));
   for(let y=0;y<CH;y++)for(let x=0;x<CW;x++)if(L.map[y*CW+x]===4)L.lights.push({x:x+.5,y:y+.5,r:2.6,c:[.9,.95,.8],i:.6});
   for(const[x,y]of[[47.5,36.3],[51.5,30.6],[44.2,40.6]])P.push({k:'boat',x,y,r:.35});
+  for(const st of STOPS)P.push({k:'stop',x:st.x,y:st.y,stop:st});P.push({k:'wood',x:4.5,y:44.3,r:.35});
   // деревья: городской парк и «Байкальский берег»
   const TR=rng(77),okT=(x,y)=>!L.map[(y|0)*CW+(x|0)]&&L.fl[(y|0)*CW+(x|0)]===0&&!P.some(p=>Math.hypot(p.x-x,p.y-y)<1.1);
   for(let n=0,k=0;n<55&&k<2000;k++){const x=7+TR()*16,y=3.5+TR()*13;if(x+y<20||!okT(x,y))continue;P.push({k:TR()<.6?'pine':'birch',x,y,r:.22});n++}
@@ -648,13 +693,14 @@ function buildFlat(){
   FLAT_ROWS.forEach((r,y)=>{for(let x=0;x<16;x++)L.map[y*16+x]=cmap[r[x]]||0});
   for(let i=0;i<3;i++)L.map[9*16+10+i]=81-i;
   frect(L,0,0,16,11,6);frect(L,1,1,7,4,5);frect(L,5,5,3,5,5);frect(L,1,6,3,4,7);
+  const O=(x,y,d)=>L.ori[y*16+x]=d;O(1,1,3);O(2,1,3);O(3,1,3);O(13,1,3);O(14,1,4);O(14,2,4);O(10,9,1);O(11,9,1);O(12,9,1);O(1,7,2);O(1,8,2);O(3,6,3);
   L.props=[{k:'cat',x:11.5,y:6.5,a:0,t:0,mode:'walk'}];
   L.lights=[{x:11.5,y:5,r:6,c:[1,.82,.55],i:.55},{x:4,y:2.5,r:5,c:[1,.95,.8],i:.5},{x:6.5,y:7.5,r:3.5,c:[1,.8,.5],i:.35},{x:2,y:7.5,r:3,c:[.9,.95,1],i:.3}];
   L.amb=()=>isNight()?.42:.66;
   return L;
 }
 function buildInt(id,rows,cmap,flf,o){const w=rows[0].length,h=rows.length,L=mkLevel(id,w,h,Object.assign({outdoor:false,ceil:2.4,camz:1.45},o));
-  rows.forEach((r,y)=>{for(let x=0;x<w;x++){L.map[y*w+x]=cmap[r[x]]||0;L.fl[y*w+x]=flf(x,y)}});L.props=o.props||[];L.lights=o.lights||[];return L}
+  rows.forEach((r,y)=>{for(let x=0;x<w;x++){const t=cmap[r[x]]||0;L.map[y*w+x]=t;L.fl[y*w+x]=flf(x,y);if([63,64,78].includes(t))L.ori[y*w+x]=3;if(t===75)L.ori[y*w+x]=2}});L.props=o.props||[];L.lights=o.lights||[];return L}
 function buildInteriors(){
   PODEZD=buildInt('podezd',['##SS##','#....M','#....#','D....#','#....#','#....#','###E##'],{'#':60,S:68,M:67,D:62,E:61},()=>11,
     {lights:[{x:3,y:3,r:5,c:[1,.85,.6],i:.85}],amb:()=>.28,exits:{'3,6':[20.5,25.35,-Math.PI/2]}});
@@ -670,15 +716,36 @@ function buildInteriors(){
     {W:60,V:74,E:61,b:69,K:65,D:66},()=>10,
     {lights:[{x:4,y:3,r:5.5,c:[1,.9,.7],i:.75},{x:11,y:3,r:5.5,c:[1,.9,.7],i:.75},{x:7.5,y:5,r:5,c:[1,.9,.7],i:.6}],amb:()=>.4,
      exits:{'7,0':[37,27.2,-Math.PI/2],'8,0':[38,27.2,-Math.PI/2]}});
-  for(const L of[PODEZD,TBC,DK,STATION,FLAT])bakeLights(L);
+  KPZ=buildInt('kpz',['#####','#b..#','#...#','#...#','XXEXX'],{'#':60,b:69,X:82,E:61},()=>11,{lights:[{x:2.5,y:2,r:4,c:[1,.9,.6],i:.6}],amb:()=>.25,exits:{'2,4':[22.5,20.2,-Math.PI/2]}});
+  for(const L of[PODEZD,TBC,DK,STATION,FLAT,KPZ])bakeLights(L);
   mkNPC('zhen',3,1.45,'seller','Продавщица универмага',TBC,'tbc');mkNPC('zhen',9.5,1.4,'barmaid','Буфетчица',TBC,'cafe');
   const sp=mkNPC('ban',11.6,1.5,'siply','Сиплый',TBC,'cafe');sp.v=1;mkNPC('ban',12.4,3.3,'',' ',TBC).v=0;mkNPC('ban',8.4,3.4,'',' ',TBC).v=1;mkNPC('muzh',8.5,5.5,'','',TBC);
   for(const e of TBC.enemies)if(e.type==='ban'&&!e.named)e.guard=1;
   mkNPC('muzh',13.5,9.6,'trainer','Тренер по боксу',DK,'dk').v=0;mkNPC('babka',10.5,7.35,'dkcash','Вахтёрша',DK,'dk');
   mkNPC('babka',5.5,3.4,'','',STATION);mkNPC('mil',12.5,5.3,'','',STATION);mkNPC('zhen',10.5,1.5,'','',STATION)}
+const STOPS=[{n:'Шанхай',x:12.5,y:36.4,a:Math.PI/2},{n:'Центр, ТБЦ',x:32.6,y:18.4,a:Math.PI},{n:'Вокзал',x:31.6,y:24.3,a:0},{n:'5-й микрорайон',x:25.6,y:10.4,a:Math.PI/2},{n:'Пляж и промзона',x:46.5,y:33.4,a:0}];
+function moveCar(x,y){const c=CITY.props.find(p=>p.k==='car');let cx=x+1.3,cy=y;if(solidAt(CITY,cx,cy))cx=x-1.3;if(c){c.x=cx;c.y=cy}else CITY.props.push({k:'car',x:cx,y:cy,r:.45});G.carPos=[cx,cy]}
+function busHTML(st){const h=G.min/60,open=h>=6&&h<23,p=shopPrice(300);
+  return`<div class="card"><div class="stamp">ПАЗ</div><h2>Остановка «${st.n}»</h2><p class="sub">${open?'Жёлтый ПАЗик ходит с 06:00 до 23:00. Ждать 0–20 минут, ехать 20.':'Автобусы не ходят. Последний ушёл в 23:00.'}</p><div class="rows">`+
+  STOPS.map((s2,i)=>s2===st?'':row(s2.n,'20–40 минут в пути',fmt(p)+' р.','bus:'+i,!open||P.money<p,'Ехать')).join('')+`</div>${cardFoot()}</div>`}
+function carHTML(){return`<div class="card"><div class="stamp">ВАЗ</div><h2>Завелась «Копейка»</h2><p class="sub">Бензина: ${P.fuel} кан. Каждая поездка — одна канистра и 10 минут.</p><div class="rows">`+
+  [{n:'Домой, к подъезду'},...STOPS].map((s2,i)=>row(s2.n,'10 минут','','trip:'+(i-1),P.fuel<1,'Ехать')).join('')+`</div>${cardFoot()}</div>`}
+function arrest(m){if(G.state!=='play')return;curPlace='__arrest';const bribe=Math.round(price(5000)*(1+P.wanted/150)/100)*100;G.bribe=bribe;
+  openModal(`<div class="card"><div class="stamp">МИЛИЦИЯ</div><h2>«Стоять! Руки на капот!»</h2><p>Сержант крепко держит за рукав. Второй уже достаёт наручники.</p><div class="rows">`+
+  row('Откупиться','«Штраф на месте, без протокола»',fmt(bribe)+' р.','arrest:pay',P.money<bribe,'Дать')+row('Сдаться','ночь в КПЗ, штраф, оружие изымут','','arrest:give',false,'Сдаться')+row('Вырваться и бежать','розыск станет только сильнее','','arrest:run',false,'Бежать')+`</div></div>`)}
+function arrestAct(k){if(k==='pay'){P.money-=G.bribe;P.wanted=0;rep('town',-3);closeModal();msg('Сержант сунул деньги в карман: «Свободен. И чтоб я тебя не видел».','say');for(const m of CITY.enemies)if(m.type==='mil')m.st='idle';return}
+  if(k==='give'){closeModal();kpz(false);return}
+  P.wanted+=60;closeModal();for(const m of CITY.enemies)if(m.type==='mil'&&Math.hypot(m.x-P.x,m.y-P.y)<2){m.st='stagger';m.tm=1.2}msg('Вырвался! Беги!','bad')}
+function kpz(beaten){const fine=Math.round(P.money*.2/10)*10;P.money-=fine;const lostPm=P.has.pm;if(lostPm){P.has.pm=false;P.ammo=0;if(P.w===3)P.w=0}
+  const target=G.min<8*60?8*60-G.min:1440-G.min+8*60;passTime(target);P.wanted=0;P.food=Math.max(5,P.food-25);P.warm=Math.max(P.warm,60);if(beaten)P.hp=Math.max(P.hp,15);rep('town',-10);
+  for(const m of CITY.enemies)if(m.type==='mil'){m.st='idle'}CITY.props=CITY.props.filter(p=>p.k!=='uaz');
+  goTo(KPZ,2.5,2.2,Math.PI/2,true);curPlace=null;openModal(`<div class="card"><div class="stamp">КПЗ</div><h2>Утро в камере</h2><p>${beaten?'Очнулся на нарах. Бока болят: дубинками приложили от души. ':''}Ночь на деревянных нарах, лампочка под решёткой. Утром сержант Кузьмин отпер дверь: «Свободен. Ещё раз — сядешь надолго».</p>
+    <p class="sub">Штраф: ${fmt(fine)} р.${lostPm?' · ПМ и патроны изъяли.':''}</p><div class="cardFoot"><span></span><button class="btn" data-a="close">Выйти</button></div></div>`)}
+function callUaz(){const a0=Math.random()*6.28;for(let k=0;k<24;k++){const a=a0+k*.26,x=P.x+Math.cos(a)*8,y=P.y+Math.sin(a)*8;if(x<2||y<2||x>CW-3||y>CH-3||solidAt(CITY,x,y)||solidAt(CITY,x+.6,y)||isBaikal(x,y))continue;
+    CITY.props.push({k:'uaz',x,y,r:.5});for(const d of[-.9,.9]){const m=mkNPC('mil',x+d,y+.8);m.st='chase';m.uaz=1}msg('Сирена! Подъехал милицейский «бобик».','bad');return}}
 const discoTime=()=>G&&G.min>=19*60&&G.min<23*60;
-let CITY,FLAT,LV,PODEZD,TBC,DK,STATION;
-const LEVELS=()=>({city:CITY,flat:FLAT,podezd:PODEZD,tbc:TBC,dk:DK,station:STATION});
+let CITY,FLAT,LV,PODEZD,TBC,DK,STATION,KPZ;
+const LEVELS=()=>({city:CITY,flat:FLAT,podezd:PODEZD,tbc:TBC,dk:DK,station:STATION,kpz:KPZ});
 const solidAt=(L,x,y)=>{const ix=Math.floor(x),iy=Math.floor(y);if(ix<0||iy<0||ix>=L.w||iy>=L.h)return true;return L.map[iy*L.w+ix]>0};
 function free(x,y,r){if(solidAt(LV,x-r,y-r)||solidAt(LV,x+r,y-r)||solidAt(LV,x-r,y+r)||solidAt(LV,x+r,y+r))return false;
   for(const p of LV.props)if(p.r&&Math.hypot(p.x-x,p.y-y)<p.r+r)return false;return true}
@@ -822,6 +889,16 @@ const SP={
   birch:mkTex((g,e,R)=>{ell(g,32,62,8,2,'rgba(0,0,0,.2)');g.fillStyle='#ece9e0';g.fillRect(30,8,4,56);g.fillStyle='#222';for(let y=12;y<62;y+=5)g.fillRect(30+(R()*3|0),y,2+(R()*2|0),1);
     g.strokeStyle='#6a5a4a';g.lineWidth=1;for(let i=0;i<12;i++){const y=10+R()*30,d=R()<.5?-1:1;g.beginPath();g.moveTo(32,y);g.lineTo(32+d*(6+R()*12),y-6-R()*10);g.stroke()}
     g.fillStyle='rgba(236,242,246,.8)';for(let i=0;i<10;i++)g.fillRect(20+R()*24|0,6+R()*30|0,3,1)},882),
+  stop:mkTex(g=>{g.fillStyle='#4a4e52';g.fillRect(31,10,2,54);g.fillStyle='#e8d23a';g.fillRect(24,4,16,14);g.fillStyle='#2a6a3a';g.fillRect(25,5,14,12);txt(g,'А',32,11.5,10,'#e8d23a','900 ');
+    g.fillStyle='#eef3f6';g.fillRect(23,3,18,2);g.fillStyle='#e8e2d0';g.fillRect(26,20,12,8);g.fillStyle='#555';for(let i=0;i<3;i++)g.fillRect(27,22+i*2,10,.8);ell(g,32,63,6,1.4,'rgba(0,0,0,.25)')}),
+  car:mkTex(g=>{ell(g,32,62,28,2.4,'rgba(0,0,0,.3)');g.fillStyle='#9a2a22';g.beginPath();g.moveTo(3,58);g.lineTo(3,48);g.lineTo(14,46);g.lineTo(20,36);g.lineTo(44,36);g.lineTo(50,46);g.lineTo(61,48);g.lineTo(61,58);g.closePath();g.fill();
+    g.fillStyle='#b83a30';g.fillRect(4,48,56,4);g.fillStyle='#2a3a4a';g.beginPath();g.moveTo(22,38);g.lineTo(31,38);g.lineTo(31,46);g.lineTo(17,46);g.closePath();g.fill();g.beginPath();g.moveTo(33,38);g.lineTo(42,38);g.lineTo(47,46);g.lineTo(33,46);g.closePath();g.fill();
+    g.fillStyle='#d8d8d8';g.fillRect(3,55,58,2);g.fillStyle='#eef3f6';g.fillRect(19,34,26,3);g.fillRect(4,46,10,2);ell(g,15,58,6,6,'#1a1a1a');ell(g,49,58,6,6,'#1a1a1a');ell(g,15,58,3,3,'#9a9a9a');ell(g,49,58,3,3,'#9a9a9a');g.fillStyle='#f0e8a0';g.fillRect(58,50,3,3);g.fillStyle='#c83a2a';g.fillRect(3,50,2,3)}),
+  uaz:mkTex((g,e)=>{ell(g,32,62,28,2.4,'rgba(0,0,0,.3)');g.fillStyle='#5a6a5a';g.fillRect(4,34,56,22);g.fillStyle='#4a5a4a';g.fillRect(4,30,40,6);g.fillStyle='#2a3a4a';g.fillRect(8,36,12,9);g.fillRect(24,36,12,9);g.fillRect(40,36,10,9);
+    g.fillStyle='#2a4aa8';g.fillRect(4,47,56,4);txt(g,'МИЛИЦИЯ',32,49,4,'#fff');g.fillStyle='#3a8aff';g.fillRect(20,25,8,5);e.fillStyle='#fff';e.fillRect(20,25,8,5);g.fillStyle='#eef3f6';g.fillRect(4,28,40,2);
+    ell(g,14,57,6,6,'#1a1a1a');ell(g,50,57,6,6,'#1a1a1a');ell(g,14,57,3,3,'#7a7a7a');ell(g,50,57,3,3,'#7a7a7a')}),
+  wood:mkTex(g=>{ell(g,32,62,22,2.4,'rgba(0,0,0,.25)');for(let r=0;r<4;r++)for(let i=0;i<6-r;i++){const x=10+i*8+r*4,y=56-r*7;ell(g,x,y,4,3.6,'#7a5232');ell(g,x,y,2.6,2.2,'#c8a06a');ell(g,x,y,1,1,'#8a6a42')}
+    g.fillStyle='#eef3f6';g.fillRect(20,31,26,3);g.fillStyle='#5a3a24';g.fillRect(48,50,12,12);g.fillStyle='#c8a06a';g.fillRect(48,49,12,2);g.fillStyle='#6a4a2a';g.fillRect(52,34,2,16);g.fillStyle='#9a9aa2';g.fillRect(49,33,8,4)}),
   catWalkA:mkTex(g=>catDraw(g,'walk',0)),catWalkB:mkTex(g=>catDraw(g,'walk',1)),catSit:mkTex(g=>catDraw(g,'sit')),catSleep:mkTex(g=>catDraw(g,'sleep')),
   pbag:mkTex(g=>{g.fillStyle='#5a5a5a';g.fillRect(31,0,2,10);ell(g,32,10,3,1.5,'#3a3a3a');g.fillStyle='#7a2a20';g.beginPath();if(g.roundRect)g.roundRect(22,10,20,46,8);else g.rect(22,10,20,46);g.fill();
     g.fillStyle='rgba(255,255,255,.15)';g.fillRect(25,14,3,38);g.fillStyle='#5a1a14';g.fillRect(22,20,20,2);g.fillRect(22,44,20,2);ell(g,32,62,10,2,'rgba(0,0,0,.25)')}),
@@ -906,7 +983,7 @@ const SND={
   hurt:()=>tone(240,110,.22,.18,'sawtooth'),grunt:()=>tone(180,120,.15,.1,'sawtooth'),
   bark:()=>{tone(520,300,.09,.14,'sawtooth');setTimeout(()=>tone(500,280,.09,.12,'sawtooth'),130)},
   pick:()=>tone(880,1320,.1,.08,'triangle'),coin:()=>{tone(1300,1300,.06,.06,'square');setTimeout(()=>tone(1700,1700,.12,.06,'square'),70)},
-  eat:()=>nz(.25,1400,3,.12),meow:()=>{tone(620,820,.12,.07,'triangle');setTimeout(()=>tone(820,520,.32,.07,'triangle'),110)},
+  eat:()=>nz(.25,1400,3,.12),cough:()=>{nz(.12,500,1.2,.18,'lowpass');setTimeout(()=>nz(.1,600,1.2,.14,'lowpass'),180)},meow:()=>{tone(620,820,.12,.07,'triangle');setTimeout(()=>tone(820,520,.32,.07,'triangle'),110)},
   step:o=>{if(o){nz(.08,1800+Math.random()*600,1.4,.05);nz(.05,500,1,.035)}else{nz(.04,900,1,.03,'lowpass');tone(110,80,.05,.035,'sine')}},crack:()=>nz(.03,2500+Math.random()*2000,3,.07),
   barkFar:()=>{tone(480,300,.09,.035,'sawtooth');setTimeout(()=>tone(460,280,.09,.03,'sawtooth'),140)},click:()=>tone(1500,1400,.03,.05,'square'),door:()=>{nz(.3,200,1,.4,'lowpass');tone(300,180,.2,.05,'triangle')},
   horn:()=>{if(!AC)return;for(const f of[220,277]){const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type='sawtooth';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.05,t+.2);g.gain.setValueAtTime(.05,t+1.4);g.gain.linearRampToValueAtTime(0,t+1.9);o.connect(g);g.connect(master);o.start(t);o.stop(t+2)}}
@@ -936,9 +1013,10 @@ let P,G;
 function newGame(){
   CITY=buildCity();FLAT=buildFlat();LV=FLAT;
   P={x:10.5,y:7.6,a:-Math.PI/2,pitch:0,hp:100,food:75,warm:85,st:100,money:3000,bottles:0,ammo:0,
-    inv:{bread:1,tush:0,thermos:1,band:0,medkit:0,potato:0,pickle:0},fridge:{bread:1,tush:1,potato:2,pickle:2},
+    inv:{bread:1,tush:0,thermos:1,band:0,medkit:0,potato:0,pickle:0,aspirin:0,antibio:0},fridge:{bread:1,tush:1,potato:2,pickle:2},
     has:{kastet:false,arm:false,pm:false,coat:false,hat:false,valenki:false},w:0,side:1,act:null,charging:false,charge:0,blocking:false,
-    bob:0,phase:0,hurt:0,shake:0,cause:'',kills:0,flash:0,recoil:0,gunCd:0,debtBag:0,wanted:0,boxing:false};
+    bob:0,phase:0,hurt:0,shake:0,cause:'',kills:0,flash:0,recoil:0,gunCd:0,debtBag:0,wanted:0,boxing:false,
+    rep:{sh:0,sip:0,town:0},ill:'',illT:0,expo:0,car:false,fuel:0};
   G={day:1,min:7*60+30,state:'play',spawnT:0,warnT:0,hornT:40,krysha:0,biz:false,till:0,quest:0,zpDay:0,bathDay:0,wagonDay:0,snowDay:0,hs:0,parts:[],fade:0,
     story:{st:0,helped:false,betrayed:false,ledger:'',goshaDead:false},sipWar:false,wx:{k:'snow',left:300},mailDay:0};
   populateCity();ensureCivs();buildInteriors();
@@ -982,11 +1060,19 @@ function lightLevel(){const h=G.min/60,n=.13;if(h<6)return n;if(h<9)return n+(h-
 const dd=()=>Math.min(G.day,40)-1,infl=()=>Math.pow(1.03,dd()),wage=()=>Math.pow(1.02,dd()),tick=()=>Math.pow(1.015,dd());
 const ticketPrice=()=>Math.round(140000*tick()/100)*100;
 const price=b=>Math.round(b*infl()/10)*10;
+const townMul=()=>{const t=(P.rep||{}).town||0;return t>=40?.9:t<=-40?1.15:1};
+const shopPrice=b=>Math.round(price(b)*townMul()/10)*10;
+function rep(k,v){if(!P.rep)P.rep={sh:0,sip:0,town:0};const o=P.rep[k];P.rep[k]=clamp(o+v,-100,100);const n=P.rep[k];
+  if(k==='sh'&&o<50&&n>=50)msg('В Шанхае тебя теперь знают. Гопники обходят стороной.','good');
+  if(k==='town'&&o<40&&n>=40)msg('В городе тебя уважают. В ларьках и ТБЦ теперь скидка.','good');
+  if(k==='town'&&o>-40&&n<=-40)msg('В городе на тебя косо смотрят. Цены для тебя выше.','bad');
+  if(k==='sip'&&o>-40&&n<=-40)msg('У Сиплого на тебя зуб. Крыша теперь дороже, братва злее.','bad')}
+const gopRespect=e=>P.rep&&(P.rep.sh>=75||(P.rep.sh>=45&&e.x<22&&e.y>35));
 const hasKrysha=()=>G.krysha>=G.day;
 
 /* ---------- сохранение: автослот и три ручных ---------- */
 const SLOTS=['auto','1','2','3'],SK=k=>'gansta_v3_'+k;
-const placeName=()=>LV===FLAT?'дома':LV===PODEZD?'подъезд':LV===TBC?'ТБЦ':LV===DK?'ДК':LV===STATION?'вокзал':isBaikal(P.x,P.y)?'на Байкале':P.x+P.y>=70?'промзона':P.y>38&&P.x<22?'Шанхай':P.x+P.y<40&&P.y<17?'парк':'город';
+const placeName=()=>LV===FLAT?'дома':LV===KPZ?'КПЗ':LV===PODEZD?'подъезд':LV===TBC?'ТБЦ':LV===DK?'ДК':LV===STATION?'вокзал':isBaikal(P.x,P.y)?'на Байкале':P.x+P.y>=70?'промзона':P.y>38&&P.x<22?'Шанхай':P.x+P.y<40&&P.y<17?'парк':'город';
 function inDanger(){return P.wanted>0||(LV.enemies.some(e=>!e.dead&&!ED[e.type].civ&&e.st!=='idle'&&Math.hypot(e.x-P.x,e.y-P.y)<10))}
 function saveTo(k){try{const g={...G,state:'play',parts:[],hs:0};delete g.ret;
   localStorage.setItem(SK(k),JSON.stringify({v:3,ts:Date.now(),lvl:LV.id,place:placeName(),P:{...P,act:null,charging:false,blocking:false},G:g}));return true}catch(e){return false}}
@@ -1014,7 +1100,9 @@ const keys={};let lookDX=0,lookDY=0,locked=false,blkKey=false,blkMouse=false,blk
 const isTouch=()=>document.body.classList.contains('touch');
 const playing=()=>G&&G.state==='play';
 addEventListener('keydown',e=>{
-  if(G&&G.state==='modal'&&['Escape','KeyE','KeyI','Tab','KeyM'].includes(e.code)){e.preventDefault();closeModal();return}
+  if(G&&G.state==='modal'&&curPlace==='__mg'&&MG.on&&(e.code==='Space'||e.code==='KeyE'||e.code==='Enter')){e.preventDefault();if(!e.repeat)mgHit();return}
+  if(G&&G.state==='modal'&&curPlace==='__arrest')return;
+  if(G&&G.state==='modal'&&['Escape','KeyE','KeyI','Tab','KeyM'].includes(e.code)){e.preventDefault();if(curPlace==='__mg')MG.on=false;closeModal();return}
   if(!playing())return;
   if(e.repeat&&e.code==='Space'){e.preventDefault();return}
   keys[e.code]=true;
@@ -1085,6 +1173,7 @@ function doHit(){const w=WP[P.w],a=P.act;const e=findTarget(w.rng,.6);if(!e){SND
 function hitEnemy(e,dmg,kd,heavy,gun){
   const ED_=ED[e.type];
   if(e.type==='ban'&&!e.angry){e.angry=1;if(hasKrysha()&&G.story.ledger!=='sip'){G.krysha=0;msg('Ты поднял руку на людей Сиплого. Крыши больше нет.','bad')}}
+  if(ED_.civ)rep('town',-6);if(e.type==='ban'&&!e.dead)rep('sip',-3);
   if(ED_.civ){e.scared=10;const seen=e.type==='mil'||LV.enemies.some(m=>m.type==='mil'&&!m.dead&&Math.hypot(m.x-P.x,m.y-P.y)<12&&los(m.x,m.y,P.x,P.y));
     if(seen){P.wanted=Math.max(P.wanted,e.type==='mil'?150:90);msg('— Стоять! Милиция!','bad');for(const m of LV.enemies)if(m.type==='mil'&&!m.dead)m.st='chase'}}
   if(LV===DK&&e.calm)DK.fought=true;
@@ -1104,6 +1193,7 @@ function kill(e){e.dead=.001;P.kills++;e.st='dead';SND.fall();
   const I=LV.items;
   if(ED[e.type].civ){P.wanted=Math.max(P.wanted,e.type==='mil'?300:200);msg(e.type==='mil'?'Ты убил милиционера. Теперь тебя ищет вся милиция города.':'За такое по головке не погладят. Милиция уже ищет.','bad');if(e.type==='mil')I.push({kind:'ammo',x:e.x,y:e.y,v:8})}
   if(e.type==='gosha'){G.story.goshaDead=true;I.push({kind:'ledger',x:e.x,y:e.y+.1,v:1});I.push({kind:'money',x:e.x+.25,y:e.y,v:price(12000)});msg('Гоша Цемент лёг. Из кармана выпала чёрная тетрадь.','good')}
+  if(e.type==='gop')rep('sh',e.x<22&&e.y>35?6:2);if(e.type==='ban')rep('sip',-12);if(ED[e.type].civ)rep('town',e.type==='mil'?-40:-25);
   if(e.type==='gop'){I.push({kind:'money',x:e.x+.2,y:e.y,v:Math.round(rnd(250,1100)*infl()/10)*10});if(Math.random()<.45)I.push({kind:'bottle',x:e.x-.2,y:e.y+.1,v:1})}
   if(e.type==='ban'){I.push({kind:'money',x:e.x,y:e.y+.2,v:Math.round(rnd(2200,6500)*infl()/10)*10});if(Math.random()<.6)I.push({kind:'ammo',x:e.x-.25,y:e.y,v:4+(Math.random()*5|0)})}
   if(e.type==='dolg'){I.push({kind:'debt',x:e.x,y:e.y+.15,v:Math.round(22000*infl()/10)*10});msg('Должник лёг. Пачка денег выпала в снег.','good')}
@@ -1135,9 +1225,9 @@ function update(dt){
   if(moving){const pp=P.phase;P.phase+=dt*(run?11:9)*Math.min(1,m);if(Math.floor(pp/Math.PI)!==Math.floor(P.phase/Math.PI))SND.step(LV.outdoor);P.bob=Math.sin(P.phase)*1.1*(H/180)}else P.bob*=.85;
   if(P.charging)P.charge+=dt;
   if(P.act){P.act.t+=dt;if(!P.act.done&&P.act.t>=P.act.dur*P.act.hit){P.act.done=true;doHit()}if(P.act&&P.act.t>=P.act.dur)P.act=null}
-  if(P.wanted>0){P.wanted-=dt;if(P.wanted<=0){P.wanted=0;msg('Кажется, милиция отстала.','good')}}
+  if(P.wanted>0){P.wanted-=dt;if(LV===CITY){G.uazT=(G.uazT||0)-dt;if(G.uazT<=0&&!CITY.props.some(p=>p.k==='uaz')&&P.wanted>40){G.uazT=40;callUaz()}}if(P.wanted<=0){P.wanted=0;msg('Кажется, милиция отстала.','good');CITY.props=CITY.props.filter(p=>p.k!=='uaz');CITY.enemies=CITY.enemies.filter(e=>!e.uaz||e.dead)}}
   P.gunCd-=dt;P.flash-=dt;P.recoil=Math.max(0,P.recoil-dt*5);P.hurt-=dt;P.shake=Math.max(0,P.shake-dt*2.5);
-  if(!P.act&&!P.charging&&!run)P.st=Math.min(100,P.st+(P.blocking?5:24)*dt);
+  const stMax=P.ill==='pneu'?50:P.ill==='cold'?70:100;if(!P.act&&!P.charging&&!run)P.st=Math.min(stMax,P.st+(P.blocking?5:24)*(P.ill?.55:1)*dt);if(P.st>stMax)P.st=stMax;
   P.st=Math.max(0,P.st);
   const gm=dt*2;G.min+=gm;if(G.min>=1440){G.min-=1440;newDay()}
   if(!G.wx)G.wx={k:'snow',left:300};G.wx.left-=gm;if(G.wx.left<=0){const r=Math.random(),k=r<.3?'clear':r<.68?'snow':r<.84?'blizzard':'fog';const old=G.wx.k;G.wx={k,left:rnd(240,480)};
@@ -1147,8 +1237,11 @@ function update(dt){
   if(LV===FLAT)P.warm+=18*hr;
   else if(nearFire)P.warm+=48*hr;
   else if(LV!==CITY)P.warm+=14*hr;
-  else{let k=(P.has.coat?.5:1)*(P.has.hat?.8:1)*(P.has.valenki?.8:1)*({clear:isNight()?1.15:1,snow:1,blizzard:1.8,fog:1}[G.wx.k]||1);if(isBeach(P.x,P.y)||isBaikal(P.x,P.y))k*=1.4;P.warm-=(isNight()?11:6)*k*hr}
+  else{let k=(P.has.coat?.5:1)*(P.has.hat?.8:1)*(P.has.valenki?.8:1)*({clear:isNight()?1.15:1,snow:1,blizzard:1.8,fog:1}[G.wx.k]||1)*(P.ill==='pneu'?1.3:P.ill==='cold'?1.15:1);if(isBeach(P.x,P.y)||isBaikal(P.x,P.y))k*=1.4;P.warm-=(isNight()?11:6)*k*hr}
   if(P.food<=0){P.food=0;P.hp-=6*hr;P.cause='голод'}
+  if(LV===CITY&&P.warm<25)P.expo+=hr*(G.wx.k==='blizzard'?2:1);else P.expo=Math.max(0,P.expo-hr*.5);
+  if(!P.ill&&P.expo>1.5){P.expo=0;if(Math.random()<.6){P.ill='cold';P.illT=0;msg('Кажется, простыл: горло дерёт, нос заложен. Аспирин в аптеке ТБЦ.','bad')}}
+  if(P.ill){P.illT+=gm;if(P.ill==='cold'&&P.illT>2880){P.ill='pneu';msg('Простуда перешла в воспаление лёгких! Нужны антибиотики.','bad')}if(P.ill==='pneu'){P.hp-=2.5*hr;P.cause='болезнь'}if(Math.random()<dt/(P.ill==='pneu'?10:18))SND.cough()}
   if(P.warm<=0){P.warm=0;P.hp-=18*hr;P.cause='холод'}
   P.food=clamp(P.food,0,100);P.warm=clamp(P.warm,0,100);
   G.warnT-=dt;if(G.warnT<=0){if(P.warm<25&&!nearFire&&LV===CITY){msg('Пальцы не гнутся. Нужно погреться.','bad');G.warnT=20}else if(P.food<20){msg('В животе урчит. Надо поесть.','bad');G.warnT=20}}
@@ -1178,7 +1271,7 @@ function update(dt){
       if(c.mode==='walk'){const nx=c.x+Math.cos(c.a)*.55*dt,ny=c.y+Math.sin(c.a)*.55*dt;if(!solidAt(FLAT,nx-.15,ny-.15)&&!solidAt(FLAT,nx+.15,ny+.15)&&!solidAt(FLAT,nx+.15,ny-.15)&&!solidAt(FLAT,nx-.15,ny+.15)&&Math.hypot(nx-P.x,ny-P.y)>.6){c.x=nx;c.y=ny}else c.a+=2+Math.random()}}
   }
   if(windGain&&AC)windGain.gain.value=!LV.outdoor?.012:G.wx.k==='blizzard'?.24:isNight()?.09:.05;
-  if(P.hp<=0){P.hp=0;gameOver()}
+  if(P.hp<=0){if(P.cause==='милиция'){P.hp=15;kpz(true)}else{P.hp=0;gameOver()}}
 }
 function newDay(){G.day++;ensureCivs();msg('День '+G.day+'. В ларьке опять переписали ценники.');for(let i=0;i<8;i++)dropRandom('bottle');
   if(P.fridge.pickle<3)P.fridge.pickle++;
@@ -1196,13 +1289,15 @@ function updEnemy(e,dt){
   e.moving=false;
   if(e.st==='stagger'||e.st==='down'){if(e.tm<=0)e.st=(neutral||D.civ)?'idle':'chase';return}
   if(D.civ&&!(D.law&&P.wanted>0)){civMove(e,D,dt,d,rx,ry);return}
+  if(D.law&&P.wanted>0&&d<1.3&&LV===CITY&&G.state==='play'&&e.st!=='stagger'){arrest(e);return}
   if(e.type==='gop'&&P.wanted<=0&&milNear(e,5)){if(e.st!=='idle'){e.st='idle';if(e.said<=0){msg('— Атас, менты!','say');e.said=20}}}
   if(e.st==='windup'){if(e.tm<=0){enemyStrike(e);e.st='recover';e.tm=D.rec}return}
   if(e.st==='recover'){if(e.tm<=0)e.st='chase';return}
   if(e.st==='aim'){if(e.tm<=0){e.fire=.12;e.st='chase';e.cd=D.cd+rnd(0,.8);d<7?SND.shot():SND.far();
       if(los(e.x,e.y,P.x,P.y)&&Math.random()<clamp(.75-d*.06-(P.moving?.18:0),.12,.7))hurtP(rnd(D.dmg[0],D.dmg[1]),D.name);else if(d<6)msg('Пуля свистнула мимо.')}return}
   if(e.st==='idle'||neutral){
-    if(!neutral&&!(e.type==='gop'&&P.wanted<=0&&milNear(e,5))&&d<D.aggro*(isNight()?1.25:1)&&los(e.x,e.y,P.x,P.y)){e.st='chase';if(e.said<=0){msg((e.type==='dog'?'':'— ')+pick(D.say),'say');e.said=14;if(e.type==='dog')SND.bark()}}
+    if(e.type==='gop'&&gopRespect(e)&&d<2.6&&e.said<=0){msg('— '+pick(['Здорово, братан. Проходи.','О, это тот самый… Не трогай его.','Уважаемый человек идёт.']),'say');e.said=40}
+    if(!neutral&&!(e.type==='gop'&&(gopRespect(e)||P.wanted<=0&&milNear(e,5)))&&d<D.aggro*(isNight()?1.25:1)&&los(e.x,e.y,P.x,P.y)){e.st='chase';if(e.said<=0){msg((e.type==='dog'?'':'— ')+pick(D.say),'say');e.said=14;if(e.type==='dog')SND.bark()}}
     else{if(neutral&&d<2.4&&e.said<=0){msg('— Привет Сиплому. Ходи спокойно.','say');e.said=40}
       e.wt-=dt;if(e.wt<=0){e.wt=rnd(1.5,4);e.wa=Math.random()*6.283;e.idle=Math.random()<.4}
       if(!e.idle){e.moving=moveE(e,Math.cos(e.wa),Math.sin(e.wa),D.spd*.35*dt);if(!e.moving)e.wt=0}return}
@@ -1236,11 +1331,17 @@ let lookTile=null;function lookTarget(){const dx=Math.cos(P.a),dy=Math.sin(P.a),
 function lookNPC(){const dx=Math.cos(P.a),dy=Math.sin(P.a);let best=null,bd=LV.outdoor?1.9:2.4;
   for(const e of LV.enemies){if(e.dead||(!ED[e.type].civ&&!e.place)||e.scared>0||(e.type==='mil'&&P.wanted>0))continue;const rx=e.x-P.x,ry=e.y-P.y,d=Math.hypot(rx,ry);if(d>bd)continue;const f=rx*dx+ry*dy;if(f<=0||Math.abs(-rx*dy+ry*dx)>.5)continue;best=e;bd=d}return best}
 const npcTitle=e=>(e.name&&e.name.trim())||ED[e.type].title;
+function lookProp(){if(LV!==CITY)return null;let best=null,bd=1.8;for(const p of CITY.props){if(p.k!=='stop'&&p.k!=='car'&&p.k!=='wood')continue;const rx=p.x-P.x,ry=p.y-P.y,d=Math.hypot(rx,ry);if(d>bd)continue;const f=rx*Math.cos(P.a)+ry*Math.sin(P.a);if(f>0&&Math.abs(-rx*Math.sin(P.a)+ry*Math.cos(P.a))<.75){best=p;bd=d}}return best}
+const propTitle=p=>p.k==='stop'?'Остановка «'+p.stop.n+'»':p.k==='car'?'«Копейка» — завести':'Дрова бабы Шуры — наколоть';
 function lookCat(){if(LV!==FLAT)return null;const c=FLAT.props.find(p=>p.k==='cat');const rx=c.x-P.x,ry=c.y-P.y,d=Math.hypot(rx,ry);if(d>1.8)return null;const f=rx*Math.cos(P.a)+ry*Math.sin(P.a);return f>0&&Math.abs(-rx*Math.sin(P.a)+ry*Math.cos(P.a))<.6?c:null}
 function goTo(L,x,y,a,quiet){const from=LV;LV=L;P.x=x;P.y=y;P.a=a;P.pitch=0;G.fade=1;SND.door();
   if(from===DK&&L===CITY&&discoTime()&&(P.danceT||0)>15&&!DK.fought){P.danceT=0;msg('На крыльце ДК тебя уже ждут.','bad');for(const[ex,ey]of[[17.5,19.6],[21.5,19.6]]){const e=mkNPC('gop',ex,ey,'','',CITY);e.named='';e.st='chase';e.angry=1;e.cd=.8;delete e.place}}
   if(L===DK&&discoTime()&&!quiet)msg('В зале гремит дискотека. Тепло, темно и громко.','say')}
 function interact(){if(!playing())return;const cat=lookCat();if(cat){SND.meow();if((G.petT||0)<G.day*1440+G.min-60){G.petT=G.day*1440+G.min;P.warm=Math.min(100,P.warm+5)}msg(pick(['Погладил Барсика. Мурчит, как трактор.','Барсик потёрся о ногу и мяукнул.','Кот лениво приоткрыл один глаз.']),'good');if(cat.mode==='walk'){cat.mode='sit';cat.t=4}return}
+  const pr=lookProp();if(pr){if(pr.k==='stop'){curPlace='__bus';openModal(busHTML(pr.stop))}
+    else if(pr.k==='wood'){if(G.woodDay===G.day){msg('Баба Шура: «Хватит на сегодня, сынок, завтра приходи».');return}curPlace='__wood';openModal(`<div class="card"><div class="stamp">ШАНХАЙ</div><h2>Дрова бабы Шуры</h2><p>«Сынок, наколи дровишек, а? Заплачу, сколько смогу».</p><div class="cardFoot"><span></span><span style="display:flex;gap:8px"><button class="btn" data-a="wood">Наколоть</button><button class="btn" data-a="close">Уйти</button></span></div></div>`)}
+    else if(pr.k==='car'){if(P.fuel<1){msg('Бак пустой. Канистру бензина продают на рынке.','bad');return}const cold=isNight()||G.wx.k==='blizzard'||G.wx.k==='clear';
+      startMG(Object.assign({},MGSET.car,{zone:cold?.13:.18,desc:MGSET.car.desc+(cold?' На таком морозе схватывает плохо.':''),after:'carok',onDone:(h)=>{if(h>=2){G.carOk=1;return'Мотор чихнул и затарахтел. Печка дует холодом, но едем!'}G.carOk=0;passTime(10);return'Не завелась. Аккумулятор подсел на морозе. Попробуй ещё раз.'}}))}return}
   const n=lookNPC();if(n){openTalk(n);return}const a=lookTarget();if(!a)return;
   if(LV===CITY){if(a==='home'){goTo(PODEZD,3.5,5.3,-Math.PI/2);return}if(a==='tbc'){goTo(TBC,2.5,6.3,-Math.PI/2);return}if(a==='cafe'){goTo(TBC,9.5,6.3,-Math.PI/2);return}
     if(a==='station'){goTo(STATION,7.5,1.4,Math.PI/2);return}if(a==='dk'){goTo(DK,7.5,10.3,-Math.PI/2);return}}
@@ -1278,11 +1379,11 @@ function talkHTML(e){const S=G.story,D=ED[e.type];let line=pick(D.lines||['…']
 function storyAct(code){const S=G.story;
   if(code==='s1'){setStory(1)}
   else if(code==='s2'){setStory(2)}
-  else if(code==='help'){if(P.inv.tush<1)return;P.inv.tush--;S.helped=true;setStory(4,'«Спасибо, брат. Я твой должник».')}
+  else if(code==='help'){rep('town',15);if(P.inv.tush<1)return;P.inv.tush--;S.helped=true;setStory(4,'«Спасибо, брат. Я твой должник».')}
   else if(code==='betray'){if(P.inv.tush>0)P.inv.tush--;setStory(10,'Серёга не заметил, как ты отвёл глаза.')}
   else if(code==='sell'){S.betrayed=true;P.money+=price(15000);const s=npcByName('serega');if(s){s.dead=50;s.x=-5}setStory(4,'Сиплый отсчитал '+fmt(price(15000))+' руб. «А теперь вот что: Гоша Цемент мне мешает. Разберись».')}
-  else if(code==='ledsip'){S.ledger='sip';P.money+=price(20000);G.krysha=G.day+400;G.sipWar=false;setStory(6,'Сиплый полистал тетрадь и улыбнулся. «Теперь промзона наша. А ты — наш человек. Крыша тебе пожизненно».'+(S.helped?' Долг Серёги списан.':''))}
-  else if(code==='ledmil'){S.ledger='mil';P.money+=price(20000);G.krysha=0;G.sipWar=true;for(const b of CITY.enemies)if(b.type==='ban')b.angry=1;setStory(6,'Кузьмин выписал премию. Гошу закроют. Но люди Сиплого теперь смотрят на тебя волком.')}
+  else if(code==='ledsip'){rep('sip',40);S.ledger='sip';P.money+=price(20000);G.krysha=G.day+400;G.sipWar=false;setStory(6,'Сиплый полистал тетрадь и улыбнулся. «Теперь промзона наша. А ты — наш человек. Крыша тебе пожизненно».'+(S.helped?' Долг Серёги списан.':''))}
+  else if(code==='ledmil'){rep('sip',-80);rep('town',25);S.ledger='mil';P.money+=price(20000);G.krysha=0;G.sipWar=true;for(const b of CITY.enemies)if(b.type==='ban')b.angry=1;setStory(6,'Кузьмин выписал премию. Гошу закроют. Но люди Сиплого теперь смотрят на тебя волком.')}
   else if(code==='brigade'){win('brigade');return}
   else if(code==='market'){const p=+arguments[1];if(P.money<p)return;P.money-=p;win('market');return}
   if(curPlace==='__talk'&&talkWith)$('modal').innerHTML=talkHTML(talkWith);else rerender()}
@@ -1300,14 +1401,14 @@ const KIOSK=[['bread','Хлеб «кирпичик»','+30 сытости',450],
 const hhmm=()=>(G.min/60|0).toString().padStart(2,'0')+':'+(G.min%60|0).toString().padStart(2,'0');
 function placeHTML(k){
   if(k==='kiosk'){return`<div class="card"><div class="stamp">ДЕНЬ ${G.day}</div><h2>Ларёк «24 часа»</h2><p class="sub">Окошко с решёткой. Продавщица считает на калькуляторе.</p><div class="rows">`+
-    KIOSK.map(([id,n,d,b])=>{const p=price(b);return row(n,d+' · в сумке: '+P.inv[id],fmt(p)+' р.','buy:'+id+':'+p,P.money<p)}).join('')+`</div>${cardFoot()}</div>`}
+    KIOSK.map(([id,n,d,b])=>{const p=shopPrice(b);return row(n,d+' · в сумке: '+P.inv[id],fmt(p)+' р.','buy:'+id+':'+p,P.money<p)}).join('')+`</div>${cardFoot()}</div>`}
   if(k==='tbc'){const it=[['hat','Шапка-ушанка','холод −20%',9000,P.has.hat],['valenki','Валенки','холод −20%',12000,P.has.valenki],['coat','Пуховик','холод вдвое слабее',28000,P.has.coat],
-      ['medkit','Аптечка','+70 здоровья · в сумке: '+P.inv.medkit,3500,false],['potato','Картошка, 2 кг','пожарить дома · в сумке: '+P.inv.potato,1500,false]];
+      ['medkit','Аптечка','+70 здоровья · в сумке: '+P.inv.medkit,3500,false],['aspirin','Аспирин (аптека)','лечит простуду · в сумке: '+P.inv.aspirin,900,false],['antibio','Антибиотики (аптека)','от воспаления лёгких · в сумке: '+P.inv.antibio,6000,false],['potato','Картошка, 2 кг','пожарить дома · в сумке: '+P.inv.potato,1500,false]];
     return`<div class="card"><div class="stamp">ТБЦ</div><h2>Универмаг ТБЦ</h2><p class="sub">Торгово-бытовой центр. Полки полупустые, но тепло.</p><div class="rows">`+
-    it.map(([id,n,d,b,own])=>{const p=price(b);return row(n,own?'уже есть':d,own?'—':fmt(p)+' р.','buy:'+id+':'+p,own||P.money<p)}).join('')+`</div>${cardFoot()}</div>`}
-  if(k==='market'){const it=[['kastet','Кастет','удар тяжелее',1800,P.has.kastet],['arm','Арматура','длиннее и тяжелее',2500,P.has.arm],['pm','Пистолет ПМ','без лишних вопросов',65000,P.has.pm],['ammo','Патроны 9×18, 8 шт.','в кармане: '+P.ammo,6000,false]];
+    it.map(([id,n,d,b,own])=>{const p=shopPrice(b);return row(n,own?'уже есть':d,own?'—':fmt(p)+' р.','buy:'+id+':'+p,own||P.money<p)}).join('')+`</div>${cardFoot()}</div>`}
+  if(k==='market'){const it=[['kastet','Кастет','удар тяжелее',1800,P.has.kastet],['arm','Арматура','длиннее и тяжелее',2500,P.has.arm],['pm','Пистолет ПМ','без лишних вопросов',65000,P.has.pm],['ammo','Патроны 9×18, 8 шт.','в кармане: '+P.ammo,6000,false],['car','«Жигули» ВАЗ-2101 с рук','ездить без автобуса · стоят у дома',60000,P.car],['fuel','Канистра бензина','одна поездка · в канистрах: '+P.fuel,800,false]];
     const bizP=price(45000);
-    const biz=G.biz?row('Твоя точка: выручка','копится каждый день'+(hasKrysha()?' · крыша есть':' · без крыши могут наехать'),fmt(G.till)+' р.','till',G.till<=0,'Забрать')
+    const biz=G.biz?row('Твоя точка: выручка','копится каждый день'+(hasKrysha()?' · крыша есть':' · без крыши могут наехать'),fmt(G.till)+' р.','till',G.till<=0,'Забрать')+row('Постоять за прилавком','мини-игра: торгуйся с покупателями · 3 часа · раз в день',G.tradeDay===G.day?'завтра':'до '+fmt(price(1400)*5)+' р.','trade',G.tradeDay===G.day,'Торговать')
       :row('Купить точку на рынке','прилавок с куртками · около '+fmt(price(3200))+' р. в день',fmt(bizP)+' р.','biz:'+bizP,P.money<bizP);
     const own=G.story.st===6&&G.story.ledger==='sip'&&G.biz?row('Выкупить рынок у Сиплого','концовка: стать хозяином рынка',fmt(price(150000))+' р.','st:market:'+price(150000),P.money<price(150000),'Выкупить'):'';
     return`<div class="card"><div class="stamp">ДЕНЬ ${G.day}</div><h2>Рынок</h2><p class="sub">Под брезентом торгуют всем подряд. Барыга косится на дверь.</p><div class="rows">`+
@@ -1322,7 +1423,7 @@ function placeHTML(k){
     return`<div class="card"><div class="stamp">ПРИЁМНАЯ</div><h2>Администрация города</h2><p class="sub">Очередь до лестницы. На двери: «Биржа труда — 2 этаж».</p><div class="rows">`+
     row('Чистить снег на площади',G.snowDay===G.day?'на сегодня работы нет':'2 часа, −10 сытости · раз в день',fmt(pay)+' р.','job:'+pay+':120:10:snowDay',G.snowDay===G.day,'Работать')+
     row('Спросить про долг по зарплате','час в очереди · раз в день',asked?'завтра':'?','zp',asked,'Спросить')+`</div>${cardFoot()}</div>`}
-  if(k==='cafe'){const pel=price(1500),fee=price(15000),days=G.krysha-G.day+1,S=G.story;
+  if(k==='cafe'){const pel=price(1500),fee=Math.round(price(15000)*(P.rep.sip<=-40?1.5:P.rep.sip>=30?.7:1)/10)*10,days=G.krysha-G.day+1,S=G.story;
     if(G.sipWar)return`<div class="card"><div class="stamp">ТБЦ</div><h2>Кафе «Северянка»</h2><p class="sub">За угловым столиком Сиплый. Двое у входа встают, когда ты заходишь.</p><p>«Ты с ментами снюхался. Ещё раз зайдёшь — вынесут вперёд ногами».</p><div class="rows">`+row('Пельмени со сметаной','+60 сытости, +20 тепла',fmt(pel)+' р.','pel:'+pel,P.money<pel,'Поесть')+`</div>${cardFoot()}</div>`;
     let st='';if(S.st===10)st=row('Сказать Сиплому, где Серёга','барак у стеклотары в Шанхае',fmt(price(15000))+' р.','st:sell',false,'Сказать');
     if(S.st===5)st=row('Отдать Сиплому чёрную тетрадь Гоши','промзона перейдёт к Сиплому'+(S.helped?', долг Серёги спишут':''),fmt(price(20000))+' р.','st:ledsip',false,'Отдать');
@@ -1355,7 +1456,34 @@ function placeHTML(k){
     <p>Сон до утра вернёт тепло и немного здоровья. Игра сохранится.</p><div class="rows">${row('Лечь спать','до 07:00 · сохранение','','sleep',false,'Спать')}</div>${cardFoot('<button class="btn" data-a="bag">Сумка</button>')}</div>`}
   return''
 }
+/* мини-игра на точность: жми, когда бегунок в зелёной зоне */
+let MG={on:false};
+function startMG(o){MG=Object.assign({on:true,pos:0,dir:1,hits:0,miss:0,n:0,zc:rnd(.25,.75),flash:0,last:performance.now(),result:''},o);curPlace='__mg';openModal(mgHTML());requestAnimationFrame(mgLoop)}
+function mgHTML(){return`<div class="card"><div class="stamp">${MG.stamp||'РАБОТА'}</div><h2>${MG.title}</h2><p class="sub">${MG.desc}</p>
+  <canvas id="mgc" width="420" height="64" style="width:100%;height:auto;display:block;background:#1d2024;cursor:pointer"></canvas>
+  <p class="sub" id="mgs" style="margin-top:8px"></p>
+  <div class="cardFoot"><span class="cash">Пробел, E или клик — ${MG.verb||'действие'}</span><span style="display:flex;gap:8px"><button class="btn" data-a="mg" id="mgb" style="background:var(--paper-ink);color:var(--paper)">${(MG.verb||'Жми').toUpperCase()}</button><button class="btn" data-a="mgquit">Бросить</button></span></div></div>`}
+function mgLoop(now){if(!MG.on)return;const dt=Math.min(.05,(now-MG.last)/1000);MG.last=now;
+  const c=$('mgc');if(!c){MG.on=false;return}const g=c.getContext('2d'),w=c.width,h=c.height,sp=MG.speed*(1+MG.n*.05);
+  MG.pos+=MG.dir*sp*dt;if(MG.pos>1){MG.pos=1;MG.dir=-1}if(MG.pos<0){MG.pos=0;MG.dir=1}MG.flash-=dt;
+  g.fillStyle='#1d2024';g.fillRect(0,0,w,h);g.fillStyle='#3a3f45';g.fillRect(10,24,w-20,16);
+  const zw=MG.zone*(w-20),zx=10+MG.zc*(w-20)-zw/2;g.fillStyle=MG.flash>0?(MG.lastHit?'#9be07a':'#e06a5a'):'#5aa84a';g.fillRect(zx,22,zw,20);g.fillStyle='#bfe3a5';g.fillRect(zx+zw/2-1,22,2,20);
+  const mx=10+MG.pos*(w-20);g.fillStyle='#f0a03a';g.fillRect(mx-3,12,6,40);g.fillStyle='#fff';g.fillRect(mx-1,12,2,40);
+  for(let i=0;i<MG.rounds;i++){g.fillStyle=i<MG.n?(i<MG.hitsArr?.length&&MG.hitsArr[i]?'#9be07a':'#e06a5a'):'#555';g.fillRect(12+i*((w-24)/MG.rounds),54,(w-24)/MG.rounds-3,5)}
+  const st=$('mgs');if(st)st.textContent=MG.status?MG.status(MG.hits,MG.n):(MG.hits+' из '+MG.n);
+  requestAnimationFrame(mgLoop)}
+function mgHit(){if(!MG.on)return;const ok=Math.abs(MG.pos-MG.zc)<=MG.zone/2;MG.hitsArr=MG.hitsArr||[];MG.hitsArr.push(ok);MG.n++;MG.flash=.25;MG.lastHit=ok;
+  if(ok){MG.hits++;(MG.okSnd||SND.punch)(false)}else{MG.miss++;SND.whiff()}MG.zc=rnd(.15,.85);
+  if(MG.n>=MG.rounds||MG.miss>=(MG.maxMiss||99)||(MG.need&&MG.hits>=MG.need)){MG.on=false;const txt=MG.onDone(MG.hits,MG.n);curPlace='__mgdone';
+    $('modal').innerHTML=`<div class="card"><div class="stamp">${MG.stamp||'РАБОТА'}</div><h2>${MG.title}</h2><p>${txt}</p><div class="cardFoot"><span></span><button class="btn" data-a="${MG.after||'close'}">Готово</button></div></div>`}}
+const MGSET={
+  wagon:{title:'Разгрузка вагона с цементом',desc:'Подхватывай мешок, когда бегунок в зелёной зоне. Двенадцать мешков, сдельная оплата. Промахи отнимают силы.',rounds:12,speed:.95,zone:.2,maxMiss:6,verb:'Взять мешок',status:(h,n)=>'Мешков в складе: '+h+' · попыток: '+n+' из 12'},
+  snow:{title:'Снег на площади',desc:'Бросай лопату в ритм. Десять взмахов, платят за расчищенное.',rounds:10,speed:.85,zone:.24,verb:'Кидать снег',status:(h,n)=>'Расчищено: '+h+' из 10'},
+  wood:{title:'Дрова для бабы Шуры',desc:'Бей колуном точно по центру полена. Восемь поленьев.',rounds:8,speed:1.05,zone:.18,verb:'Рубить',status:(h,n)=>'Раскололось: '+h+' из '+n},
+  trade:{title:'За прилавком на рынке',desc:'Торгуйся: останавливай бегунок на хорошей цене. Пять покупателей.',rounds:5,speed:1.15,zone:.17,verb:'Сбить цену',stamp:'ТОРГ',status:(h,n)=>'Продано: '+h+' из '+n},
+  car:{title:'Завести «Копейку»',desc:'Крути стартер, когда стрелка в зелёной зоне. Нужно два попадания из четырёх.',rounds:4,need:2,speed:1.2,zone:.16,verb:'Крутить',stamp:'МОРОЗ',status:(h,n)=>'Схватило: '+h+' из 2 · попыток '+n+' из 4'}};
 function passTime(min){G.min+=min;while(G.min>=1440){G.min-=1440;newDay()}P.food=Math.max(0,P.food-4*min/60)}
+$('modal').addEventListener('pointerdown',e=>{if(e.target&&e.target.id==='mgc'){e.preventDefault();mgHit()}});
 $('modal').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const a=b.dataset.a.split(':');SND.click();
   const A=a[0];
   if(A==='close'||A==='resume'){closeModal();return}
@@ -1369,13 +1497,27 @@ $('modal').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(
   if(A==='bag'){curPlace=null;$('modal').innerHTML=bagHTML();return}
   if(A==='menu'){toMenu();return}
   if(A==='buy'){const id=a[1],p=+a[2];if(P.money<p)return;P.money-=p;SND.coin();
-    if(P.inv[id]!==undefined)P.inv[id]++;else if(id==='ammo')P.ammo+=8;else{P.has[id]=true;
+    if(P.inv[id]!==undefined)P.inv[id]++;else if(id==='ammo')P.ammo+=8;else if(id==='fuel')P.fuel++;else if(id==='car'){P.car=true;P.fuel+=1;moveCar(17.8,23.2);msg('Копейка твоя. Стоит у подъезда, в баке одна канистра.','good')}else{P.has[id]=true;
       if(id==='kastet')P.w=1;if(id==='arm')P.w=2;if(id==='pm')P.w=3;
       if(id==='coat')msg('Пуховик сел как родной.','good');if(id==='hat')msg('Ушанка. Уши спасены.','good');if(id==='valenki')msg('Валенки. Ноги в тепле.','good')}
     rerender();return}
   if(A==='sell'){const p=+a[1],sum=p*P.bottles;P.money+=sum;msg('Сдал '+P.bottles+' бут. за '+fmt(sum)+' руб.','good');P.bottles=0;SND.coin();rerender();return}
-  if(A==='job'){const p=+a[1],mins=+a[2],fd=+a[3];if(a[4])G[a[4]]=G.day;P.money+=p;P.food=Math.max(0,P.food-fd);P.warm=Math.max(0,P.warm-(P.has.coat?10:22)*mins/240);passTime(mins);
-    msg('Отработал. Получил '+fmt(p)+' руб.','good');rerender();return}
+  if(A==='job'){const p=+a[1],mins=+a[2],fd=+a[3],flag=a[4],kind=flag==='wagonDay'?'wagon':'snow',back=curPlace;
+    startMG(Object.assign({},MGSET[kind],{after:'back:'+back,onDone:(h,n)=>{if(flag)G[flag]=G.day;const R0=MGSET[kind].rounds;let pay=Math.round(p*h/R0/10)*10;if(h===R0)pay+=Math.round(p*.15/10)*10;
+      P.money+=pay;P.food=Math.max(0,P.food-fd);P.warm=Math.max(0,P.warm-(P.has.coat?10:22)*mins/240);P.st=Math.max(10,P.st-(n-h)*6);passTime(mins);if(h>=R0*.7)rep('town',2);
+      return h===R0?'Всё чисто, без единого промаха. Бригадир отсчитал '+fmt(pay)+' руб. и накинул премию.':h>0?'Сделано '+h+' из '+R0+'. Получил '+fmt(pay)+' руб.':'Ничего не вышло. Бригадир махнул рукой: «Иди домой, не позорься».'}}));return}
+  if(A==='back'){curPlace=a[1]&&a[1]!=='null'?a[1]:null;if(curPlace&&curPlace[0]!=='_')$('modal').innerHTML=placeHTML(curPlace);else closeModal();return}
+  if(A==='mg'){mgHit();return}
+  if(A==='mgquit'){MG.on=false;closeModal();return}
+  if(A==='wood'){startMG(Object.assign({},MGSET.wood,{onDone:(h,n)=>{G.woodDay=G.day;const pay=Math.round(price(1500)*h/8/10)*10;P.money+=pay;passTime(60);P.food=Math.max(0,P.food-6);if(h>=6)rep('town',3);
+      return h>0?'Баба Шура охнула: «Ой, спасибо, сынок!» и сунула '+fmt(pay)+' руб.'+(h>=6?' И пирожок с капустой.':''):'Колун застрял в полене. Баба Шура вздохнула.'}}));if(true){}return}
+  if(A==='trade'){startMG(Object.assign({},MGSET.trade,{after:'back:market',onDone:(h,n)=>{G.tradeDay=G.day;const pay=h*price(1400);P.money+=pay;passTime(180);P.warm=Math.max(0,P.warm-12);if(h>=4)rep('town',2);
+      return'Продал '+h+' курток из 5. В кассе '+fmt(pay)+' руб.'}}));return}
+  if(A==='bus'){const st=STOPS[+a[1]],p=shopPrice(300);if(P.money<p)return;P.money-=p;closeModal();passTime(20+(Math.random()*20|0));P.warm=Math.min(100,P.warm+5);goTo(CITY,st.x,st.y+.7,st.a||0,true);SND.door();msg('Двадцать минут в промёрзшем ПАЗике. Приехали: '+st.n+'.','say');return}
+  if(A==='trip'){const st=+a[1]===-1?{n:'дом',x:17.8,y:23.2}:STOPS[+a[1]];P.fuel--;closeModal();passTime(10);moveCar(st.x,st.y);goTo(CITY,st.x,st.y+.9,0,true);msg('Доехал до места: '+st.n+'. Бензина осталось: '+P.fuel+' кан.','say');return}
+  if(A==='arrest'){arrestAct(a[1]);return}
+  if(A==='carok'){if(G.carOk){curPlace='__car';$('modal').innerHTML=carHTML()}else closeModal();return}
+  if(A==='quality'){QUAL=QUAL==='med'?'low':QUAL==='low'?'high':'med';try{localStorage.setItem('gansta_q',QUAL)}catch(e){}resize();$('modal').innerHTML=pauseHTML();return}
   if(A==='zp'){G.zpDay=G.day;passTime(60);const r=Math.random();
     if(r<.3){const v=Math.round(8000*wage()/10)*10;P.money+=v;msg('Выдали часть долга по зарплате: '+fmt(v)+' руб.!','good')}
     else if(r<.6){P.inv.tush+=2;msg('Денег нет, выдали продуктами: две банки тушёнки.','good')}
@@ -1384,10 +1526,10 @@ $('modal').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(
   if(A==='biz'){const p=+a[1];if(P.money<p)return;P.money-=p;G.biz=true;G.till=0;msg('Теперь у тебя точка на рынке. Выручку забирай здесь каждый день.','good');rerender();return}
   if(A==='till'){P.money+=G.till;SND.coin();msg('Забрал выручку: '+fmt(G.till)+' руб.','good');G.till=0;rerender();return}
   if(A==='pel'){const p=+a[1];if(P.money<p)return;P.money-=p;P.food=Math.min(100,P.food+60);P.warm=Math.min(100,P.warm+20);SND.eat();rerender();return}
-  if(A==='kr'){const p=+a[1];if(P.money<p)return;P.money-=p;G.krysha=Math.max(G.krysha,G.day-1)+7;for(const en of CITY.enemies)if(en.type==='ban'){en.angry=0;if(!en.dead)en.st='idle'}
+  if(A==='kr'){const p=+a[1];if(P.money<p)return;P.money-=p;rep('sip',10);G.krysha=Math.max(G.krysha,G.day-1)+7;for(const en of CITY.enemies)if(en.type==='ban'){en.angry=0;if(!en.dead)en.st='idle'}
     msg('Сиплый кивнул: «Теперь ты под нами». Крыша до дня '+G.krysha+'.','good');rerender();return}
   if(A==='q1'){G.quest=1;spawn('dolg');msg('«Шнырь в ушанке должен нам. Прячется в Шанхае. Тряхни его».','say');rerender();return}
-  if(A==='q2'){const cut=Math.round(P.debtBag*.35);P.money+=cut;P.debtBag=0;G.quest=0;SND.coin();msg('Сиплый пересчитал и отслюнявил тебе '+fmt(cut)+' руб.','good');rerender();return}
+  if(A==='q2'){rep('sip',15);const cut=Math.round(P.debtBag*.35);P.money+=cut;P.debtBag=0;G.quest=0;SND.coin();msg('Сиплый пересчитал и отслюнявил тебе '+fmt(cut)+' руб.','good');rerender();return}
   if(A==='fput'){const id=a[1];if(P.inv[id]>0){P.inv[id]--;P.fridge[id]++}rerender();return}
   if(A==='fget'){const id=a[1];if(P.fridge[id]>0){P.fridge[id]--;P.inv[id]++}rerender();return}
   if(A==='feat'){const id=a[1];if(P.fridge[id]>0){P.fridge[id]--;P.food=Math.min(100,P.food+({bread:30,tush:55,pickle:15}[id]));SND.eat()}rerender();return}
@@ -1402,12 +1544,15 @@ $('modal').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(
   if(A==='use'){useItem(a[1]);$('modal').innerHTML=bagHTML();return}
   if(A==='w'){pickW(+a[1]);$('modal').innerHTML=bagHTML();return}
 });
-function sleepOld(){if(G.min>=7*60)newDay();G.min=7*60;P.warm=100;P.hp=Math.min(100,P.hp+25);P.st=100;P.food=Math.max(0,P.food-15);
+function sleepOld(){if(P.ill==='cold'&&Math.random()<.4){P.ill='';P.illT=0;msg('Отлежался — простуда прошла.','good')}
+  if(G.min>=7*60)newDay();G.min=7*60;P.warm=100;P.hp=Math.min(100,P.hp+25);P.st=100;P.food=Math.max(0,P.food-15);
   P.x=10.5;P.y=7.6;P.a=-Math.PI/2;CITY.enemies=CITY.enemies.filter(e=>!e.dead);
   const ok=saveTo('auto');closeModal();G.fade=1;msg('Утро. День '+G.day+'. '+(ok?'Автосохранение.':'Сохранить не вышло: браузер не даёт хранилище.'),ok?'good':'bad')}
 const sleep=sleepOld;
-const USE={bread:['Хлеб','+30 сытости','Съесть'],tush:['Тушёнка','+55 сытости','Съесть'],pickle:['Соленья','+15 сытости','Съесть'],thermos:['Чай в термосе','+40 тепла','Выпить'],band:['Бинт и зелёнка','+35 здоровья','Перевязать'],medkit:['Аптечка','+70 здоровья','Лечиться']};
+const USE={aspirin:['Аспирин','от простуды','Принять'],antibio:['Антибиотики','от воспаления лёгких','Принять'],bread:['Хлеб','+30 сытости','Съесть'],tush:['Тушёнка','+55 сытости','Съесть'],pickle:['Соленья','+15 сытости','Съесть'],thermos:['Чай в термосе','+40 тепла','Выпить'],band:['Бинт и зелёнка','+35 здоровья','Перевязать'],medkit:['Аптечка','+70 здоровья','Лечиться']};
 function useItem(id){if(!P.inv[id])return;P.inv[id]--;
+  if(id==='aspirin'){if(P.ill==='cold'){P.ill='';P.illT=0;msg('Аспирин подействовал: простуда отступила.','good')}else if(P.ill==='pneu')msg('Аспирин не поможет. Нужны антибиотики.','bad');else msg('Голова прошла, но ты и не болел.');return}
+  if(id==='antibio'){if(P.ill){P.ill='';P.illT=0;msg('Курс антибиотиков. Дышать стало легче.','good')}else msg('Зря переводишь лекарство.');return}
   const fx={bread:['food',30],tush:['food',55],pickle:['food',15],thermos:['warm',40],band:['hp',35],medkit:['hp',70]}[id];P[fx[0]]=Math.min(100,P[fx[0]]+fx[1]);SND.eat()}
 function bagHTML(){const cl=[P.has.hat&&'ушанка',P.has.coat&&'пуховик',P.has.valenki&&'валенки'].filter(Boolean).join(', ')||'старая куртка';
   return`<div class="card"><div class="stamp">СУМКА</div><h2>Хозяйственная сумка</h2><p class="sub">Бутылок: ${P.bottles} · патронов: ${P.ammo} · картошки: ${P.inv.potato} · одежда: ${cl}${P.debtBag?' · долг Сиплому: '+fmt(P.debtBag)+' р.':''}</p><div class="rows">`+
@@ -1415,8 +1560,9 @@ function bagHTML(){const cl=[P.has.hat&&'ушанка',P.has.coat&&'пухови
   WP.map((w,i)=>owned(i)?row(w.n,w.gun?'патронов: '+P.ammo:'клавиша '+(i+1),P.w===i?'в руках':'','w:'+i,P.w===i,'Взять'):'').join('')+`</div>${cardFoot()}</div>`}
 function openBag(){if(!G||(G.state!=='play'&&G.state!=='modal'))return;curPlace=null;openModal(bagHTML())}
 function pauseHTML(){return`<div class="card"><div class="stamp">ПАУЗА</div><h2>Перекур</h2><p class="sub">День ${G.day} · ${placeName()} · побед в драках: ${P.kills}</p>
-  <h3>Цель</h3><p>${goalText()||'Собери на билет до Москвы'}</p><p class="sub">Билет до Москвы сейчас: ${fmt(ticketPrice())} р. · у тебя ${fmt(P.money)} р.</p>
-  <div class="cardFoot"><button class="btn" data-a="menu">В меню</button><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-a="music">Музыка: ${MUS.on?'вкл':'выкл'}</button><button class="btn" data-a="savemenu">Сохранить</button><button class="btn" data-a="loadmenu">Загрузить</button><button class="btn" data-a="resume">Продолжить</button></span></div></div>`}
+  <h3>Цель</h3><p>${goalText()||'Собери на билет до Москвы'}</p>
+  <h3>Репутация</h3><div class="rows">${[['sh','Шанхай','уважают — не трогают'],['sip','Братва Сиплого','крыша дешевле или дороже'],['town','Город','скидки в магазинах']].map(([k,n,d])=>{const v=P.rep[k]||0;return`<div class="row"><div class="nm"><b>${n}</b><small>${d}</small></div><div class="pr" style="color:${v>=0?'var(--ok)':'var(--stamp)'}">${v>0?'+':''}${v}</div><span></span></div>`}).join('')}</div>${P.ill?`<p class="sub" style="color:var(--stamp)">Здоровье: ${P.ill==='pneu'?'воспаление лёгких — нужны антибиотики':'простуда — аспирин или отлежаться дома'}</p>`:''}<p class="sub">Билет до Москвы сейчас: ${fmt(ticketPrice())} р. · у тебя ${fmt(P.money)} р.</p>
+  <div class="cardFoot"><button class="btn" data-a="menu">В меню</button><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-a="music">Музыка: ${MUS.on?'вкл':'выкл'}</button><button class="btn" data-a="quality">Графика: ${QN[QUAL]}</button><button class="btn" data-a="savemenu">Сохранить</button><button class="btn" data-a="loadmenu">Загрузить</button><button class="btn" data-a="resume">Продолжить</button></span></div></div>`}
 function openPause(){if(!playing())return;curPlace=null;openModal(pauseHTML())}
 function toMenu(){$('modal').hidden=true;document.body.classList.remove('playing');$('menu').hidden=false;$('build').hidden=false;menuScene();refreshMenu()}
 
@@ -1446,7 +1592,7 @@ function openMap(){if(!G||(G.state!=='play'&&G.state!=='modal'))return;curPlace=
   drawCityMap($('bigmap'),12)}
 
 function gameOver(){G.state='over';exitLock();document.body.classList.remove('playing');P.charging=false;
-  const why={'холод':'Замёрз в сугробе. Нашли только весной.','голод':'Сил не осталось даже дойти до ларька.','гопники':'В Шанхае забили гопники. Отобрали даже шапку.','бандиты':'Бандиты не любят свидетелей.','собаки':'Стая бродячих собак не оставила шансов.','должник':'Должник оказался злее, чем казался.'}[P.cause]||'Северобайкальск не прощает.';
+  const why={'холод':'Замёрз в сугробе. Нашли только весной.','голод':'Сил не осталось даже дойти до ларька.','гопники':'В Шанхае забили гопники. Отобрали даже шапку.','бандиты':'Бандиты не любят свидетелей.','собаки':'Стая бродячих собак не оставила шансов.','должник':'Должник оказался злее, чем казался.','болезнь':'Воспаление лёгких без лекарств. В Северобайкальске зимой это приговор.'}[P.cause]||'Северобайкальск не прощает.';
   $('over').innerHTML=`<div class="card"><div class="stamp">КОНЕЦ</div><h2>Не выжил</h2><p class="sub">День ${G.day} · побед в драках: ${P.kills}</p><p>${why}</p>
     <div class="cardFoot"><button class="btn" id="oMenu">В меню</button>${latestSlot()?'<button class="btn" id="oLoad">Загрузить</button>':''}<button class="btn" id="oNew">Заново</button></div></div>`;
   $('over').hidden=false}
@@ -1516,10 +1662,10 @@ function render(){
     for(let y=0;y<yH;y++){const p=H2-y-.5,rd=ch*F/p;const stx=rd*(rdx1-rdx0)/W,sty=rd*(rdy1-rdy0)/W;let fx=P.x+rd*rdx0,fy=P.y+rd*rdy0;const f=fogAt(rd);const o=y*W;
       for(let x=0;x<W;x++){const c=tx[(((fy*64)|0)&63)*64+(((fx*64)|0)&63)];if(CB){const ix=(fx*LR)|0,iy=(fy*LR)|0;buf[o+x]=(ix>=0&&iy>=0&&ix<LMW&&iy<LMH)?shadeL(c,L*.85,CB,(iy*LMW+ix)*3,f):shade(c,L*.85,f)}else buf[o+x]=shade(c,L*.85,f);fx+=stx;fy+=sty}}
   }
-  const rdx0=dirX-plX,rdy0=dirY-plY,rdx1=dirX+plX,rdy1=dirY+plY,Lf=L*.95,LW=LV.w,LH=LV.h,FL=LV.fl;
+  const rdx0=dirX-plX,rdy0=dirY-plY,rdx1=dirX+plX,rdy1=dirY+plY,Lf=L*.95,LW=LV.w,LH=LV.h,FL=LV.fl,DG=LV.dg||null,FBASE=LV.fb;
   for(let y=yH;y<H;y++){const p=y+.5-H2,rd=CAMZ*F/p;const stx=rd*(rdx1-rdx0)/W,sty=rd*(rdy1-rdy0)/W;let fx=P.x+rd*rdx0,fy=P.y+rd*rdy0;const f=fogAt(rd);const o=y*W;
     for(let x=0;x<W;x++){const cx=Math.floor(fx),cy=Math.floor(fy);let tex;
-      let fi;if(cx>=0&&cy>=0&&cx<LW&&cy<LH)fi=FL[cy*LW+cx];else fi=out?(isBaikal(cx,cy)?2:0):6;
+      let fi;if(cx>=0&&cy>=0&&cx<LW&&cy<LH){const ci=cy*LW+cx;fi=FL[ci];if(DG&&DG[ci]){const cf=cityF(fx,fy);fi=cf>=0?cf:FBASE[ci]}}else fi=out?(isBaikal(cx,cy)?2:0):6;
       if(fi===8){const sv=fx+fy,d=Math.min(Math.abs(sv-70.85),Math.abs(sv-72.15));let c;
         if(Math.abs(d-.24)<.035)c=0xff8a8580;else if(d<.42&&((fx-fy)*1.6-Math.floor((fx-fy)*1.6))<.34)c=0xff2c3a4a;else c=TX.snow.px[(((fy*64)|0)&63)*64+(((fx*64)|0)&63)]&0xffe0e0e0;
         buf[o+x]=CB&&cx>=0&&cy>=0&&cx<LW&&cy<LH?shadeL(c,Lf,CB,(((fy*LR)|0)*LMW+((fx*LR)|0))*3,f):shade(c,Lf,f)}
@@ -1533,16 +1679,19 @@ function render(){
     let clip=H,full=false,lowSet=false,anyT=false;zbuf[x]=1e9;zl[x]=1e9;yl[x]=H;const stamp=++stampN;
     for(let it=0;it<100;it++){let side;if(sdx<sdy){sdx+=ddx;mx+=sx;side=0}else{sdy+=ddy;my+=sy;side=1}
       if(mx<0||my<0||mx>=LW||my>=LH)break;const t=M[my*LW+mx];if(!t)continue;
-      const D=T[t];if(D.grp){const px2=side===0?mx-sx:mx,py2=side===1?my-sy:my,pt=M[py2*LW+px2];if(pt&&T[pt].grp===D.grp)continue}
-      let perp=side===0?sdx-ddx:sdy-ddy;if(perp<.05)perp=.05;
-      const lineH=F/perp,bottom=H2+CAMZ*lineH,top=bottom-D.h*lineH,vh=D.vh||D.h;
+      const D=T[t];let perp=side===0?sdx-ddx:sdy-ddy;if(perp<.05)perp=.05;const vh=D.vh||D.h;
+      if(D.top&&vh<CAMZ){const k=(CAMZ-vh)*F,yN=H2+k/perp,yF=H2+k/Math.min(sdx,sdy),y0=Math.max(0,Math.ceil(yF)),y1=Math.min(clip,Math.ceil(yN),H),tp=TX[D.top].px,lkT=CB?lightAt(P.x+rdx*(perp+.3),P.y+rdy*(perp+.3)):-1,fT=fogAt(perp);
+        for(let y=y0;y<y1;y++){if(anyT&&mark[y]===stamp)continue;const rd=k/(y+.5-H2),wx2=P.x+rdx*rd,wy2=P.y+rdy*rd,c=tp[(((wy2*64)|0)&63)*64+(((wx2*64)|0)&63)];buf[y*W+x]=lkT>=0?shadeL(c,L*1.05,CB,lkT,fT):shade(c,L*1.05,fT);mark[y]=stamp}anyT=true}
+      if(D.grp){const px2=side===0?mx-sx:mx,py2=side===1?my-sy:my,pt=M[py2*LW+px2];if(pt&&T[pt].grp===D.grp)continue}
+      const lineH=F/perp,bottom=H2+CAMZ*lineH,top=bottom-D.h*lineH;
+      const fdir=side===0?(rdx>0?4:2):(rdy>0?1:3),od=LV.ori?LV.ori[my*LW+mx]:0,useSide=D.side&&od&&fdir!==od;
       if(vh>=thr){if(!full){zbuf[x]=perp;full=true}}else if(!lowSet&&!full){zl[x]=perp;yl[x]=Math.max(0,bottom-vh*lineH);lowSet=true}
       let wx=side===0?P.y+perp*rdy:P.x+perp*rdx;wx-=Math.floor(wx);let tx=(wx*64)|0;if((side===0&&rdx<0)||(side===1&&rdy>0))tx=63-tx;
       const lw=L*(side?.78:1),f=fogAt(perp),fe=f*.45,inv=perp/F,lk=CB?lightAt(P.x+rdx*(perp-.06),P.y+rdy*(perp-.06)):-1;
       const ys=Math.max(0,Math.ceil(top)),ye=Math.min(clip,Math.ceil(bottom),H);
       let lastSeg=-1,tex=null;
       for(let y=ys;y<ye;y++){const z=(bottom-y-.5)*inv;let ty;
-        if(D.stretch){tex=TX[D.segs[0]];const th=tex.h;ty=th-1-((z/D.h*th)|0);if(ty<0)ty=0;else if(ty>=th)ty=th-1}else{const seg=z<0?0:z|0;if(seg!==lastSeg){tex=wallTex(D,seg,mx,my);lastSeg=seg}ty=63-(((z-seg)*64)|0);if(ty<0)ty=0;else if(ty>63)ty=63}
+        if(D.stretch){tex=TX[useSide?D.side:D.segs[0]];const th=tex.h;ty=th-1-((z/D.h*th)|0);if(ty<0)ty=0;else if(ty>=th)ty=th-1}else{const seg=z<0?0:z|0;if(seg!==lastSeg){tex=wallTex(D,seg,mx,my);lastSeg=seg}ty=63-(((z-seg)*64)|0);if(ty<0)ty=0;else if(ty>63)ty=63}
         if(anyT&&mark[y]===stamp)continue;
         const i=ty*64+tx,c=tex.px[i];if((c>>>24)<128)continue;
         buf[y*W+x]=tex.em[i]?shade(c,1,fe):lk>=0?shadeL(c,lw,CB,lk,f):shade(c,lw,f);if(D.trans)mark[y]=stamp}
@@ -1570,6 +1719,7 @@ function render(){
     else if(p.k==='boat'){tex=SP.boat;h=.9}
     else if(p.k==='cat'){tex=p.mode==='sleep'||p.mode==='sofa'?SP.catSleep:p.mode==='sit'?SP.catSit:(performance.now()/180|0)%2?SP.catWalkA:SP.catWalkB;h=.75}
     else if(p.k==='pbag'){tex=SP.pbag;h=1.9}
+    else if(p.k==='stop'){tex=SP.stop;h=1.5}else if(p.k==='car'){tex=SP.car;h=1.05}else if(p.k==='uaz'){tex=SP.uaz;h=1.15}else if(p.k==='wood'){tex=SP.wood;h=.9}
     else if(p.k==='pine'){tex=SP.pine;h=1.8}else if(p.k==='birch'){tex=SP.birch;h=1.6}
     list.push({x:p.x,y:p.y,tex,h,z:p.z||0})}
   for(const s of list){s.rx=s.x-P.x;s.ry=s.y-P.y;s.d=s.rx*s.rx+s.ry*s.ry}
@@ -1592,7 +1742,7 @@ function render(){
   if(G.fade>0){ctx.fillStyle=`rgba(0,0,0,${G.fade})`;ctx.fillRect(0,0,cv.width,cv.height)}
 }
 const flakes=Array.from({length:420},()=>({x:Math.random(),y:Math.random(),z:rnd(.3,1)}));
-function drawSnow(L){const w=cv.width,h=cv.height,t=performance.now()/1000,k=(G.wx||{}).k||'snow',N={clear:18,snow:140,blizzard:420,fog:50}[k],bz=k==='blizzard';ctx.fillStyle=`rgba(240,244,248,${.55+(1-Math.min(1,L))*.2})`;const rot=G.rot||0;let n=0;
+function drawSnow(L){const w=cv.width,h=cv.height,t=performance.now()/1000,k=(G.wx||{}).k||'snow',N=({clear:18,snow:140,blizzard:420,fog:50}[k])*(QUAL==='low'?.5:1),bz=k==='blizzard';ctx.fillStyle=`rgba(240,244,248,${.55+(1-Math.min(1,L))*.2})`;const rot=G.rot||0;let n=0;
   if(bz){ctx.fillStyle='rgba(225,232,240,.1)';ctx.fillRect(0,0,w,h);ctx.fillStyle=`rgba(240,244,248,.75)`}
   for(const f of flakes){if(n++>=N)break;f.y+=(bz?.006:.0026)*f.z;f.x+=(bz?-.014:(.0008+Math.sin(t+f.z*9)*.0006))*f.z-rot*.25*f.z;if(f.y>1){f.y=0;f.x=Math.random()}f.x=(f.x+1)%1;const s=Math.max(1,f.z*2.6*DPR);ctx.fillRect(f.x*w,f.y*h,s,s)}}
 function drawParts(){const dt=1/60;for(let i=G.parts.length-1;i>=0;i--){const p=G.parts[i];p.life-=dt;if(p.life<=0){G.parts.splice(i,1);continue}
@@ -1661,13 +1811,13 @@ function drawHands(L){const w=cv.width,h=cv.height,s=Math.min(h/400,w/440)*1.05;
 let hudT=0;
 function setBar(id,v){const el=$(id);el.querySelector('b').style.width=v+'%';el.querySelector('em').textContent=Math.round(v);el.classList.toggle('low',v<25)}
 function hud(dt){hudT-=dt;
-  const ct=lookCat(),n=ct?null:lookNPC(),a=n||ct?null:lookTarget(),pr=$('prompt');if(ct){pr.hidden=false;pr.textContent=(isTouch()?'':'E · ')+'Погладить Барсика'}else if(n){pr.hidden=false;pr.textContent=(isTouch()?'':'E · ')+'Поговорить: '+npcTitle(n)}else if(a){pr.hidden=false;pr.textContent=(isTouch()?'':'E · ')+PLACE[a]}else pr.hidden=true;
-  $('bUse').classList.toggle('on',!!(a||n||ct));$('mhint').hidden=locked||isTouch()||!!G.hintOff;
+  const pp=lookProp(),ct=pp?null:lookCat(),n=ct||pp?null:lookNPC(),a=n||ct||pp?null:lookTarget(),pr=$('prompt');if(pp){pr.hidden=false;pr.textContent=(isTouch()?'':'E · ')+propTitle(pp)}else if(ct){pr.hidden=false;pr.textContent=(isTouch()?'':'E · ')+'Погладить Барсика'}else if(n){pr.hidden=false;pr.textContent=(isTouch()?'':'E · ')+'Поговорить: '+npcTitle(n)}else if(a){pr.hidden=false;pr.textContent=(isTouch()?'':'E · ')+PLACE[a]}else pr.hidden=true;
+  $('bUse').classList.toggle('on',!!(a||n||ct||pp));$('mhint').hidden=locked||isTouch()||!!G.hintOff;
   if(hudT>0)return;hudT=.15;
   setBar('sHp',P.hp);setBar('sSt',P.st);setBar('sFood',P.food);setBar('sWarm',P.warm);$('cash').textContent=fmt(P.money)+' р.';
   const kr=$('krysha');kr.classList.remove('wanted');if(P.wanted>0){kr.textContent='РОЗЫСК: милиция ищет';kr.className='wanted'}else if(G.sipWar){kr.textContent='Сиплый: война';kr.className='wanted'}else if(hasKrysha()){kr.textContent='Крыша: Сиплый · '+(G.krysha>G.day+300?'навсегда':(G.krysha-G.day+1)+' дн.');kr.className='on'}else{kr.textContent='Крыша: нет';kr.className=''}
-  $('tick').textContent='Билет: '+fmt(ticketPrice())+' р.';$('goal').textContent=goalText();
-  $('clockT').textContent=`День ${G.day} · ${hhmm()}`;const wk=G.wx.k,tmp={clear:isNight()?-38:-26,snow:isNight()?-32:-21,blizzard:isNight()?-30:-24,fog:isNight()?-28:-18}[wk];$('clockS').textContent=LV===FLAT?'дома · кв. 17':LV===CITY?(isNight()?'ночь':'день')+' · '+tmp+'° · '+{clear:'ясно',snow:'снег',blizzard:'метель',fog:'туман'}[wk]:{podezd:'подъезд',tbc:'ТБЦ',dk:'ДК «Железнодорожник»',station:'вокзал'}[LV.id]+' · тепло';
+  $('tick').textContent='Билет: '+fmt(ticketPrice())+' р.';const il=$('ill');il.hidden=!P.ill;il.textContent=P.ill==='pneu'?'Воспаление лёгких!':P.ill==='cold'?'Простуда':'';$('goal').textContent=goalText();
+  $('clockT').textContent=`День ${G.day} · ${hhmm()}`;const wk=G.wx.k,tmp={clear:isNight()?-38:-26,snow:isNight()?-32:-21,blizzard:isNight()?-30:-24,fog:isNight()?-28:-18}[wk];$('clockS').textContent=LV===FLAT?'дома · кв. 17':LV===CITY?(isNight()?'ночь':'день')+' · '+tmp+'° · '+{clear:'ясно',snow:'снег',blizzard:'метель',fog:'туман'}[wk]:{podezd:'подъезд',tbc:'ТБЦ',dk:'ДК «Железнодорожник»',station:'вокзал',kpz:'КПЗ'}[LV.id]+' · тепло';
   const w=WP[P.w];$('wpn').innerHTML=`<b>${w.n}</b>${w.gun?' · патроны '+P.ammo:''}${P.bottles?' · бутылки '+P.bottles:''}${P.blocking?' · БЛОК':''}`;
   const mc=$('mini');if(!mc.classList.contains('off')){if(LV===CITY){mc.style.display='';drawMiniCity(mc)}else mc.style.display='none'}}
 function star(g,x,y,r){g.fillStyle='#ffd04a';g.strokeStyle='#000';g.lineWidth=1;g.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.45:r;g.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)}g.closePath();g.fill();g.stroke()}
@@ -1695,6 +1845,8 @@ function startNew(){newGame();launch();saveTo('auto');msgIntro()}
 function startLoad(k){k=typeof k==='string'?k:latestSlot();const s=k&&readSlot(k);if(!s){startNew();return}newGame();
   const story=G.story;Object.assign(P,s.P);Object.assign(G,s.G,{state:'play',parts:[],hs:0,fade:1,ret:null});G.story=Object.assign(story,s.G.story||{});
   P.act=null;P.charging=false;P.wanted=P.wanted||0;LV=LEVELS()[s.lvl]||FLAT;if(!(P.x>0&&P.x<LV.w&&P.y>0&&P.y<LV.h)||solidAt(LV,P.x,P.y)){LV=FLAT;P.x=10.5;P.y=7.6;P.a=-Math.PI/2}
+  P.inv=Object.assign({bread:0,tush:0,thermos:0,band:0,medkit:0,potato:0,pickle:0,aspirin:0,antibio:0},P.inv);P.rep=Object.assign({sh:0,sip:0,town:0},P.rep||{});P.expo=P.expo||0;P.ill=P.ill||'';P.illT=P.illT||0;P.fuel=P.fuel||0;
+  if(P.car){const c=G.carPos||[19.1,23.2];CITY.props.push({k:'car',x:c[0],y:c[1],r:.45})}
   ensureCivs();launch();msg('День '+G.day+', '+hhmm()+'. Загружено.','good');msg('Цель: '+goalText(),'say')}
 function launch(){$('menu').hidden=true;$('build').hidden=true;$('over').hidden=true;$('modal').hidden=true;document.body.classList.add('playing');last=performance.now();
   const g=G;setTimeout(()=>{if(g)g.hintOff=1},16000)}
