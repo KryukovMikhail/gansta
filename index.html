@@ -229,7 +229,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 
 <script>
 'use strict';
-const BUILD='G001.009';
+const BUILD='G001.010';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -988,6 +988,32 @@ TX.mailTall=face(1,2.4,(g,e,R,w,h,s,Z)=>{for(let k=0;k<3;k++){g.save();g.transla
 
 
 
+
+TX.stepFace=mkTexW(128,128,(g,e,R)=>{g.fillStyle='#6e6a62';g.fillRect(0,0,128,128);noise(g,R,900,['#5e5a52','#7e7a70','#56524a'],.6,0,0,128,128);for(let k=0;k<8;k++){g.fillStyle='rgba(0,0,0,.28)';g.fillRect(0,k*16+13,128,3);g.fillStyle='rgba(255,255,255,.08)';g.fillRect(0,k*16,128,2)}},3121);
+TX.stepTop=SQ((g,e,R)=>{g.fillStyle='#a49e92';g.fillRect(0,0,1,1);speck(g,R,900,['#948e82','#b4aea2','#86807a'],.55,0,0,1,1,.006);
+  g.fillStyle=lgr(g,0,0,0,1,['rgba(0,0,0,.28)','rgba(0,0,0,0)','rgba(0,0,0,0)']);g.fillRect(0,0,1,1);g.fillStyle='rgba(90,80,64,.18)';g.beginPath();g.ellipse(.5,.55,.22,.3,0,0,7);g.fill();
+  g.fillStyle='#c4beb0';g.fillRect(0,.86,1,.07);g.fillStyle='#5a564e';g.fillRect(0,.93,1,.07);for(let i=0;i<6;i++){g.fillStyle='rgba(40,36,30,.45)';g.fillRect(R(),.3+R()*.5,.03,.012)}},3122);
+TX.landTop=SQ((g,e,R)=>{g.fillStyle='#9a9488';g.fillRect(0,0,1,1);speck(g,R,900,['#8a8478','#aaa498','#7a746a'],.55,0,0,1,1,.006);g.strokeStyle='rgba(40,36,30,.35)';g.lineWidth=.004;g.beginPath();g.moveTo(.1,.2);g.lineTo(.5,.26);g.lineTo(.8,.2);g.stroke();
+  for(let i=0;i<3;i++){g.fillStyle='rgba(20,18,14,.6)';g.fillRect(.2+R()*.6,.3+R()*.6,.02,.008)}g.fillStyle='rgba(240,230,200,.5)';g.fillRect(.6,.7,.05,.012)},3124);
+TX.stepSide=mkTexW(128,128,(g,e,R)=>{g.fillStyle='#3e6a4e';g.fillRect(0,0,128,128);noise(g,R,600,['#356046','#4a7a5a','#2e5440'],.5,0,0,128,128);for(let i=0;i<5;i++){g.fillStyle='rgba(200,200,180,.12)';g.fillRect(R()*128,R()*128,10+R()*20,3)}},3123);
+function landWall(g,R,Z,h){for(let k=0;k<4;k++){g.save();g.translate(0,h-1-k);podBase(g,R,k===0||k===2);g.restore()}g.fillStyle='#7a2a20';g.fillRect(0,Z(1.5)-.02,1,.02)}
+TX.landDoor=face(1,3.6,(g,e,R,w,h,s,Z)=>{landWall(g,R,Z,h);const z0=1.5,x0=.06,x1=.94,yt=Z(z0+2.0),yb=Z(z0);
+  g.fillStyle='#d8d2c4';g.fillRect(x0-.03,yt-.04,x1-x0+.06,yb-yt+.04);g.fillStyle=lgr(g,x0,0,x1,0,['#2a2a3e','#3e3e5a','#2a2a40']);g.fillRect(x0,yt,x1-x0,yb-yt);
+  for(let r=0;r<10;r++)for(let c=0;c<5;c++){const cx=x0+.06+c*.17,cy=yt+.08+r*.19;ell(g,cx,cy,.008,.008,'#c8a654')}g.strokeStyle='#c8a654';g.lineWidth=.006;g.strokeRect(x0+.04,yt+.05,x1-x0-.08,yb-yt-.1);
+  g.fillStyle='#e9e3cf';rr(g,.44,Z(z0+1.76),.12,.07,.008);ftxt(g,s,'18',.5,Z(z0+1.725),.055,'#222','700 ');ell(g,.5,Z(z0+1.5),.015,.015,'#c9c9c9');
+  g.fillStyle='#b8b8b8';rr(g,.8,Z(z0+1.06),.035,.17,.01);g.fillStyle='#e8e8e8';g.fillRect(.77,Z(z0+1.0),.08,.022);
+  g.fillStyle='#8a6a4a';g.fillRect(.25,yb-.03,.5,.03);
+  g.fillStyle='#e8e2d0';rr(g,.95,Z(z0+1.4),.04,.06,.006);ell(g,.97,Z(z0+1.37),.008,.008,'#c83a2a')},3141,128);
+TX.landWin=face(1,3.6,(g,e,R,w,h,s,Z)=>{landWall(g,R,Z,h);const x0=.14,x1=.86,yt=Z(3.35),yb=Z(2.25);g.fillStyle='#d8d4c8';g.fillRect(x0-.04,yt-.04,x1-x0+.08,yb-yt+.08);outside(g,R,x0,yt,x1-x0,yb-yt,true,e);
+  g.fillStyle='#cfc8b6';g.fillRect((x0+x1)/2-.015,yt,.03,yb-yt);g.fillRect(x0,(yt+yb)/2,x1-x0,.025);g.fillStyle='#bcb6a6';g.fillRect(x0-.06,yb,x1-x0+.12,.04);
+  g.fillStyle='rgba(30,80,40,.6)';g.fillRect(x0+.04,yb-.1,.06,.1);
+  for(let x=.22;x<.78;x+=.05){g.fillStyle='#a8a090';rr(g,x,Z(2.15),.042,.5,.012);g.fillStyle='rgba(0,0,0,.15)';g.fillRect(x+.032,Z(2.13),.008,.46)}
+  graf(g,s,'ВИТЯ+ЮЛЯ',.5,Z(3.48),.06,'rgba(20,20,20,.7)',-.04,'700 ')},3142,128);
+TX.stoolF=face(.36,.46,(g,e,R,w,h,s,Z)=>{const leg=(x,dark)=>{g.fillStyle=dark?lgr(g,x,0,x+.03,0,['#3a2414','#5a3a22']):lgr(g,x,0,x+.035,0,['#5a3820','#9a6a40','#5a3820']);g.fillRect(x,Z(.42),dark?.03:.035,.42)};
+  leg(.06,1);leg(w-.09,1);g.fillStyle='#4a2e18';g.fillRect(.08,Z(.17),w-.16,.02);leg(0,0);leg(w-.035,0);g.fillStyle='#6a4428';g.fillRect(.03,Z(.15),w-.06,.025);
+  g.fillStyle=lgr(g,0,Z(.46),0,Z(.42),['#c08a54','#8a5a34']);rr(g,-.005,Z(.46),w+.01,.042,.008);grain(g,R,0,Z(.46),w,.04,'#7a4a28','#d8a060',6);g.fillStyle='rgba(0,0,0,.35)';g.fillRect(0,Z(.42),w,.006)},3151,128);
+TX.stoolT=SQ((g,e,R)=>{g.fillStyle='#b07a46';g.fillRect(0,0,1,1);grainV(g,R,0,0,1,1,'#8a5a30','#d8a060',40);g.fillStyle='rgba(255,230,190,.18)';g.fillRect(0,0,1,.06);g.fillStyle='rgba(0,0,0,.2)';g.fillRect(0,.94,1,.06);
+  g.fillStyle='#3a2414';rr(g,.32,.44,.36,.12,.06);g.fillStyle='rgba(0,0,0,.4)';rr(g,.33,.45,.34,.05,.04)},3152);
 TX.sinkS=face(.58,1.2,(g,e,R,w,h,s,Z)=>{g.fillStyle=lgr(g,0,0,w,0,['#e6dcc0','#d2c8aa']);g.fillRect(.005,Z(.84),w-.01,.8);g.fillStyle='#b8b0a0';g.fillRect(0,Z(.87),w,.035);g.fillStyle='#5a4a32';g.fillRect(.01,Z(.04),w-.02,.04)},3025,128);
 ['snow','road','ice','rails','path','lino','parquet','tile','snow','beach','tilesPub','concrete'].forEach((n,i)=>{FLOORS[i]=TX[n]});
 const HBUF={t:new Float32Array(32),f:new Float32Array(32),s:new Uint8Array(32),b:new Array(32)};
@@ -1016,9 +1042,18 @@ T[95]={h:2.2,vh:2.2,segs:['stenka1'],stretch:true,act:'stenka',side:'stenkaS',to
   T[80]={h:.9,segs:['sofaSeatF'],stretch:true,act:'sofa',grp:'sofa',boxes:sofa(0,0,SEAT,BACK2)};
   T[81]={h:.9,segs:['sofaSeatF'],stretch:true,act:'sofa',grp:'sofa',boxes:sofa(0,1,SEAT2,BACK)};}
 T[88]={h:2.4,segs:[['podL0','podL1','podL2','podL3','podL4','podL5','podL6','podL7'],['podU0','podU1','podU2'],'podTop'],stop:true};
-T[92]={h:1,segs:['stepFace'],side:'stepSide',top:'stepTop',act:'stairs',
-  boxes:(x,y)=>{const r=[];for(let i=0;i<4;i++){const k=(5-y)*4+i;r.push([x,y+1-(i+1)*.25,x+1,y+1-i*.25,Math.min(2.38,(k+1)*.125)])}return r}};
+const STEP={h:1,segs:['stepFace'],side:'stepSide',top:'stepTop',boxTop:true},LAND={h:1.5,segs:['stepFace'],side:'stepSide',top:'landTop'};
+const railBase=y=>Math.min(1.5,(6-y)*.5);
+const RAIL={h:3,trans:true,proc:(z,wy,u)=>{const b0=railBase(wy);if(z>b0+.95)return 0;if(z>b0+.91)return 0xff4a7aa0;if(z>b0+.86)return 0xff22406a;
+  const f=(wy*4)%1;if((f<.07||(f>.5&&f<.53))&&z>b0-.14)return 0xff2e2a2a;if(z>b0+.06&&z<b0+.09)return 0xff2e2a2a;return 0}};
+T[92]={h:1,segs:['stepFace'],side:'stepSide',top:'stepTop',boxTop:true,act:'stairs',
+  boxes:(x,y)=>{const r=[],x0=x===6?x+.05:x;for(let i=0;i<4;i++){const k=(5-y)*4+i,hh=(k+1)*.125;r.push([x0,y+1-(i+1)*.25,x+1,y+1-i*.25,hh,STEP])}
+    if(x===6)r.push([x,y,x+.05,y+1,railBase(y)+.95,RAIL]);return r}};
+T[98]={h:1.5,segs:['stepFace'],side:'stepSide',top:'landTop',act:'stairs',boxes:(x,y)=>{const r=[[x===6?x+.05:x,y,x+1,y+1,1.5,LAND]];if(x===6)r.push([x,y,x+.05,y+1,2.45,RAIL]);return r}};
+T[97]={h:3.6,segs:['landDoor'],stretch:true,stop:true,act:'stairs'};T[99]={h:3.6,segs:['landWin'],stretch:true,stop:true,act:'window'};
+T[96]={h:.46,vh:.46,segs:['stoolF'],stretch:true,trans:true,top:'stoolT',boxTop:true,boxes:(x,y)=>y===4?[[x+.32,y+.04,x+.68,y+.4]]:[[x+.32,y+.58,x+.68,y+.94]]};
 T[93]={h:2.4,segs:['radWall'],stretch:true,stop:true,act:'window'};
+for(const t of[61,62,67,88,93])T[t].cap='podTop';
 function buildBoxes(L){L.bx=new Array(L.w*L.h).fill(null);let any=false;
   const wallish=(x,y)=>{if(x<0||y<0||x>=L.w||y>=L.h)return true;const t=L.map[y*L.w+x];return!!(t&&T[t].wall)};
   for(let y=0;y<L.h;y++)for(let x=0;x<L.w;x++){const i=y*L.w+x,t=L.map[i];if(!t)continue;const D=T[t];let bl=null;
@@ -1113,7 +1148,7 @@ function buildFlat(){
   for(let i=0;i<3;i++)L.map[9*16+10+i]=81-i;
   frect(L,0,0,16,11,6);frect(L,1,1,7,4,5);frect(L,5,5,3,5,5);frect(L,1,6,3,4,7);
   const O=(x,y,d)=>L.ori[y*16+x]=d;O(1,1,3);O(2,1,3);O(3,1,3);O(13,1,3);O(14,1,4);O(14,2,4);O(10,9,1);O(11,9,1);O(12,9,1);O(1,7,2);O(1,8,2);O(3,6,3);O(4,3,3);O(5,3,3);
-  L.props=[{k:'cat',x:11.5,y:6.5,a:0,t:0,mode:'walk'},{k:'lustra',x:11.5,y:5,z:1.72},{k:'plafon',x:4.5,y:2.2,z:1.95},{k:'plafon',x:2.3,y:7.6,z:1.95},{k:'tap',x:1.12,y:8,z:.6},{k:'stool',x:4.6,y:4.25,r:.16},{k:'stool',x:5.5,y:2.45,r:.16}];buildBoxes(L);
+  L.props=[{k:'cat',x:11.5,y:6.5,a:0,t:0,mode:'walk'},{k:'lustra',x:11.5,y:5,z:1.72},{k:'plafon',x:4.5,y:2.2,z:1.95},{k:'plafon',x:2.3,y:7.6,z:1.95},{k:'tap',x:1.12,y:8,z:.6}];L.map[4*16+4]=96;L.map[2*16+5]=96;buildBoxes(L);
   L.lights=[{x:11.5,y:5,r:6,c:[1,.82,.55],i:.55},{x:4,y:2.5,r:5,c:[1,.95,.8],i:.5},{x:6.5,y:7.5,r:3.5,c:[1,.8,.5],i:.35},{x:2,y:7.5,r:3,c:[.9,.95,1],i:.3}];
   L.amb=()=>isNight()?.42:.66;
   return L;
@@ -1121,11 +1156,10 @@ function buildFlat(){
 function buildInt(id,rows,cmap,flf,o){const w=rows[0].length,h=rows.length,L=mkLevel(id,w,h,Object.assign({outdoor:false,ceil:2.4,camz:1.45},o));
   rows.forEach((r,y)=>{for(let x=0;x<w;x++){const t=cmap[r[x]]||0;L.map[y*w+x]=t;L.fl[y*w+x]=flf(x,y);if([63,64,78].includes(t))L.ori[y*w+x]=3;if(t===75)L.ori[y*w+x]=2}});L.props=o.props||[];L.lights=o.lights||[];return L}
 function buildInteriors(){
-  PODEZD=buildInt('podezd',['#########','#.....SS#','#.....SS#','D.....SS#','#.....SS#','#.....SS#','M.......#','#.......W','##W#E####'],{'#':88,S:92,M:67,D:62,E:61,W:93},()=>11,
-    {lights:[{x:3.2,y:3.6,r:6.5,c:[1,.85,.6],i:.95},{x:4.5,y:7,r:3.5,c:[1,.85,.6],i:.5}],amb:()=>.3,exits:{'4,8':[20.5,25.35,-Math.PI/2]}});
+  PODEZD=buildInt('podezd',['######PQ#','#.....LL#','#.....LL#','D.....SS#','#.....SS#','#.....SS#','M.......#','#.......W','##W#E####'],{'#':88,S:92,L:98,P:97,Q:99,M:67,D:62,E:61,W:93},()=>11,
+    {ceil:3.6,lights:[{x:3.2,y:3.6,r:6.5,c:[1,.85,.6],i:.95},{x:4.5,y:7,r:3.5,c:[1,.85,.6],i:.5},{x:6.8,y:1.4,r:3.5,c:[1,.85,.6],i:.7}],amb:()=>.3,exits:{'4,8':[20.5,25.35,-Math.PI/2]}});
   {const L=PODEZD;for(let y=1;y<=5;y++)for(const x of[6,7])L.ori[y*L.w+x]=3;for(let i=0;i<L.w*L.h;i++)L.pv[i]=((i*2654435761)>>>0)%97;L.ceilTex=TX.ceilPod;
-    for(let k=0;k<10;k++){const y=5.75-k*.5,yy=Math.floor(y),ii=Math.floor((yy+1-y)/.25),kk=(5-yy)*4+ii;L.props.push({k:'rail',x:6.08,y,z:Math.min(2.38,(kk+1)*.125)})}
-    L.props.push({k:'bulb',x:3.2,y:3.6,z:1.9})}
+    L.props.push({k:'bulb',x:3.2,y:3.6,z:2.8},{k:'bulb',x:6.9,y:1.2,z:2.9})}
   TBC=buildInt('tbc',['WHHHHHWWWWWWWW','W.....W.....tW','WCCCC.W.BBB..W','W.....W......W','W...........tW','W.....W..t...W','W.....W......W','WVEVWWWWVFVWWW'],
     {W:60,H:76,C:63,B:64,t:70,V:74,E:61,F:61},x=>x<=6?5:10,
     {lights:[{x:3,y:3.5,r:5,c:[.85,.95,1],i:.75},{x:3,y:6,r:5,c:[.85,.95,1],i:.6},{x:9.5,y:3,r:4.5,c:[1,.7,.4],i:.8},{x:11.5,y:5.5,r:4.5,c:[1,.7,.4],i:.7}],amb:()=>.45,
@@ -2415,14 +2449,18 @@ function render(){
     const ys=Math.max(0,Math.ceil(top)),ye=Math.min(clip,Math.ceil(bottom),H),edge=fw<.3&&D.edge;
     let lastSeg=-1,tex=null,tw=64,tc=0;const str=D.stretch&&!edge;
     if(str){let nm=useSide?D.side:D.segs[0];if(!useSide&&OPEN&&OPEN[ci]&&D.openTex)nm=D.openTex;tex=TX[nm];tw=tex.w||64;tc=(wf*tw)|0}
+    if(D.proc){const pw=side===0?wxw:(b?(b[1]+b[3])/2:wxw);for(let y=ys;y<ye;y++){if(anyT&&mark[y]===stamp)continue;const c=D.proc((bottom-y-.5)*inv,pw,wf);if(!c)continue;buf[y*W+x]=lk>=0?shadeL(c,lw,CB,lk,f):shade(c,lw,f);mark[y]=stamp}anyT=true;return}
     for(let y=ys;y<ye;y++){const z=(bottom-y-.5)*inv;let ty;
       if(str){const th=tex.h;ty=th-1-((z/dh*th)|0);if(ty<0)ty=0;else if(ty>=th)ty=th-1}
-      else{const sg=z<0?0:z|0;if(sg!==lastSeg){tex=edge?TX[D.edge]:wallTex(D,sg,mx,my);lastSeg=sg;tw=tex.w||64;tc=(wf*tw)|0}const th=tex.h;ty=th-1-(((z-sg)*th)|0);if(ty<0)ty=0;else if(ty>=th)ty=th-1}
+      else{const sg=z<0?0:z|0;if(sg!==lastSeg){tex=edge?TX[D.edge]:useSide?TX[D.side]:wallTex(D,sg,mx,my);lastSeg=sg;tw=tex.w||64;tc=(wf*tw)|0}const th=tex.h;ty=th-1-(((z-sg)*th)|0);if(ty<0)ty=0;else if(ty>=th)ty=th-1}
       if(anyT&&mark[y]===stamp)continue;
       const i=ty*tw+tc,c=tex.px[i];if((c>>>24)<128)continue;
       buf[y*W+x]=tex.em[i]?shade(c,1,fe):lk>=0?shadeL(c,lw,CB,lk,f):shade(c,lw,f);if(D.trans)mark[y]=stamp}
+    let yTop=ys;
+    if(D.cap&&!b&&LV.ceil>dh+.01){const ct=bottom-LV.ceil*lineH,y0=Math.max(0,Math.ceil(ct)),y1=Math.min(clip,ys,H),ctex=TX[D.cap],cw=ctex.w||64,cc=(wf*cw)|0,chh=ctex.h;
+      for(let y=y0;y<y1;y++){if(anyT&&mark[y]===stamp)continue;const z=(bottom-y-.5)*inv;let ty=chh-1-(((z-Math.floor(z))*chh)|0);if(ty<0)ty=0;const c=ctex.px[ty*cw+cc];buf[y*W+x]=lk>=0?shadeL(c,lw,CB,lk,f):shade(c,lw,f)}if(y0<yTop)yTop=y0}
     if(D.trans)anyT=true;
-    if(!D.trans&&ys<clip)clip=ys;
+    if(!D.trans&&yTop<clip)clip=yTop;
     if(D.stop)halt=true};
   for(x=0;x<W;x++){
     const cx=2*x/W-1;rdx=dirX+plX*cx;rdy=dirY+plY*cx;let mx=Math.floor(P.x),my=Math.floor(P.y);
@@ -2612,7 +2650,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Квартира перерисована: телевизор «Рубин» на тумбе, диван-книжка с подлокотниками, «Бирюса» с радио, плита с чайником, ванна на ножках, стол с клеёнкой, стенка с хрусталём','Стены в квартире стали тонкими, мебель — настоящего размера, к ней можно подойти вплотную','Окна с двойными рамами, тюлем, геранью и батареей. Створку можно открыть (E) — но станет холодно','Двери стали шире','В подъезде настоящая лестница с перилами, надписи на стенах, окно с батареей, лампочка','Игру можно установить на телефон как приложение — кнопка в меню','Когда выходит новая сборка, игра сама предложит обновиться'];
+const CHANGES=['Табуретки у кухонного стола теперь объёмные: ножки, перекладина, сиденье с прорезью','Лестница в подъезде ведёт на площадку второго этажа: дверь квартиры 18, окно с батареей, вторая лампочка','Перила сплошные — поручень и балясины без разрывов','Ступени чётче: светлые проступи с кромкой, тёмные подступенки','Потолок в подъезде выше — над лестницей видно пролёт']
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
