@@ -146,6 +146,8 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 .cardFoot .btn{color:var(--paper-ink);border-color:var(--paper-ink);padding:10px 14px;font-size:11px}
 .mapwrap{overflow:auto;max-width:100%}
 #bigmap{display:block;width:100%;height:auto;max-width:100%;image-rendering:pixelated;background:#0f1216}
+#bigmap.big{width:220%;max-width:none}
+.mapwrap{touch-action:pan-x pan-y;-webkit-overflow-scrolling:touch;max-height:70vh}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--f-mono);font-size:11px;margin-top:8px}
 .legend i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px}
 #over .card h2{font-size:24px}
@@ -207,6 +209,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
       <button class="btn" id="mCont" disabled>Продолжить</button>
       <button class="btn" id="mLoad" disabled>Загрузить</button>
       <button class="btn" id="mHelp">Управление</button>
+      <button class="btn" id="mMap">Карта города</button>
       <button class="btn" id="mAch">Достижения</button>
       <button class="btn" id="mInst" hidden>Установить на телефон</button>
     </div>
@@ -229,7 +232,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 
 <script>
 'use strict';
-const BUILD='G001.011';
+const BUILD='G001.012';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -2240,23 +2243,35 @@ const FLCOL=['#dfe5ea','#b9b6ae','#9fbccb','#a8adb2','#cfd5da','#ddd','#ddd','#d
 MAPCOL[55]='#d9c48e';MAPCOL[56]='#24497a';
 const LABELS=[[14.5,7.6,'Городской парк'],[19.5,13.9,'ДК «Железнодорожник»'],[27.5,12.9,'ТБЦ'],[23,23.7,'Администрация'],[36.9,24.4,'Памятник'],[37,31,'Вокзал'],[41.5,18.9,'Рынок'],
   [9.5,38.1,'ШАНХАЙ'],[52,38,'Пляж'],[55,43,'БАЙКАЛ'],[30,36.2,'пр. 60 лет СССР'],[45.5,35.6,'Промзона'],[30,6.1,'5-й мкр'],[5,4.5,'ул. Мира'],[21,25.1,'Дом']];
-function drawCityMap(c,sc){const g=c.getContext('2d'),L=CITY;g.clearRect(0,0,c.width,c.height);
+let MAPGRID=true,MAPMENU=false;
+function drawCityMap(c,sc,opt){opt=opt||{};const g=c.getContext('2d'),L=CITY;g.clearRect(0,0,c.width,c.height);
   for(let y=0;y<L.h;y++)for(let x=0;x<L.w;x++){const t=L.map[y*L.w+x];g.fillStyle=t?MAPCOL[t]||'#666':FLCOL[L.fl[y*L.w+x]]||'#ddd';g.fillRect(x*sc,y*sc,sc+.5,sc+.5)}
   for(const p of L.props)if(p.k==='barrel'){g.fillStyle='#e8562a';g.beginPath();g.arc(p.x*sc,p.y*sc,sc*.3,0,7);g.fill()}
   for(const e of L.enemies)if(!e.dead&&e.type==='dolg'){g.fillStyle='#ffd04a';g.strokeStyle='#000';g.beginPath();g.arc(e.x*sc,e.y*sc,sc*.4,0,7);g.fill();g.stroke()}
   for(const it of L.items)if(it.kind==='debt'){g.fillStyle='#ffd04a';g.fillRect(it.x*sc-4,it.y*sc-4,8,8)}
-  const gp=goalPos();if(gp)star(g,gp[0]*sc,gp[1]*sc,sc*.8);const g2p=goalPos2();if(g2p)star(g,g2p[0]*sc,g2p[1]*sc,sc*.7,'#7ad0ff');
+  if(!opt.menu){const gp=goalPos();if(gp)star(g,gp[0]*sc,gp[1]*sc,sc*.8);const g2p=goalPos2();if(g2p)star(g,g2p[0]*sc,g2p[1]*sc,sc*.7,'#7ad0ff')}
+  if(opt.grid){const C='ABCDEFGHIJKL';g.strokeStyle='rgba(20,24,30,.45)';g.lineWidth=Math.max(1,sc/12);g.setLineDash([sc*.4,sc*.25]);
+    for(let x=5;x<L.w;x+=5){g.beginPath();g.moveTo(x*sc,0);g.lineTo(x*sc,L.h*sc);g.stroke()}for(let y=5;y<L.h;y+=5){g.beginPath();g.moveTo(0,y*sc);g.lineTo(L.w*sc,y*sc);g.stroke()}g.setLineDash([]);
+    g.font='bold '+Math.round(sc*1.15)+'px "PT Mono",monospace';g.textAlign='left';g.textBaseline='top';g.lineJoin='round';
+    for(let cy=0;cy*5<L.h;cy++)for(let cx=0;cx*5<L.w;cx++){const s=C[cx]+(cy+1),x=cx*5*sc+sc*.3,y=cy*5*sc+sc*.25;g.lineWidth=sc*.3;g.strokeStyle='rgba(255,255,255,.85)';g.strokeText(s,x,y);g.fillStyle='#b8322a';g.fillText(s,x,y)}}
   g.font='bold '+Math.round(sc*.95)+'px "PT Sans Narrow",sans-serif';g.textAlign='center';g.textBaseline='middle';
   g.lineJoin='round';for(const[x,y,t]of LABELS){g.lineWidth=4;g.strokeStyle='rgba(255,255,255,.9)';g.strokeText(t,x*sc,y*sc);g.fillStyle='#1a1d22';g.fillText(t,x*sc,y*sc)}
-  const px=LV===CITY?P.x:20.5,py=LV===CITY?P.y:25.4,pa=LV===CITY?P.a:-Math.PI/2;
+  if(opt.menu)return;const px=LV===CITY?P.x:20.5,py=LV===CITY?P.y:25.4,pa=LV===CITY?P.a:-Math.PI/2;
   g.save();g.translate(px*sc,py*sc);g.rotate(pa);g.fillStyle='#d2412f';g.strokeStyle='#000';g.lineWidth=1.5;const k=sc*.9;
   g.beginPath();g.moveTo(k*1.3,0);g.lineTo(-k*.8,-k*.8);g.lineTo(-k*.8,k*.8);g.closePath();g.fill();g.stroke();g.restore()}
-function openMap(){if(!G||(G.state!=='play'&&G.state!=='modal'))return;curPlace='__map';
-  openModal(`<div class="card wide"><div class="stamp">СХЕМА</div><h2>Северобайкальск</h2><p class="sub">Север вверху. Парк и ДК «Железнодорожник» на северо-западе, ТБЦ и администрация в центре, вокзал с памятником у проспекта 60 лет СССР, Шанхай на юго-западе, пляж и Байкал на юго-востоке.</p>
-  <div class="mapwrap"><canvas id="bigmap" width="720" height="552"></canvas></div>
+function mapButtons(){return`<button class="btn" data-a="mapgrid">Сетка: ${MAPGRID?'вкл':'выкл'}</button><button class="btn" data-a="mapzoom">${$('bigmap')&&$('bigmap').classList.contains('big')?'Мельче':'Крупнее'}</button>`}
+function redrawMap(){drawCityMap($('bigmap'),24,{menu:MAPMENU,grid:MAPGRID})}
+function openMenuMap(){curPlace='__map';MAPMENU=true;
+  openModal(`<div class="card wide"><div class="stamp">СХЕМА</div><h2>Карта Северобайкальска</h2><p class="sub">Север вверху. Сетка по 5 клеток: столбцы A–L слева направо, строки 1–10 сверху вниз. Квадрат называется как в морском бое, например «E5».</p>
+  <div class="mapwrap"><canvas id="bigmap" width="1440" height="1104"></canvas></div>
   <div class="legend"><span><i style="background:#5fd16a"></i>твой подъезд</span><span><i style="background:#e6c13b"></i>ларёк</span><span><i style="background:#f0a03a"></i>рынок</span><span><i style="background:#ff5a4a"></i>кафе «Северянка»</span><span><i style="background:#5fb6d1"></i>стеклотара</span><span><i style="background:#2f5aa8"></i>администрация</span><span><i style="background:#24497a"></i>ДК</span><span><i style="background:#e8562a"></i>бочка с огнём</span><span><i style="background:#ffd04a"></i>цель и должник</span><span><i style="background:#7ad0ff"></i>доп. дело</span><span><i style="background:#d9784a"></i>баня</span><span><i style="background:#c9ccd0"></i>гараж</span></div>
-  <div class="cardFoot"><span class="cash">${LV===FLAT?'Ты дома, кв. 17':'Красная стрелка — ты'}</span><button class="btn" data-a="close">Закрыть</button></div></div>`);
-  drawCityMap($('bigmap'),12)}
+  <div class="cardFoot"><span style="display:flex;gap:8px;flex-wrap:wrap" id="mapBtns">${mapButtons()}</span><button class="btn" data-a="close">Закрыть</button></div></div>`);redrawMap()}
+function openMap(){if(!G||(G.state!=='play'&&G.state!=='modal'))return;curPlace='__map';MAPMENU=false;
+  openModal(`<div class="card wide"><div class="stamp">СХЕМА</div><h2>Северобайкальск</h2><p class="sub">Север вверху. Парк и ДК «Железнодорожник» на северо-западе, ТБЦ и администрация в центре, вокзал с памятником у проспекта 60 лет СССР, Шанхай на юго-западе, пляж и Байкал на юго-востоке.</p>
+  <div class="mapwrap"><canvas id="bigmap" width="1440" height="1104"></canvas></div>
+  <div class="legend"><span><i style="background:#5fd16a"></i>твой подъезд</span><span><i style="background:#e6c13b"></i>ларёк</span><span><i style="background:#f0a03a"></i>рынок</span><span><i style="background:#ff5a4a"></i>кафе «Северянка»</span><span><i style="background:#5fb6d1"></i>стеклотара</span><span><i style="background:#2f5aa8"></i>администрация</span><span><i style="background:#24497a"></i>ДК</span><span><i style="background:#e8562a"></i>бочка с огнём</span><span><i style="background:#ffd04a"></i>цель и должник</span><span><i style="background:#7ad0ff"></i>доп. дело</span><span><i style="background:#d9784a"></i>баня</span><span><i style="background:#c9ccd0"></i>гараж</span></div>
+  <div class="cardFoot"><span class="cash">${LV===FLAT?'Ты дома, кв. 17':'Красная стрелка — ты'}</span><span style="display:flex;gap:8px;flex-wrap:wrap" id="mapBtns">${mapButtons()}</span><button class="btn" data-a="close">Закрыть</button></div></div>`);
+  redrawMap()}
 
 
 /* ================= G001.008: новое ================= */
@@ -2480,6 +2495,8 @@ function updExtra(dt){if(!G.stats)G.stats=newStats();
 
 /* --- обработчик новых кнопок в карточках --- */
 function clickExtra(A,a,b){
+  if(A==='mapgrid'){MAPGRID=!MAPGRID;redrawMap();$('mapBtns').innerHTML=mapButtons();return true}
+  if(A==='mapzoom'){$('bigmap').classList.toggle('big');$('mapBtns').innerHTML=mapButtons();return true}
   if(A==='diff'){startNew(a[1]);return true}
   if(A==='achv'){curPlace='__ach';$('modal').innerHTML=achHTML();return true}
   if(A==='tutskip'){G.tut=4;$('modal').innerHTML=pauseHTML();return true}
@@ -2812,7 +2829,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Вокзал как настоящий: белый «нос» с иллюминаторами, пилоны, стеклянный зал с табло, волна кровли и кирпичные крылья','Администрация — пять этажей, башня с круглым окном и флагом, красные полотнища, портик','ТБЦ из тёмного кирпича: витрины с вывесками, буквы «ТОРГОВЫЙ ЦЕНТР» на крыше, каменный парапет','Пятиэтажки в кремовой плитке с бирюзовыми вставками, эркерами, цоколем и подъездом с козырьком','ДК «Железнодорожник»: светлый кирпич, колонны и стеклянный первый этаж'];
+const CHANGES=['В главном меню появилась кнопка «Карта города»','На карте есть сетка с квадратами A1–L10 — удобно говорить, что где находится','Кнопка «Крупнее» увеличивает карту, её можно двигать пальцем; сетка включается и в игре (M)'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
@@ -2835,7 +2852,7 @@ function checkUpdate(){if(!(location.protocol==='https:'||location.hostname==='l
     $('updX').onclick=()=>{el.hidden=true}}}).catch(()=>{})}
 setTimeout(checkUpdate,4000);setInterval(checkUpdate,10*60*1000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkUpdate()});
 function newsHTML(prev){return`<div class="card"><div class="stamp">${BUILD}</div><h2>Что нового</h2><p class="sub">Игра обновилась${prev?' с '+prev:''}.</p><ol>${CHANGES.map(c=>'<li>'+c+'</li>').join('')}</ol><div class="cardFoot"><span></span><button class="btn" data-a="close">Играть</button></div></div>`}
-$('mNew').onclick=()=>{curPlace='__diff';openModal(diffHTML())};$('mAch').onclick=()=>{curPlace='__ach';openModal(achHTML())};$('mCont').onclick=()=>startLoad();$('mLoad').onclick=()=>{curPlace='__load';openModal(loadHTML())};$('mHelp').onclick=()=>{$('helpBox').hidden=!$('helpBox').hidden};
+$('mNew').onclick=()=>{curPlace='__diff';openModal(diffHTML())};$('mMap').onclick=()=>openMenuMap();$('mAch').onclick=()=>{curPlace='__ach';openModal(achHTML())};$('mCont').onclick=()=>startLoad();$('mLoad').onclick=()=>{curPlace='__load';openModal(loadHTML())};$('mHelp').onclick=()=>{$('helpBox').hidden=!$('helpBox').hidden};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing())openPause()});
 refreshMenu();menuScene();showInst();
 try{const prev=localStorage.getItem('gansta_seen');localStorage.setItem('gansta_seen',BUILD);if(prev&&prev!==BUILD){curPlace='__news';openModal(newsHTML(prev))}}catch(e){}
