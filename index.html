@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ru">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#0b0d10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -151,6 +151,9 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--f-mono);font-size:11px;margin-top:8px}
 .legend i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px}
 #over .card h2{font-size:24px}
+#view,#touch,#touch *,.hud{touch-action:none}
+.ov,.ov *{touch-action:pan-x pan-y}
+.ov textarea,.ov input{touch-action:auto}
 @media (max-width:560px){
   #stats{width:126px;padding:6px 7px;gap:3px;font-size:10px}
   .bar{grid-template-columns:42px 1fr 22px;gap:4px}.bar span{font-size:9px}
@@ -232,7 +235,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 
 <script>
 'use strict';
-const BUILD='G001.012';
+const BUILD='G001.013';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1799,6 +1802,14 @@ tbtn('bAtk',()=>atkDown(),()=>atkUp());tbtn('bBlk',()=>blkTouch=true,()=>blkTouc
 tbtn('bBag',()=>openBag());tbtn('bPause',()=>openPause());tbtn('bMap',()=>openMap());
 document.addEventListener('touchmove',e=>{if(playing())e.preventDefault()},{passive:false});
 document.addEventListener('gesturestart',e=>e.preventDefault());
+/* iPhone: двойное касание и щипок не должны масштабировать страницу */
+for(const ev of['gesturechange','gestureend'])document.addEventListener(ev,e=>e.preventDefault());
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+let lastTE=0;document.addEventListener('touchend',e=>{const t=e.target;if(t&&/^(TEXTAREA|INPUT|SELECT)$/.test(t.tagName))return;const n=Date.now();
+  if(n-lastTE<350&&e.cancelable){e.preventDefault();const b=t&&t.closest&&t.closest('button,[data-a]');if(b&&!b.disabled)b.click()}lastTE=n},{passive:false});
+function resetZoom(){const m=document.querySelector('meta[name=viewport]');if(m){const c=m.content;m.content=c.replace(/maximum-scale=[^,]*/,'maximum-scale=1.0');setTimeout(()=>{m.content=c},300)}
+  joy.id=null;joy.x=joy.y=0;joyEl.hidden=true;look.id=null;for(const k in keys)keys[k]=false;resize()}
+if(window.visualViewport)visualViewport.addEventListener('resize',()=>{if(visualViewport.scale>1.02)resetZoom()});
 
 /* ---------- бой ---------- */
 const owned=i=>i===0||(i===1&&P.has.kastet)||(i===2&&P.has.arm)||(i===3&&P.has.pm);
@@ -2829,7 +2840,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['В главном меню появилась кнопка «Карта города»','На карте есть сетка с квадратами A1–L10 — удобно говорить, что где находится','Кнопка «Крупнее» увеличивает карту, её можно двигать пальцем; сетка включается и в игре (M)'];
+const CHANGES=['На iPhone двойное касание и щипок больше не увеличивают экран','Если экран всё же увеличился, игра сама вернёт масштаб и сбросит джойстик'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
