@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.021';
+const BUILD='G001.022';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1135,13 +1135,13 @@ TX.admDoor2=SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='#b8946e';g.fillRect(0,.86,1,
   g.fillStyle='#3a2a1e';g.fillRect(.3,.5,.4,.42);for(const x0 of[.32,.51]){g.fillStyle='#5a4030';g.fillRect(x0,.52,.17,.4);g.fillStyle='#8aa0ac';g.fillRect(x0+.03,.55,.11,.2)}g.fillStyle='#d8b56a';g.fillRect(.48,.7,.012,.06);g.fillRect(.51,.7,.012,.06);
   g.fillStyle='#a8a090';g.fillRect(.22,.92,.56,.04);g.fillStyle='#bcb4a4';g.fillRect(.18,.96,.64,.04);
   g.fillStyle='#24497a';g.fillRect(.18,.465,.64,.03);ftxt(g,128,'ГОРИСПОЛКОМ',.5,.481,.022,'#f2eee4','700 ');ell(g,.5,.43,.02,.008,'#ffd98a')},4105);
-TX.admTowL=SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='#b8946e';g.fillRect(0,.86,1,.14);for(const y of[.1,.55])fwin(g,e,R,.36,y,.28,.26,{frame:'#f0e8dc'});g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.05,1)},4106);
-TX.admTowM=SQ((g,e,R)=>{admBase2(g,R);for(const y of[.1,.58])fwin(g,e,R,.36,y,.28,.26,{frame:'#f0e8dc'});g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.05,1)},4107);
+TX.admTowL=SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='#b8946e';g.fillRect(0,.86,1,.14);for(const y of[.1,.55])fwin(g,e,R,.12,y,.1,.26,{frame:'#f0e8dc',cross:false});g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.05,1)},4106);
+TX.admTowM=SQ((g,e,R)=>{admBase2(g,R);for(const y of[.1,.58])fwin(g,e,R,.12,y,.1,.26,{frame:'#f0e8dc',cross:false});g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.05,1)},4107);
 TX.admTowU=SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.05,1);ell(g,.5,.38,.22,.22,'#c49e7c');ell(g,.5,.38,.19,.19,'#2a2a2a');ell(g,.5,.38,.165,.165,'#f6f2e2');e.fillStyle='#fff';e.beginPath();e.arc(.5,.38,.165,0,7);e.fill();for(let k=0;k<12;k++){const a=k*Math.PI/6,r0=k%3?.14:.125;g.strokeStyle='#1a1a1a';g.lineWidth=k%3?.008:.016;g.beginPath();g.moveTo(.5+Math.cos(a)*r0,.38+Math.sin(a)*r0);g.lineTo(.5+Math.cos(a)*.158,.38+Math.sin(a)*.158);g.stroke()}g.strokeStyle='#111';g.lineCap='round';g.lineWidth=.018;g.beginPath();g.moveTo(.5,.38);g.lineTo(.5+Math.cos(-2.6)*.08,.38+Math.sin(-2.6)*.08);g.stroke();g.lineWidth=.011;g.beginPath();g.moveTo(.5,.38);g.lineTo(.5+Math.cos(-.55)*.13,.38+Math.sin(-.55)*.13);g.stroke();g.lineCap='butt';ell(g,.5,.38,.014,.014,'#111');
-  for(const x of[.2,.72])fwin(g,e,R,x,.7,.08,.22,{frame:'#f0e8dc',cross:false,p:0})},4108);
+  fwin(g,e,R,.12,.7,.1,.22,{frame:'#f0e8dc',cross:false,p:0})},4108);
 TX.admTowTop=SQ((g,e,R)=>{g.clearRect(0,0,1,1);admBase2(g,R);g.clearRect(0,0,1,.55);g.fillStyle='#7a3e2a';g.fillRect(0,.55,1,.08);g.fillStyle='#eef3f6';g.fillRect(0,.53,1,.03);
   g.fillStyle='#8a8e92';g.fillRect(.495,.21,.012,.34);g.fillStyle='#e8e8ea';g.fillRect(.506,.22,.2,.045);g.fillStyle='#2a5ab8';g.fillRect(.506,.265,.2,.045);g.fillStyle='#d83a2a';g.fillRect(.506,.31,.2,.045);
-  for(const y of[.75])fwin(g,e,R,.36,y,.28,.18,{frame:'#f0e8dc'})},4109);
+  fwin(g,e,R,.12,.75,.1,.18,{frame:'#f0e8dc',cross:false})},4109);
 
 /* --- ДК «Железнодорожник»: силикатный кирпич, колонны, стекло --- */
 function silicate(g,R,x,y,w,h){g.fillStyle='#e2d6bf';g.fillRect(x,y,w,h);for(let yy=y;yy<y+h;yy+=.03){const o=(Math.round(yy/.03)%2)*.04;for(let xx=x-o;xx<x+w;xx+=.08){g.fillStyle=`rgba(${200+R()*30|0},${188+R()*28|0},${165+R()*25|0},.55)`;g.fillRect(xx+.003,yy+.003,.074,.024)}}speck(g,R,Math.round(w*h*400),['#cdbf9f','#efe6d2'],.4,x,y,w,h,.006)}
@@ -1254,7 +1254,23 @@ const towSide=(g,e,R,plinth,rows)=>{admBase2(g,R);if(plinth){g.fillStyle='#b8946
 TX.admTowSL=SQ((g,e,R)=>towSide(g,e,R,1,[.1,.55]),4111);TX.admTowSM=SQ((g,e,R)=>towSide(g,e,R,0,[.1,.58]),4112);
 TX.admTowSU=SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.025,1);for(const x of[.2,.72])fwin(g,e,R,x,.7,.06,.22,{frame:'#f0e8dc',cross:false,p:0});for(const x of[.17,.69])fwin(g,e,R,x,.18,.14,.26,{frame:'#f0e8dc'})},4113);
 TX.admTowSTop=SQ((g,e,R)=>{g.clearRect(0,0,1,1);admBase2(g,R);g.clearRect(0,0,1,.55);g.fillStyle='#7a3e2a';g.fillRect(0,.55,1,.08);g.fillStyle='#eef3f6';g.fillRect(0,.53,1,.03);for(const x of[.17,.69])fwin(g,e,R,x,.75,.14,.18,{frame:'#f0e8dc'})},4114);
-T[108]={h:3.8,segs:['admTowL','admTowM','admTowU','admTowTop'],side:'admTowSM',sides:['admTowSL','admTowSM','admTowSU','admTowSTop'],trans:true};
+TX.admTowSide=face(2,3.8,(g,e,R,w,h,s,Z)=>{g.fillStyle=ADMC;g.fillRect(0,Z(3.45),2,3.45);speck(g,R,2600,['#cfac88','#e4c6a6','#c49e7c'],.5,0,Z(3.45),2,3.45,.007);g.fillStyle='rgba(120,80,50,.12)';for(let z=0;z<3.45;z+=.06)g.fillRect(0,Z(z),2,.004);
+  g.fillStyle='#b8946e';g.fillRect(0,Z(.14),2,.14);g.fillStyle='#7a3e2a';g.fillRect(0,Z(3.45),2,.07);g.fillStyle='#eef3f6';g.fillRect(0,Z(3.47),2,.025);g.fillStyle='rgba(0,0,0,.08)';g.fillRect(1.6,Z(3.38),.012,3.24);
+  for(const z of[.35,.9,1.45,2.0,2.55,3.05]){fwin(g,e,R,1.74,Z(z+.34),.11,.34,{frame:'#f0e8dc',cross:false});g.fillStyle='#a88c70';g.fillRect(1.68,Z(z-.02),.23,.035);g.strokeStyle='#5a5a5a';g.lineWidth=.008;g.strokeRect(1.7,Z(z+.12),.19,.12)}
+  const px=.18,pw=1.3,pz=.62,ph=1.75,top=Z(pz+ph);g.fillStyle='#2a2a2e';g.fillRect(px-.03,top-.03,pw+.06,ph+.06);
+  g.fillStyle=lgr(g,0,top,0,top+ph*.45,['#3a6ab8','#8ab8e0']);g.fillRect(px,top,pw,ph*.45);
+  g.fillStyle='#4a5a8a';g.beginPath();g.moveTo(px,top+ph*.42);for(let k=0;k<=10;k++)g.lineTo(px+pw*k/10,top+ph*(.3+.08*Math.sin(k*1.7)+.03*(k%3)));g.lineTo(px+pw,top+ph*.45);g.closePath();g.fill();
+  g.fillStyle='#eef3f6';for(let k=1;k<10;k+=2)g.fillRect(px+pw*k/10-.02,top+ph*(.3+.08*Math.sin(k*1.7)),.04,.02);
+  g.fillStyle='#2f6a9a';g.fillRect(px,top+ph*.45,pw,ph*.08);g.fillStyle='#6a5a4a';g.fillRect(px,top+ph*.53,pw,ph*.47);
+  for(let k=0;k<6;k++){g.fillStyle=['#c83a2a','#d8b04a','#e8e2d6'][k%3];g.fillRect(px+.04+k*.2,top+ph*.56,.12,.08)}
+  g.fillStyle='#e8c84a';g.fillRect(px+.06,top+.06,.16,.2);g.fillStyle='#2a6a3a';g.beginPath();g.moveTo(px+.06,top+.16);g.lineTo(px+.14,top+.08);g.lineTo(px+.22,top+.16);g.lineTo(px+.22,top+.26);g.lineTo(px+.06,top+.26);g.fill();
+  ftxt(g,s,'Это наш город',px+.75,top+.17,.11,'#f8f4e8','italic 700 ');
+  const fig=(cx,base,hh,coat,shirt,hair)=>{g.fillStyle=coat;g.fillRect(cx-hh*.18,base-hh*.62,hh*.36,hh*.62);g.fillStyle=shirt;g.fillRect(cx-hh*.06,base-hh*.6,hh*.12,hh*.3);g.fillStyle='#e8c8a8';g.beginPath();g.arc(cx,base-hh*.72,hh*.1,0,7);g.fill();g.fillStyle=hair;g.fillRect(cx-hh*.1,base-hh*.84,hh*.2,hh*.06)};
+  const bb=top+ph-.12;fig(px+.55,bb,1.05,'#2a2a2e','#f2f0ea','#3a2a1a');fig(px+.95,bb,.95,'#f2f0ea','#c83a2a','#8a5a2a');fig(px+.55,bb-.82,.42,'#c83a6a','#f2f0ea','#d8b070');
+  g.fillStyle='#c83a2a';g.beginPath();for(let k=0;k<5;k++)g.arc(px+.2+k*.06,bb-.25+(k%2)*.05,.05,0,7);g.fill();
+  ftxt(g,s,'нам здесь жить!',px+.86,bb+.03,.1,'#f8f4e8','italic 700 ')},4120,160);
+TX.admTowBack=face(2,3.8,(g,e,R,w,h,s,Z)=>{g.fillStyle=ADMC;g.fillRect(0,Z(3.45),2,3.45);speck(g,R,2600,['#cfac88','#e4c6a6','#c49e7c'],.5,0,Z(3.45),2,3.45,.007);g.fillStyle='rgba(120,80,50,.12)';for(let z=0;z<3.45;z+=.06)g.fillRect(0,Z(z),2,.004);g.fillStyle='#b8946e';g.fillRect(0,Z(.14),2,.14);g.fillStyle='#7a3e2a';g.fillRect(0,Z(3.45),2,.07);g.fillStyle='#eef3f6';g.fillRect(0,Z(3.47),2,.025);g.fillStyle='#8a4a2a';g.fillRect(.9,Z(.9),.22,.9);g.fillStyle='#5a3a2a';g.fillRect(.93,Z(.87),.16,.85)},4121,160);
+T[108]={h:3.8,segs:['admTowL','admTowM','admTowU','admTowTop'],side:'admTowSide',sideBack:'admTowBack',sideTall:true,trans:true};
 /* --- стеклянный вход горисполкома: две клетки, по две двери в каждой --- */
 const admGlass=(sign)=>SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='#b8946e';g.fillRect(0,.86,1,.14);admRow(g,e,R,.08,.26);
   g.fillStyle='#e8e2d6';g.fillRect(0,.4,1,.05);g.fillStyle='rgba(0,0,0,.3)';g.fillRect(0,.45,1,.03);g.fillStyle='#eef3f6';g.fillRect(0,.38,1,.025);
@@ -1282,7 +1298,8 @@ function cityF(fx,fy){const x=fx-OX,s=x+.5*fy,u=fy-.5*x,A=s/1.118,B=u/1.118;
   if(s>=R2[0]&&s<R2[1]&&fy<38.6)return 1;
   if(A>=LAWN[0]&&A<LAWN[2]&&B>=LAWN[1]&&B<LAWN[3])return(A<LAWN[0]+.25||A>=LAWN[2]-.25||B<LAWN[1]+.25||B>=LAWN[3]-.25)?11:-1;
   if(B>=5.2&&B<7&&A>=-3&&A<MIRA[0]/1.118)return 1;                     // улица вдоль ТБЦ
-  if(A>=-3&&A<-1.2&&B>=5.2)return 1;                                    // улица между ДК и горисполкомом
+  if(A>=-3&&A<-1.2&&B>=5.2&&B<18)return 1;                              // проезд у ДК
+  if(B>=16.2&&B<18&&A<-1.2)return 1;                                    // улица между ДК и горисполкомом, на запад
   if(A>=RING[0]&&A<RING[2]&&B>=7&&B<RING[3]&&!(A>=LAWN[0]&&A<LAWN[2]&&B<LAWN[1]))return 1;
   if(A>=-5&&A<13&&B>=4.5&&B<18)return 10;
   if(u>=AVE[0]&&u<AVE[1]&&A>=-5&&s<R2[1])return 1;
@@ -1313,7 +1330,7 @@ function buildCity(){
   const L=mkLevel('city',CW,CH,{outdoor:true,camz:.62});L.obbs=[];KSPEC=[];
   const base=new Uint8Array(CW*CH);const fr=(x,y,w,h,f)=>{for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++)if(i>=0&&j>=0&&i<CW&&j<CH)base[j*CW+i]=f};
   fr(1,37,41,2,1);                             // пр. 60 лет СССР поворачивает к Шанхаю
-  fr(3,17,12,1,4);fr(8,11,1,12,4);             // аллеи парка
+  fr(3,17,3,1,4);fr(8,11,1,4,4);             // аллеи парка
   fr(21,41,21,1,4);fr(28,39,1,6,4);fr(35,39,1,6,4);fr(3,41,17,1,4); // тропинки Шанхая
   L.fb=base;L.dg=new Uint8Array(CW*CH);
   for(let y=0;y<CH;y++)for(let x=0;x<CW;x++){const i=y*CW+x,fc=cityF(x+.5,y+.5);L.fl[i]=fc>=0?fc:base[i]}
@@ -1362,10 +1379,11 @@ function buildCity(){
   for(const[x,y]of[[SX+6.5,41.5],[SX+14.5,40.5],[46.5+SX,34.5],[5,33],[10,20],[6,41]])P.push({k:'barrel',x,y});
   for(let a=-4;a<=35.5;a+=3.6)put(a,AVE[0]/1.118-.35,{k:'lamp'});
   for(let b=-16;b<=22;b+=4.6)put(R2[0]/1.118-.4,b,{k:'lamp'});
-  for(let a=16.4;a<=35.5;a+=3.6)put(a,12.55,{k:'lamp'});for(let a=-2;a<=12.5;a+=3.6)put(a,4.85,{k:'lamp'});for(let b=9;b<=33;b+=4.5)put(-3.35,b,{k:'lamp'});
+  for(let a=16.4;a<=35.5;a+=3.6)put(a,12.55,{k:'lamp'});for(let a=-2;a<=12.5;a+=3.6)put(a,4.85,{k:'lamp'});for(let b=9;b<=15;b+=4.5)put(-3.35,b,{k:'lamp'});for(let a=-4.5;a>=-11;a-=3.6)put(a,15.85,{k:'lamp'});
   for(let b=-24;b<=22;b+=5)put(HWY[0]/1.118-.25,b,{k:'lamp'});
   for(const[a,b]of[[1.1,6.4],[10.9,6.4],[1.1,16.1],[10.9,16.1]])put(a,b,{k:'lamp'});
   {const[x,y]=AW(40.5,AXB);P.push({k:'monument',x,y,r:.4})}
+  {const[x,y]=AW(-1.3,21.1),[sx,sy]=AW(6,11.27);P.push({k:'rotunda',x,y,r:2.65,face:Math.atan2(sy-y,sx-x)})}
   L.lights=P.filter(p=>p.k==='lamp').map(p=>({x:p.x+.15,y:p.y,r:4.6,c:[1,.62,.28],i:1.15})).concat(P.filter(p=>p.k==='barrel').map(p=>({x:p.x,y:p.y,r:3.4,c:[1,.5,.18],i:1.25,fire:1})));
   for(const k of KSPEC)L.lights.push({x:k.x,y:k.y,r:2.6,c:[.9,.95,.8],i:.6});
   for(const[x,y]of[[47.5,36.3],[51.5,30.6],[44.2,40.6]])P.push({k:'boat',x:x+SX,y,r:.35});
@@ -1374,7 +1392,7 @@ function buildCity(){
   // ёлки по углам газона на площади
   for(const a of[5.6,6.9,8.2,9.5]){const[x,y]=AW(a,17.25);P.push({k:'pine',x,y,r:.22})}
   // деревья: городской парк и лес вдоль берега
-  const TR=rng(77),okT=(x,y)=>x>1.3&&y>1.3&&x<CW-1.3&&y<CH-1.3&&!L.map[(y|0)*CW+(x|0)]&&cityF(x,y)<0&&L.fb[(y|0)*CW+(x|0)]===0&&!obbBlocks(L,x,y,.6)&&!P.some(p=>Math.hypot(p.x-x,p.y-y)<1.1);
+  const TR=rng(77),okT=(x,y)=>x>1.3&&y>1.3&&x<CW-1.3&&y<CH-1.3&&!L.map[(y|0)*CW+(x|0)]&&cityF(x,y)<0&&L.fb[(y|0)*CW+(x|0)]===0&&!obbBlocks(L,x,y,.6)&&!P.some(p=>Math.hypot(p.x-x,p.y-y)<(p.k==='rotunda'?p.r+.9:1.1));
   for(let n=0,k=0;n<60&&k<4000;k++){const x=1.5+TR()*14,y=9+TR()*15;if(!okT(x,y))continue;P.push({k:TR()<.6?'pine':'birch',x,y,r:.22});n++}
   for(let n=0,k=0;n<30&&k<3000;k++){const x=13+TR()*30,y=1.5+TR()*7;if(!okT(x,y))continue;P.push({k:TR()<.5?'pine':'birch',x,y,r:.22});n++}
   for(let n=0,k=0;n<110&&k<6000;k++){const y=1.5+TR()*42.5,s=FOREST[0]+.4+TR()*(FOREST[1]-FOREST[0]-.8),x=s-.5*y+OX;if(!okT(x,y))continue;P.push({k:TR()<.65?'pine':'birch',x,y,r:.22});n++}
@@ -2197,8 +2215,8 @@ let lookTile=null;function lookTarget(){const dx=Math.cos(P.a),dy=Math.sin(P.a),
 function lookNPC(){const dx=Math.cos(P.a),dy=Math.sin(P.a);let best=null,bd=LV.outdoor?1.9:2.4;
   for(const e of LV.enemies){if(e.dead||(!ED[e.type].civ&&!e.place)||e.scared>0||(e.type==='mil'&&P.wanted>0))continue;const rx=e.x-P.x,ry=e.y-P.y,d=Math.hypot(rx,ry);if(d>bd)continue;const f=rx*dx+ry*dy;if(f<=0||Math.abs(-rx*dy+ry*dx)>.5)continue;best=e;bd=d}return best}
 const npcTitle=e=>(e.name&&e.name.trim())||ED[e.type].title;
-function lookProp(){if(LV!==CITY)return null;let best=null,bd=1.8;for(const p of CITY.props){if(!['stop','car','wood','lunka','wagonX'].includes(p.k)&&!(p.k==='boat'&&isSummer()))continue;if(p.k==='lunka'&&isSummer())continue;const rx=p.x-P.x,ry=p.y-P.y,d=Math.hypot(rx,ry);if(d>bd)continue;const f=rx*Math.cos(P.a)+ry*Math.sin(P.a);if(f>0&&Math.abs(-rx*Math.sin(P.a)+ry*Math.cos(P.a))<.75){best=p;bd=d}}return best}
-const propTitle=p=>p.k==='boat'?'Лодка — рыбачить с лодки':p.k==='stop'?'Остановка «'+p.stop.n+'»':p.k==='car'?'«Копейка» — завести':p.k==='lunka'?'Лунка — рыбачить':p.k==='wagonX'?'Пропавший вагон':'Дрова бабы Шуры — наколоть';
+function lookProp(){if(LV!==CITY)return null;let best=null,bd=1.8;for(const p of CITY.props){if(!['stop','car','wood','lunka','wagonX','rotunda'].includes(p.k)&&!(p.k==='boat'&&isSummer()))continue;if(p.k==='lunka'&&isSummer())continue;const rx=p.x-P.x,ry=p.y-P.y,d=Math.hypot(rx,ry)-(p.k==='rotunda'?p.r:0);if(d>bd)continue;const f=rx*Math.cos(P.a)+ry*Math.sin(P.a);if(f>0&&Math.abs(-rx*Math.sin(P.a)+ry*Math.cos(P.a))<.75+(p.k==='rotunda'?p.r:0)){best=p;bd=d}}return best}
+const propTitle=p=>p.k==='rotunda'?'Кинотеатр «Байкал»':p.k==='boat'?'Лодка — рыбачить с лодки':p.k==='stop'?'Остановка «'+p.stop.n+'»':p.k==='car'?'«Копейка» — завести':p.k==='lunka'?'Лунка — рыбачить':p.k==='wagonX'?'Пропавший вагон':'Дрова бабы Шуры — наколоть';
 function lookCat(){if(LV!==FLAT)return null;const c=FLAT.props.find(p=>p.k==='cat');const rx=c.x-P.x,ry=c.y-P.y,d=Math.hypot(rx,ry);if(d>1.8)return null;const f=rx*Math.cos(P.a)+ry*Math.sin(P.a);return f>0&&Math.abs(-rx*Math.sin(P.a)+ry*Math.cos(P.a))<.6?c:null}
 function goTo(L,x,y,a,quiet){const from=LV;LV=L;P.x=x;P.y=y;P.a=a;P.pitch=0;G.fade=1;SND.door();
   if(from===DK&&L===CITY&&discoTime()&&(P.danceT||0)>15&&!DK.fought){P.danceT=0;msg('На крыльце ДК тебя уже ждут.','bad');for(const[ex,ey]of[A2W(16.2,9.4),A2W(16.2,13.2)]){const e=mkNPC('gop',ex,ey,'','',CITY);e.named='';e.st='chase';e.angry=1;e.cd=.8;delete e.place}}
@@ -2206,6 +2224,7 @@ function goTo(L,x,y,a,quiet){const from=LV;LV=L;P.x=x;P.y=y;P.a=a;P.pitch=0;G.fa
 function interact(){if(!playing())return;const cat=lookCat();if(cat){SND.meow();if((G.petT||0)<G.day*1440+G.min-60){G.petT=G.day*1440+G.min;P.warm=Math.min(100,P.warm+5)}msg(pick(['Погладил Барсика. Мурчит, как трактор.','Барсик потёрся о ногу и мяукнул.','Кот лениво приоткрыл один глаз.']),'good');if(cat.mode==='walk'){cat.mode='sit';cat.t=4}return}
   const pr=lookProp();if(pr){if(pr.k==='stop'){curPlace='__bus';openModal(busHTML(pr.stop))}
     else if(pr.k==='wood'){if(G.woodDay===G.day){msg('Баба Шура: «Хватит на сегодня, сынок, завтра приходи».');return}curPlace='__wood';openModal(`<div class="card"><div class="stamp">ШАНХАЙ</div><h2>Дрова бабы Шуры</h2><p>«Сынок, наколи дровишек, а? Заплачу, сколько смогу».</p><div class="cardFoot"><span></span><span style="display:flex;gap:8px"><button class="btn" data-a="wood">Наколоть</button><button class="btn" data-a="close">Уйти</button></span></div></div>`)}
+    else if(pr.k==='rotunda'){const h=G.min/60;msg(h>=10&&h<23?pick(['Афиша: «Терминатор 2», «Бриллиантовая рука», вечером — «Эммануэль». Билет '+fmt(price(500))+' р. Касса закрыта на обед.','У кассы табличка: «Сеанс отменён — нет плёнки». Видеосалон в фойе работает.','Из-за двери слышно, как Шварценеггер кого-то стреляет. Видеосалон, 20 человек в зале.']):'Кинотеатр закрыт. На двери: «Сеансы с 10:00».','say');return}
     else if(pr.k==='boat'){if(!P.has.rod){msg('Без удочки тут делать нечего. Удочку продают на рынке.');return}
       startMG(Object.assign({},MGSET.fishBoat,{onDone:(h)=>{P.inv.fish+=h;G.stats.fish+=h;passTime(120);P.food=Math.max(0,P.food-6);if(G.stats.fish>=10)ach('fisher');return h?'Наловил с лодки: '+h+' омулей. Байкал летом щедрее.':'Покачался на волнах впустую. Омуль ушёл на глубину.'}}))}
     else if(pr.k==='lunka'){if(!P.has.rod){msg('Без удочки тут делать нечего. Удочку и ледобур продают на рынке.');return}
@@ -2796,7 +2815,7 @@ function initTraffic(Pr){const w=(a,b)=>A2W(a,b),bY=(a,y)=>(y*SQ5-(a-0))/2,ay=(a
     BUS=[w(-3.8,10.8),...RE,w(36.8,10.8),ay(36.8,37.5),[OX+8,37.5],[OX+8,38.5],ay(37.6,38.5),w(37.6,11.75),...RW,w(-3.8,11.75)],
     AV=[w(-3.8,10.8),...RE,w(35.6,10.8),w(35.6,11.75),...RW,w(-3.8,11.75)],
     MR=[ay(13.6,1.3),ay(13.6,36.4),ay(14.2,36.4),ay(14.2,1.3)],
-    TL=[w(12.4,5.65),w(-1.65,5.65),w(-1.65,35),w(-2.55,35),w(-2.55,6.55),w(12.4,6.55)];
+    TL=[w(12.4,5.65),w(-1.65,5.65),w(-1.65,16.65),w(-10.8,16.65),w(-10.8,17.55),w(-2.55,17.55),w(-2.55,6.55),w(12.4,6.55)];
   const V=[['carB',HW,3.4,0],['carG',HW,3.0,2],['carW',R2L,2.8,0],['car',R2L,2.6,3],['bus',BUS,2.1,0],['carB',AV,2.6,0],['carW',MR,2.8,0],['carG',MR,2.6,2],['carW',TL,2.6,0],['carB',TL,2.4,3]];
   for(const[spr,path,spd,seg]of V){const a=path[seg];Pr.push({k:'mcar',spr,path,loop:1,spd,seg,dirS:1,x:a[0],y:a[1],dir:0,r:.42,wait:0})}}
 function vehNext(v){if(v.loop)return(v.seg+1)%v.path.length;const n=v.seg+v.dirS;if(n<0||n>=v.path.length){v.dirS=-v.dirS;return v.seg+v.dirS}return n}
@@ -2958,8 +2977,8 @@ function glWalls(groups,gw,gh,map,ori,pv,toW,rot){
       if(n){const Dn=T[n];if(D.grp&&Dn.grp===D.grp)continue;if(Dn.trans&&D.trans&&Dn.h>=dh)continue;if(!Dn.trans){if(Dn.h>=dh)continue;z0=Dn.h}}
       const lp=dir===1?[i+1,j]:dir===2?[i+1,j+1]:dir===3?[i,j+1]:[i,j],rp=dir===1?[i,j]:dir===2?[i+1,j]:dir===3?[i+1,j+1]:[i,j+1];
       const l=toW(lp[0],lp[1]),r=toW(rp[0],rp[1]),wn=rot(di,dj),k=1-.22*wn[1]*wn[1],useSide=D.side&&od&&dir!==od;
-      if(D.stretch){const tex=TX[useSide?D.side:D.segs[0]];quad(tex,l,r,z0,dh,0,1,1-z0/dh,0,wn[0],wn[1],k)}
-      else for(let s=Math.floor(z0);s<dh;s++){const zb=Math.max(s,z0),zt=Math.min(s+1,dh);if(zt-zb<.001)continue;const tex=useSide?TX[D.sides?D.sides[Math.min(s,D.sides.length-1)]:D.side]:wt(D,s,c);quad(tex,l,r,zb,zt,0,1,1-(zb-s),1-(zt-s),wn[0],wn[1],k)}}
+      if(D.stretch||(useSide&&D.sideTall)){const opp=od&&((dir+1)%4+1)===od,tex=TX[useSide?(opp&&D.sideBack?D.sideBack:D.side):D.segs[0]];quad(tex,l,r,z0,dh,0,1,1-z0/dh,0,wn[0],wn[1],k)}
+      else for(let s=Math.floor(z0);s<dh;s++){const zb=Math.max(s,z0),zt=Math.min(s+1,dh);if(zt-zb<.001)continue;const tex=useSide?TX[D.side]:wt(D,s,c);quad(tex,l,r,zb,zt,0,1,1-(zb-s),1-(zt-s),wn[0],wn[1],k)}}
     if(D.top&&dh<1.2){const tex=TX[D.top],a=toW(i,j),b=toW(i+1,j),cc=toW(i+1,j+1),d=toW(i,j+1);let g=groups.get(tex);if(!g){g={p:[],u:[],n:[],k:[]};groups.set(tex,g)}
       const pts=[[a,0,0],[d,0,1],[cc,1,1],[b,1,0]];for(const idx of[0,1,2,0,2,3]){const q=pts[idx];g.p.push(q[0][0],dh,q[0][1]);g.u.push(q[1],q[2]);g.n.push(0,1,0);g.k.push(1.05)}}}}
 function glFloorMat(){const U=GL3.U;
@@ -2978,9 +2997,25 @@ function glAtlas(){const S=128,c=document.createElement('canvas');c.width=c.heig
     for(let y=0;y<S;y++)for(let x=0;x<S;x++){const c32=t.px[((y*h/S)|0)*w+((x*w/S)|0)],o=((oy+y)*S*4+ox+x)*4;d[o]=c32&255;d[o+1]=c32>>8&255;d[o+2]=c32>>16&255;d[o+3]=255}}
   if(!GL3.atlasTex){GL3.atlasTex=new THREE.DataTexture(d,S*4,S*4,THREE.RGBAFormat);const a=GL3.atlasTex;a.magFilter=a.minFilter=THREE.NearestFilter;a.generateMipmaps=false}
   else GL3.atlasTex.image.data.set(d);GL3.atlasTex.needsUpdate=true;GL3.atlasKey=FLOORS[0];GL3.atlasKey2=FLOORS[2]}
+
+/* --- круглое здание кинотеатра --- */
+TX.rotWall=face(1,1.4,(g,e,R,w,h,s,Z)=>{g.fillStyle='#d9c8a6';g.fillRect(0,0,1,1.4);speck(g,R,500,['#cdb998','#e4d4b4','#c4ae8c'],.5,0,0,1,1.4,.006);g.fillStyle='#b8a482';g.fillRect(0,Z(.12),1,.12);
+  fwin(g,e,R,.3,Z(1.15),.4,.85,{frame:'#f4f0e6',p:.25});g.fillStyle='#f4f0e6';g.fillRect(.3,Z(.72),.4,.02);g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.02,1.4);g.fillStyle='#c8b490';g.fillRect(0,Z(1.4),1,.06)},4130,96);
+TX.rotRoof=SQ((g,e,R)=>{g.fillStyle='#6a3a2a';g.fillRect(0,0,1,1);for(let y=0;y<1;y+=.08){g.fillStyle='rgba(0,0,0,.18)';g.fillRect(0,y,1,.01)}g.fillStyle='#eef3f6';for(let i=0;i<14;i++)g.fillRect(R(),R()*.7,.15+R()*.2,.05);g.fillRect(0,0,1,.12)},4131);
+TX.rotFront=face(1.3,1.4,(g,e,R,w,h,s,Z)=>{g.clearRect(0,0,1.3,1.4);g.fillStyle='#d9c8a6';g.fillRect(.1,Z(1.4),1.1,1.4);g.fillStyle='#b8a482';g.fillRect(.1,Z(.12),1.1,.12);
+  g.fillStyle='#2a3a4a';g.fillRect(.35,Z(.85),.6,.73);for(const x0 of[.38,.66]){g.fillStyle=lgr(g,0,Z(.82),0,Z(.14),['#8aa6b4','#3a4a56']);g.fillRect(x0,Z(.82),.26,.68);g.fillStyle='#c9ccd0';g.fillRect(x0+(x0<.5?.22:.02),Z(.5),.015,.1)}
+  g.fillStyle='#24497a';g.fillRect(.12,Z(1.3),1.06,.24);ftxt(g,s,'КИНОТЕАТР',.65,Z(1.24),.09,'#f4f0e6','800 ');ftxt(g,s,'«БАЙКАЛ»',.65,Z(1.135),.08,'#ffd04a','800 ');e.fillStyle='#fff';e.fillRect(.14,Z(1.28),1.02,.2);
+  g.fillStyle='#f4f0e6';g.fillRect(.15,Z(.95),.16,.3);ftxt(g,s,'АФИША',.23,Z(.9),.03,'#c83a2a','800 ');g.fillStyle='#c83a2a';g.fillRect(.17,Z(.86),.12,.18)},4132,128);
+function glRotunda(sc,p){const U=GL3.U,mk=(t,rep)=>{const tx=glTex(t);if(rep){tx.wrapS=THREE.RepeatWrapping;tx.needsUpdate=true}return vehMat(t)};
+  const N=16,Rr=p.r-.05,H=1.4;const wall=new THREE.CylinderGeometry(Rr,Rr,H,N,1,true);const uv=wall.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)*N,1-uv.getY(i));
+  const m1=new THREE.Mesh(wall,mk(TX.rotWall,1));m1.position.set(p.x,H/2,p.y);m1.frustumCulled=false;sc.add(m1);
+  const roof=new THREE.CylinderGeometry(.25,Rr+.25,.6,N,1,false);const m2=new THREE.Mesh(roof,mk(TX.rotRoof,0));m2.position.set(p.x,H+.3,p.y);m2.frustumCulled=false;sc.add(m2);
+  const fr=new THREE.PlaneGeometry(1.3,1.4);fr.translate(0,.7,0);const uv2=fr.attributes.uv;for(let i=0;i<uv2.count;i++)uv2.setY(i,1-uv2.getY(i));
+  const m3=new THREE.Mesh(fr,vehMat(TX.rotFront));const a=p.face;m3.position.set(p.x+Math.cos(a)*(Rr+.06),0,p.y+Math.sin(a)*(Rr+.06));m3.rotation.y=Math.PI/2-a;m3.frustumCulled=false;sc.add(m3)}
 function glBuildCity(L){const sc=new THREE.Scene(),groups=new Map();
   glWalls(groups,L.w,L.h,L.map,L.ori,L.pv,(x,y)=>[x,y],(a,b)=>[a,b]);
   for(const o of L.obbs)glWalls(groups,o.na,o.nb,o.map,o.ori,o.pv,(i,j)=>A2W(o.a0+i*o.sa,o.b0+j*o.sb),(a,b)=>[(2*a-b)/SQ5,(a+2*b)/SQ5]);
+  for(const p of L.props)if(p.k==='rotunda')glRotunda(sc,p);
   for(const[tex,g]of groups){const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(g.p,3));geo.setAttribute('uv',new THREE.Float32BufferAttribute(g.u,2));
     geo.setAttribute('normal',new THREE.Float32BufferAttribute(g.n,3));geo.setAttribute('aK',new THREE.Float32BufferAttribute(g.k,1));const m=new THREE.Mesh(geo,glWallMat(tex));m.frustumCulled=false;sc.add(m)}
   // индекс пола: 16 отсчётов на клетку, чтобы диагонали были ровными
@@ -3027,6 +3062,7 @@ function cityMapLayer(sc,mini){const L=CITY,key=(mini?'m':'b')+sc;if(MAPC[key]&&
   g.putImageData(im,0,0);
   for(const o of L.obbs)for(let j=0;j<o.nb;j++)for(let i=0;i<o.na;i++){const t=o.map[j*o.na+i];if(!t)continue;g.fillStyle=MAPCOL[t]||'#666';g.beginPath();
     [[i,j],[i+1,j],[i+1,j+1],[i,j+1]].forEach(([a,b],n)=>{const p=A2W(o.a0+a*o.sa,o.b0+b*o.sb);n?g.lineTo(p[0]*sc,p[1]*sc):g.moveTo(p[0]*sc,p[1]*sc)});g.closePath();g.fill();g.strokeStyle=g.fillStyle;g.lineWidth=.6;g.stroke()}
+  for(const p of L.props)if(p.k==='rotunda'){g.fillStyle='#d9c48e';g.beginPath();g.arc(p.x*sc,p.y*sc,p.r*sc,0,7);g.fill();g.fillStyle='#8a4a32';g.beginPath();g.arc(p.x*sc,p.y*sc,p.r*sc*.35,0,7);g.fill()}
   if(!mini)for(const p of L.props)if(p.k==='pine'||p.k==='birch'){g.fillStyle=p.k==='pine'?'#4f8a58':'#9cbf86';g.beginPath();g.arc(p.x*sc,p.y*sc,sc*.32,0,7);g.fill()}
   MAPC[key]={L,c};return c}
 
@@ -3113,13 +3149,12 @@ function vehBox(){const body={x0:-.9,x1:.9,y0:.14,y1:.78,z0:-.3,z1:.3,paint:{sid
       g.fillStyle='#5a2e1e';g.fillRect(w*.38,h*.1,w*.24,h*.85);g.fillStyle='#2a1a10';g.fillRect(w*.5,h*.1,1,h*.85);ftxt(g,64,'ВСЖД',w*.2,h*.3,h*.1,'#e8e2d6','800 ');ftxt(g,64,'24519863',w*.8,h*.3,h*.07,'#e8e2d6','700 ');g.fillStyle='#eef3f6';g.fillRect(0,0,w,h*.04)},
     front:'#5a3020',back:'#5a3020',top:(g,e,w,h)=>{g.fillStyle='#eef3f6';g.fillRect(0,0,w,h)}}};
   return vehBuild([body,...bogie(.88)])}
-function vehModel(kind){let k=VEHK[kind];if(k)return k;const{geo,tex}=vehSkin(kind),U=GL3.U;
-  const mat=new THREE.ShaderMaterial({uniforms:{map:{value:glTex(tex)},uL:U.uL,uFogC:U.uFogC,uFogD:U.uFogD,uLM:U.uLM,uMap:U.uMap},
+function vehMat(tex){const U=GL3.U;return new THREE.ShaderMaterial({uniforms:{map:{value:glTex(tex)},uL:U.uL,uFogC:U.uFogC,uFogD:U.uFogD,uLM:U.uLM,uMap:U.uMap},
     vertexShader:`varying vec2 vUv;varying float vK;varying vec2 vW;varying float vD;void main(){vUv=uv;vec3 wn=normalize(mat3(modelMatrix)*normal);vK=wn.y>.5?1.05:1.-.22*wn.z*wn.z;
       vec4 wp=modelMatrix*vec4(position,1.);vW=wp.xz+wn.xz*.06;vec4 mv=viewMatrix*wp;vD=-mv.z;gl_Position=projectionMatrix*mv;}`,
     fragmentShader:`precision highp float;uniform sampler2D map;${GLSL_FOG}varying vec2 vUv;varying float vK;varying vec2 vW;varying float vD;
-      void main(){vec4 c=texture2D(map,vUv);if(c.a<.3)discard;float f=fogAt(vD);vec3 col;if(c.a<.8){col=c.rgb;f*=.45;}else col=min(c.rgb*(uL*vK+lmAt(vW)),1.);gl_FragColor=vec4(mix(col,uFogC,f),1.);}`});
-  k=VEHK[kind]={geo,mat};return k}
+      void main(){vec4 c=texture2D(map,vUv);if(c.a<.3)discard;float f=fogAt(vD);vec3 col;if(c.a<.8){col=c.rgb;f*=.45;}else col=min(c.rgb*(uL*vK+lmAt(vW)),1.);gl_FragColor=vec4(mix(col,uFogC,f),1.);}`})}
+function vehModel(kind){let k=VEHK[kind];if(k)return k;const{geo,tex}=vehSkin(kind);k=VEHK[kind]={geo,mat:vehMat(tex)};return k}
 function vehKind(p){return p.k==='mcar'||p.k==='train'?p.spr:p.k==='car'?'car':p.k==='uaz'?'uaz':p.k==='wagonX'?'wagonX':null}
 function glVehicles(){const seen=new Set();GL3.veh=GL3.veh||new Map();
   for(const p of LV.props){const kind=vehKind(p);if(!kind)continue;let m=GL3.veh.get(p);
@@ -3392,7 +3427,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Вдоль Ленинградского проспекта к вокзалу — тротуары из серого асфальта и газоны с бордюром между ними и дорогой','Новая улица между ДК и горисполкомом: от площади через парк к 19-му кварталу','Новая улица вдоль фасада ТБЦ, по ней ездят машины'];
+const CHANGES=['Улица между ДК и горисполкомом теперь идёт по диагонали на запад, к краю города','Башня горисполкома: узкие окна в один ряд у края, на боковой стене большой плакат «Это наш город — нам здесь жить!»','Рядом с башней — круглое здание кинотеатра «Байкал» с конической крышей'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
