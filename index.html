@@ -3247,7 +3247,7 @@ function startNew(d){newGame();G.diff=DIFF[d]?d:'norm';launch();saveTo('auto');m
 function startLoad(k){k=typeof k==='string'?k:latestSlot();const s=k&&readSlot(k);if(!s){startNew();return}startFromData(s)}
 function startFromData(s){newGame();
   const story=G.story;Object.assign(P,s.P);Object.assign(G,s.G,{state:'play',parts:[],hs:0,fade:1,ret:null});G.story=Object.assign(story,s.G.story||{});
-  P.act=null;P.charging=false;P.wanted=P.wanted||0;if((G.mapv||0)<17){if(s.lvl==='city')s.lvl='flat';G.carPos=null;G.mapv=17}LV=LEVELS()[s.lvl]||FLAT;if(!(P.x>0&&P.x<LV.w&&P.y>0&&P.y<LV.h)||solidAt(LV,P.x,P.y)){LV=FLAT;P.x=10.5;P.y=7.6;P.a=-Math.PI/2}
+  P.act=null;P.charging=false;P.wanted=P.wanted||0;if((s.G.mapv||0)<17){if(s.lvl==='city')s.lvl='flat';G.carPos=null;G.mapv=17}LV=LEVELS()[s.lvl]||FLAT;if(!(P.x>0&&P.x<LV.w&&P.y>0&&P.y<LV.h)||solidAt(LV,P.x,P.y)){LV=FLAT;P.x=10.5;P.y=7.6;P.a=-Math.PI/2}
   P.inv=Object.assign({bread:0,tush:0,thermos:0,band:0,medkit:0,potato:0,pickle:0,aspirin:0,antibio:0,fish:0,samogon:0,deta:0},P.inv);if(s.G.tut===undefined)G.tut=4;G.s2=Object.assign({st:0},s.G.s2||{});G.stats=Object.assign(newStats(),s.G.stats||{});G.lastM=undefined;P.rep=Object.assign({sh:0,sip:0,town:0},P.rep||{});P.expo=P.expo||0;P.ill=P.ill||'';P.illT=P.illT||0;P.fuel=P.fuel||0;
   if(P.car){const c=G.carPos||A2W(27.6,13.4);CITY.props.push({k:'car',x:c[0],y:c[1],r:.45})}
   ensureCivs();ensureS2();launch();msg('День '+G.day+', '+hhmm()+'. Загружено.','good');msg('Цель: '+goalText(),'say')}
