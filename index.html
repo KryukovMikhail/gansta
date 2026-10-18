@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.022';
+const BUILD='G001.023';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1234,7 +1234,7 @@ TX.vokRearTop=SQ((g,e,R)=>{g.clearRect(0,0,1,1);g.fillStyle='#ebe9e3';g.fillRect
 /* --- типы клеток --- */
 T[1]={h:2.6,segs:[['pnLA','pnLB','pnLC'],['pnA','pnB','pnC'],'pnTop']};
 T[6]={h:2.6,segs:['pnDoor',['pnA','pnB','pnC'],'pnTop'],act:'home'};
-T[18]={h:2.7,segs:['admL',['admM','admM','admMF'],'admT']};
+T[18]={h:2.3,segs:['admL',['admM','admM','admMF'],'admCap']};
 T[20]={h:2.7,segs:['admDoor2','admM','admT'],act:'admin'};
 T[107]={h:3.8,segs:['admTowL','admTowM','admTowU','admTowTop'],trans:true};
 T[55]={h:2.3,segs:['dkLow','dkUp','dkTop'],trans:true};
@@ -1282,14 +1282,18 @@ const admGlass=(sign)=>SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='#b8946e';g.fillRe
   if(sign){g.fillStyle='#24497a';g.fillRect(.1,.465,1.8,.03);ftxt(g,128,'ГОРИСПОЛКОМ',1,.481,.024,'#f2eee4','700 ')}else{g.fillStyle='#24497a';g.fillRect(0,.465,.9,.03);ftxt(g,128,'ГОРИСПОЛКОМ',0,.481,.024,'#f2eee4','700 ')}
   ell(g,sign?.95:.05,.43,.02,.008,'#ffd98a')},sign?4115:4116);
 TX.admGlassA=admGlass(1);TX.admGlassB=admGlass(0);
-T[109]={h:2.7,segs:['admGlassA','admM','admT'],act:'admin'};T[110]={h:2.7,segs:['admGlassB','admM','admT'],act:'admin'};
+T[109]={h:2.3,segs:['admGlassC','admM','admCap'],act:'admin'};T[110]={h:2.3,segs:['admGlassB','admM','admCap'],act:'admin'};
+TX.admCap=SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='#c09a74';g.fillRect(0,.86,1,.14);g.fillStyle='#e8d0b4';g.fillRect(0,.86,1,.012);g.fillStyle='#7a3e2a';g.fillRect(0,.72,1,.14);g.fillStyle='#9a5038';g.fillRect(0,.72,1,.025);g.fillStyle='#eef3f6';g.fillRect(0,.7,1,.03)},4140);
+TX.admGlassC=SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='#b8946e';g.fillRect(0,.86,1,.14);admRow(g,e,R,.08,.26);g.fillStyle='#e8e2d6';g.fillRect(.05,.4,.9,.05);g.fillStyle='rgba(0,0,0,.3)';g.fillRect(.07,.45,.86,.03);g.fillStyle='#eef3f6';g.fillRect(.05,.38,.9,.025);
+  g.fillStyle='#8a8e92';g.fillRect(.08,.48,.84,.44);for(const x0 of[.1,.51]){g.fillStyle='#c9ccd0';g.fillRect(x0,.5,.39,.42);g.fillStyle=lgr(g,0,.52,0,.9,['#9ab8c8','#5a7484','#3a4e5a']);g.fillRect(x0+.025,.52,.34,.38);g.fillStyle='rgba(255,255,255,.28)';g.fillRect(x0+.06,.54,.05,.33);g.fillStyle='#e8e8ea';g.fillRect(x0+(x0<.3?.33:.03),.64,.012,.12)}
+  g.fillStyle='#a8a090';g.fillRect(.05,.92,.9,.04);g.fillStyle='#bcb4a4';g.fillRect(0,.96,1,.04);g.fillStyle='#24497a';g.fillRect(.15,.465,.7,.03);ftxt(g,128,'ГОРИСПОЛКОМ',.5,.481,.024,'#f2eee4','700 ');ell(g,.5,.43,.02,.008,'#ffd98a')},4141);;
 
 /* ---------- уровни ---------- */
 function mkLevel(id,w,h,o){return Object.assign({id,w,h,ori:new Uint8Array(w*h),map:new Uint8Array(w*h),fl:new Uint8Array(w*h),pv:new Uint8Array(w*h),enemies:[],items:[],props:[]},o)}
 function rect(L,x,y,w,h,t){for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++)if(i>=0&&j>=0&&i<L.w&&j<L.h)L.map[j*L.w+i]=t}
 function frect(L,x,y,w,h,f){for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++)if(i>=0&&j>=0&&i<L.w&&j<L.h)L.fl[j*L.w+i]=f}
 const CW=80,CH=46,OX=20;
-const SQ5=Math.sqrt(5),FA=Math.atan2(1,2),A2W=(a,b)=>[(2*a-b)/SQ5+OX,(a+2*b)/SQ5],W2A=(x,y)=>{x-=OX;return[(2*x+y)/SQ5,(-x+2*y)/SQ5]},LAWN=[3.5,8.77,8.5,13.77],RING=[1.7,6.97,10.3,15.57],AVE_B=12.6/1.118;
+const SQ5=Math.sqrt(5),FA=Math.atan2(1,2),A2W=(a,b)=>[(2*a-b)/SQ5+OX,(a+2*b)/SQ5],W2A=(x,y)=>{x-=OX;return[(2*x+y)/SQ5,(-x+2*y)/SQ5]},LAWN=[3.5,8.77,8.5,13.77],RING=[0.9,6.97,11.1,16.37],AVE_B=12.6/1.118;
 const RAILB=[52.4,55.6],RT1=53.2,RT2=54.8,HWY=[56,58.6],FOREST=[58.6,63.5],R2=[40.6,42.6],AVE=[11.6,13.6],MIRA=[14.76,16.32];
 const sOf=(x,y)=>x-OX+.5*y,uOf=(x,y)=>y-.5*(x-OX);
 function cityF(fx,fy){const x=fx-OX,s=x+.5*fy,u=fy-.5*x,A=s/1.118,B=u/1.118;
@@ -1297,10 +1301,11 @@ function cityF(fx,fy){const x=fx-OX,s=x+.5*fy,u=fy-.5*x,A=s/1.118,B=u/1.118;
   if(s>=50.8&&s<RAILB[0]&&u>2&&u<22)return 11;
   if(s>=R2[0]&&s<R2[1]&&fy<38.6)return 1;
   if(A>=LAWN[0]&&A<LAWN[2]&&B>=LAWN[1]&&B<LAWN[3])return(A<LAWN[0]+.25||A>=LAWN[2]-.25||B<LAWN[1]+.25||B>=LAWN[3]-.25)?11:-1;
-  if(B>=5.2&&B<7&&A>=-3&&A<MIRA[0]/1.118)return 1;                     // улица вдоль ТБЦ
-  if(A>=-3&&A<-1.2&&B>=5.2&&B<18)return 1;                              // проезд у ДК
-  if(B>=16.2&&B<18&&A<-1.2)return 1;                                    // улица между ДК и горисполкомом, на запад
-  if(A>=RING[0]&&A<RING[2]&&B>=7&&B<RING[3]&&!(A>=LAWN[0]&&A<LAWN[2]&&B<LAWN[1]))return 1;
+  if(B>=5.2&&B<7&&A<MIRA[0]/1.118&&fy>1)return 1;                     // улица вдоль ТБЦ
+  if(A>=-3&&A<-1.2&&B<18&&fy>1)return 1;                              // проезд у ДК
+  {const t=(-(A+2)+(B-17))/1.4142,q=((A+2)+(B-17))/1.4142;if(t>-1.5&&Math.abs(q)<.9)return 1}   // улица по диагонали между ДК и горисполкомом
+  if(A>=2.7&&A<9.3&&B>=7&&B<14.57)return 14;                         // тротуар вокруг газона
+  if(A>=RING[0]&&A<RING[2]&&B>=7&&B<RING[3])return 1;
   if(A>=-5&&A<13&&B>=4.5&&B<18)return 10;
   if(u>=AVE[0]&&u<AVE[1]&&A>=-5&&s<R2[1])return 1;
   if(A>=14.6&&A<36.3){if((B>=8.2&&B<9.55)||(B>=12.99&&B<14.3))return 14;                           // тротуары
@@ -1345,7 +1350,7 @@ function buildCity(){
   {const d=mkOBB(L,-11,AXB-4,6,8,55,'ДК');oset(d,5,4,56);DOORS.dk=obbFront(d,5,4,2)}
   // центральная площадь: ТБЦ на севере, горисполком на юге, газон посередине
   {const t=mkOBB(L,1,1.5,9,3,16,'ТБЦ');for(let i=0;i<9;i++)oset(t,i,2,130+i,3);DOORS.tbc=obbFront(t,4,2,3);DOORS.cafe=obbFront(t,3,2,3)}
-  {const a=mkOBB(L,2.5,18,6,2,18,'горисполком');oset(a,1,0,109);oset(a,0,0,110);DOORS.admin=obbFront(a,.5,0,1);const tw=mkOBB(L,1.5,18,1,1,108,'горисполком',1,2);oset(tw,0,0,108,1)}
+  {const a=mkOBB(L,2.5,18,6,2,18,'горисполком');oset(a,0,0,109);DOORS.admin=obbFront(a,0,0,1);const tw=mkOBB(L,1.5,18,1,1,108,'горисполком',1,2);oset(tw,0,0,108,1)}
   // заборчик вокруг газона
   {const F=.08;mkOBB(L,LAWN[0],LAWN[1],5,1,190,'ограда',1,F);mkOBB(L,LAWN[0],LAWN[3]-F,5,1,190,'ограда',1,F);mkOBB(L,LAWN[0],LAWN[1],1,5,190,'ограда',F,1);mkOBB(L,LAWN[2]-F,LAWN[1],1,5,190,'ограда',F,1)}
   // ларьки
@@ -1379,7 +1384,7 @@ function buildCity(){
   for(const[x,y]of[[SX+6.5,41.5],[SX+14.5,40.5],[46.5+SX,34.5],[5,33],[10,20],[6,41]])P.push({k:'barrel',x,y});
   for(let a=-4;a<=35.5;a+=3.6)put(a,AVE[0]/1.118-.35,{k:'lamp'});
   for(let b=-16;b<=22;b+=4.6)put(R2[0]/1.118-.4,b,{k:'lamp'});
-  for(let a=16.4;a<=35.5;a+=3.6)put(a,12.55,{k:'lamp'});for(let a=-2;a<=12.5;a+=3.6)put(a,4.85,{k:'lamp'});for(let b=9;b<=15;b+=4.5)put(-3.35,b,{k:'lamp'});for(let a=-4.5;a>=-11;a-=3.6)put(a,15.85,{k:'lamp'});
+  for(let a=16.4;a<=35.5;a+=3.6)put(a,12.55,{k:'lamp'});for(let a=-2;a<=12.5;a+=3.6)put(a,4.85,{k:'lamp'});for(let b=9;b<=15;b+=4.5)put(-3.35,b,{k:'lamp'});for(let t=1.5;t<=8;t+=3.2)put(-2-.707*t+.75,17+.707*t+.75,{k:'lamp'});
   for(let b=-24;b<=22;b+=5)put(HWY[0]/1.118-.25,b,{k:'lamp'});
   for(const[a,b]of[[1.1,6.4],[10.9,6.4],[1.1,16.1],[10.9,16.1]])put(a,b,{k:'lamp'});
   {const[x,y]=AW(40.5,AXB);P.push({k:'monument',x,y,r:.4})}
@@ -1416,7 +1421,7 @@ function buildFlat(){
 function buildInt(id,rows,cmap,flf,o){const w=rows[0].length,h=rows.length,L=mkLevel(id,w,h,Object.assign({outdoor:false,ceil:2.4,camz:1.45},o));
   rows.forEach((r,y)=>{for(let x=0;x<w;x++){const t=cmap[r[x]]||0;L.map[y*w+x]=t;L.fl[y*w+x]=flf(x,y);if([63,64,78].includes(t))L.ori[y*w+x]=3;if(t===75)L.ori[y*w+x]=2}});L.props=o.props||[];L.lights=o.lights||[];return L}
 function buildInteriors(){
-  PODEZD=buildInt('podezd',['######PQ#','#.....LL#','#.....LL#','D.....SS#','#.....SS#','#.....SS#','M.......#','#.......W','##W#E####'],{'#':88,S:92,L:98,P:97,Q:99,M:67,D:62,E:61,W:93},()=>11,
+  PODEZD=buildInt('podezd',['######PQ#','#.....LL#','#.....LL#','D.....SS#','#.....SS#','#.....SS#','M.......#','#.......W','##W#E####'],{'#':88,S:92,L:98,P:97,Q:88,M:67,D:62,E:61,W:88},()=>11,
     {ceil:3.6,lights:[{x:3.2,y:3.6,r:6.5,c:[1,.85,.6],i:.95},{x:4.5,y:7,r:3.5,c:[1,.85,.6],i:.5},{x:6.8,y:1.4,r:3.5,c:[1,.85,.6],i:.7}],amb:()=>.3,exits:{'4,8':'home'}});
   {const L=PODEZD;for(let y=1;y<=5;y++)for(const x of[6,7])L.ori[y*L.w+x]=3;for(let i=0;i<L.w*L.h;i++)L.pv[i]=((i*2654435761)>>>0)%97;L.ceilTex=TX.ceilPod;
     L.props.push({k:'bulb',x:3.2,y:3.6,z:2.8},{k:'bulb',x:6.9,y:1.2,z:2.9})}
@@ -2761,7 +2766,7 @@ T[184]={h:2.6,segs:['birzha'],stretch:true,stop:true,act:'admin'};T[185]={h:2.6,
 
 let PODEZD2,MARKET,BANYA,GARAGE,ADMIN2;
 function buildInteriors2(){
-  PODEZD2=buildInt('podezd2',['##1#2#3##','#.......#','#.......W','#.......#','#.......#','##D######'],{'#':88,'1':140,'2':141,'3':142,W:93,D:144},()=>11,
+  PODEZD2=buildInt('podezd2',['##1#2#3##','#.......#','#.......W','#.......#','#.......#','##D######'],{'#':88,'1':140,'2':141,'3':142,W:88,D:144},()=>11,
     {lights:[{x:4.5,y:2.5,r:6,c:[1,.85,.6],i:.85}],amb:()=>.3});
   for(let i=0;i<PODEZD2.w*PODEZD2.h;i++)PODEZD2.pv[i]=((i*2246822519)>>>0)%97;PODEZD2.ceilTex=TX.ceilPod;PODEZD2.props.push({k:'bulb',x:4.5,y:2.5,z:1.9});
   MARKET=buildInt('market',['TTTTTTTTTTTT','T..........T','T000.111.33T','T..........T','T..........T','T222...444.T','T..........T','TTTTTEETTTTT'],{T:150,'0':151,'1':152,'2':153,'3':154,'4':155,E:157},()=>11,
@@ -2809,13 +2814,13 @@ function nbHTML(k){const n=NB[k],d=G.nb||(G.nb={}),ri=(G.day*7+k.charCodeAt(2))%
 
 /* --- транспорт: машины, ПАЗик, поезда --- */
 function initTraffic(Pr){const w=(a,b)=>A2W(a,b),bY=(a,y)=>(y*SQ5-(a-0))/2,ay=(a,y)=>A2W(a,(y*SQ5-a)/2);
-  const RE=[w(1.0,10.8),w(2.6,14.67),w(9.4,14.67),w(11.0,10.8)],RW=[w(11.0,11.75),w(9.4,9.6),w(9.4,6.55),w(2.6,6.55),w(2.6,9.6),w(1.0,11.75)];
+  const RE=[w(0.0,10.8),w(1.8,12.6),w(1.8,15.4),w(10.2,15.4),w(10.2,12.6),w(12.0,10.8)],RW=[w(12.0,11.75),w(10.2,9.6),w(10.2,6.55),w(1.8,6.55),w(1.8,9.6),w(0.0,11.75)];
   const HW=[ay(50.6,1.3),ay(50.6,43.6),ay(51.8,43.6),ay(51.8,1.3)],
     R2L=[ay(36.8,1.3),ay(36.8,37.5),[OX-16.8,37.5],[OX-16.8,38.5],ay(37.6,38.5),ay(37.6,1.3)],
     BUS=[w(-3.8,10.8),...RE,w(36.8,10.8),ay(36.8,37.5),[OX+8,37.5],[OX+8,38.5],ay(37.6,38.5),w(37.6,11.75),...RW,w(-3.8,11.75)],
     AV=[w(-3.8,10.8),...RE,w(35.6,10.8),w(35.6,11.75),...RW,w(-3.8,11.75)],
     MR=[ay(13.6,1.3),ay(13.6,36.4),ay(14.2,36.4),ay(14.2,1.3)],
-    TL=[w(12.4,5.65),w(-1.65,5.65),w(-1.65,16.65),w(-10.8,16.65),w(-10.8,17.55),w(-2.55,17.55),w(-2.55,6.55),w(12.4,6.55)];
+    TL=[w(12.4,5.65),w(-1.65,5.65),w(-1.65,16.2),w(-1.68,17.32),w(-7.3,22.95),w(-7.95,22.3),w(-2.32,16.68),w(-2.55,16),w(-2.55,6.55),w(12.4,6.55)];
   const V=[['carB',HW,3.4,0],['carG',HW,3.0,2],['carW',R2L,2.8,0],['car',R2L,2.6,3],['bus',BUS,2.1,0],['carB',AV,2.6,0],['carW',MR,2.8,0],['carG',MR,2.6,2],['carW',TL,2.6,0],['carB',TL,2.4,3]];
   for(const[spr,path,spd,seg]of V){const a=path[seg];Pr.push({k:'mcar',spr,path,loop:1,spd,seg,dirS:1,x:a[0],y:a[1],dir:0,r:.42,wait:0})}}
 function vehNext(v){if(v.loop)return(v.seg+1)%v.path.length;const n=v.seg+v.dirS;if(n<0||n>=v.path.length){v.dirS=-v.dirS;return v.seg+v.dirS}return n}
@@ -3427,7 +3432,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Улица между ДК и горисполкомом теперь идёт по диагонали на запад, к краю города','Башня горисполкома: узкие окна в один ряд у края, на боковой стене большой плакат «Это наш город — нам здесь жить!»','Рядом с башней — круглое здание кинотеатра «Байкал» с конической крышей'];
+const CHANGES=['Улица между ДК и горисполкомом идёт по диагонали ровно посередине между ними','Горисполком стал четырёхэтажным, вход — две стеклянные двери у башни','Улица вдоль ТБЦ и проезд у ДК продолжаются прямо до края города','Вокруг газона на площади — тротуар вдоль заборчика','В подъезде убраны окна'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
