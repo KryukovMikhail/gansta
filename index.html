@@ -235,7 +235,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 
 <script>
 'use strict';
-const BUILD='G001.014';
+const BUILD='G001.015';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1241,70 +1241,74 @@ function mkLevel(id,w,h,o){return Object.assign({id,w,h,ori:new Uint8Array(w*h),
 function rect(L,x,y,w,h,t){for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++)if(i>=0&&j>=0&&i<L.w&&j<L.h)L.map[j*L.w+i]=t}
 function frect(L,x,y,w,h,f){for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++)if(i>=0&&j>=0&&i<L.w&&j<L.h)L.fl[j*L.w+i]=f}
 const CW=60,CH=46;
-function cityF(fx,fy){const s=fx+fy,b=fx+.5*fy;if(b>=67)return 2;if(b>=63.5)return 9;if(s>=70&&s<73)return 8;
-  if(fy<39&&s>=57.2&&s<59.8)return 1;if(fy>=27&&s>=77.1&&s<78.9)return 1;if(fy<=13&&s>=17.1&&s<18.9)return 1;if(fy>=9&&fy<19&&s>=43.1&&s<44.9)return 1;
-  if(fy>=29&&fy<33&&Math.abs(fx-fy+5)<.8)return 1;return-1}
+const RAILB=[52.4,55.6],RT1=53.2,RT2=54.8,HWY=[56,58.6],FOREST=[58.6,63.5],R2=[40.6,42.6],AVE=[11.6,13.6],MIRA=[21,22.6];
+const sOf=(x,y)=>x+.5*y,uOf=(x,y)=>y-.5*x;
+function cityF(fx,fy){const s=fx+.5*fy,u=fy-.5*fx;
+  if(s>=67)return 2;if(s>=63.5)return 9;if(s>=RAILB[0]&&s<RAILB[1])return 8;if(s>=HWY[0]&&s<HWY[1])return 1;
+  if(s>=50.8&&s<RAILB[0]&&u>2&&u<22)return 11;
+  if(s>=R2[0]&&s<R2[1]&&fy<38.6)return 1;
+  if(u>=AVE[0]&&u<AVE[1]&&s>=19.5&&s<R2[1])return 1;
+  if(s>=R2[1]&&s<48&&u>=5&&u<20)return 10;
+  if(s>=MIRA[0]&&s<MIRA[1]&&fy<38.6)return 1;
+  return-1}
 const isBaikal=(x,y)=>x+.5*y>=67,isBeach=(x,y)=>!isBaikal(x,y)&&x+.5*y>=63.5;
 function buildCity(){
   const L=mkLevel('city',CW,CH,{outdoor:true,camz:.62});
-  // пол: Байкал, пляж, ж/д по диагонали, проспект 60 лет СССР по диагонали
-  L.fb=new Uint8Array(CW*CH);L.dg=new Uint8Array(CW*CH);
-  for(let y=0;y<CH;y++)for(let x=0;x<CW;x++){const s=x+y,i=y*CW+x;let f=0;
-    if(isBaikal(x,y))f=2;else if(isBeach(x,y))f=9;else if(s>=70&&s<=72)f=8;
-    else if((s===57||s===58)&&y<=38)f=1;else if(s===77&&y>=27)f=1;else if(s===17&&y<=12)f=1;else if(s===43&&y>=9&&y<=18)f=1;
-    L.fl[i]=f}
-  frect(L,1,37,20,2,1);                       // проспект 60 лет СССР у Шанхая
-  frect(L,24,1,1,19,1);                       // Пролетарский пер.
-  frect(L,5,19,33,2,1);                       // улица у ДК и ТБЦ
-  frect(L,1,24,33,1,1);frect(L,9,20,1,18,1);frect(L,10,30,18,1,1); // ул. Труда и дворы
-  for(let k=0;k<4;k++)L.fl[(29+k)*CW+24+k]=1; // Парковая
-  frect(L,31,23,12,5,1);                      // привокзальная площадь
-  frect(L,7,10,16,1,4);frect(L,15,4,1,14,4);  // аллеи парка
-  { const AX=[[1,37,20,2,1],[24,1,1,19,1],[5,19,33,2,1],[1,24,33,1,1],[9,20,1,18,1],[10,30,18,1,1],[31,23,12,5,1],[7,10,16,1,4],[15,4,1,14,4],[1,41,21,1,4],[8,39,1,6,4],[15,39,1,6,4]];
-    for(const[x,y,w,h,f]of AX)for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++)L.fb[j*CW+i]=f;
-    for(let y=0;y<CH;y++)for(let x=0;x<CW;x++){let hit=false;for(const[a,b]of[[.1,.1],[.9,.1],[.1,.9],[.9,.9],[.5,.5]])if(cityF(x+a,y+b)>=0){hit=true;break}L.dg[y*CW+x]=hit?1:0} }
-  frect(L,1,41,21,1,4);frect(L,8,39,1,6,4);frect(L,15,39,1,6,4); // тропинки Шанхая
+  // базовый пол по клеткам (без диагоналей)
+  const base=new Uint8Array(CW*CH);const fr=(x,y,w,h,f)=>{for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++)if(i>=0&&j>=0&&i<CW&&j<CH)base[j*CW+i]=f};
+  fr(1,37,21,2,1);                             // пр. 60 лет СССР поворачивает к Шанхаю
+  fr(10,30,18,1,1);                            // проезд во дворе
+  fr(7,10,16,1,4);fr(15,4,1,14,4);             // аллеи парка
+  fr(1,41,21,1,4);fr(8,39,1,6,4);fr(15,39,1,6,4); // тропинки Шанхая
+  L.fb=base;L.dg=new Uint8Array(CW*CH);
+  const S=[[.1,.1],[.9,.1],[.1,.9],[.9,.9]];
+  for(let y=0;y<CH;y++)for(let x=0;x<CW;x++){const i=y*CW+x,b=base[i],fc=cityF(x+.5,y+.5);L.fl[i]=fc>=0?fc:b;
+    let dif=false;for(const[a,c]of S){const v=cityF(x+a,y+c);if((v>=0?v:b)!==L.fl[i]){dif=true;break}}L.dg[i]=dif?1:0}
   // границы: тайга и торосы
   for(let x=0;x<CW;x++){L.map[x]=9;L.map[(CH-1)*CW+x]=isBaikal(x,CH-1)?27:9}
   for(let y=0;y<CH;y++){L.map[y*CW]=9;L.map[y*CW+CW-1]=isBaikal(CW-1,y)?27:9}
-  // центр: ДК, ТБЦ, администрация
-  rect(L,17,15,5,3,55);rect(L,19,17,1,1,56);
-  rect(L,25,14,5,3,16);rect(L,25,15,1,1,19);rect(L,28,16,1,1,19);rect(L,26,16,1,1,17);rect(L,31,17,1,1,4);
-  for(let i=0;i<5;i++){L.map[16*CW+25+i]=130+i;L.ori[16*CW+25+i]=3}for(const x of[25,27,29])L.map[17*CW+x]=115;
-  rect(L,20,21,6,2,18);rect(L,22,21,1,1,20);rect(L,25,21,1,2,107);
-  // пятиэтажки в центре, дом 4 с нашим подъездом
-  rect(L,11,26,6,2,1);rect(L,18,26,6,2,1);rect(L,20,26,1,1,6);rect(L,25,26,3,2,1);rect(L,11,32,6,2,1);rect(L,18,32,6,2,1);
+  // ДК «Железнодорожник» в конце Ленинградского проспекта, фасадом к проспекту
+  rect(L,5,14,6,5,55);rect(L,10,17,1,1,56);
+  // ТБЦ и «Северянка» на Ленинградском, фасадом к проспекту
+  rect(L,24,20,5,3,16);rect(L,24,21,1,1,19);
+  for(let i=0;i<5;i++){L.map[22*CW+24+i]=130+i;L.ori[22*CW+24+i]=3}for(const x of[24,26,28])L.map[23*CW+x]=115;rect(L,29,20,1,1,4);
+  // администрация с башней
+  rect(L,19,17,5,2,18);rect(L,21,18,1,1,20);rect(L,24,17,1,2,107);
+  // двор: пятиэтажки, дом 4 с нашим подъездом, гаражи
+  rect(L,11,26,6,2,1);rect(L,18,26,6,2,1);rect(L,20,26,1,1,6);rect(L,25,27,3,2,1);rect(L,11,32,6,2,1);rect(L,18,32,6,2,1);
   rect(L,11,29,5,1,3);rect(L,16,29,1,1,4);
   // 19-й квартал за ул. Мира
-  rect(L,1,13,3,2,1);rect(L,1,17,4,2,1);rect(L,1,21,5,2,1);rect(L,2,27,5,2,1);rect(L,2,31,5,2,1);rect(L,3,34,4,1,3);
+  rect(L,1,13,3,2,1);rect(L,1,17,3,2,1);rect(L,1,21,5,2,1);rect(L,2,27,4,2,1);rect(L,1,31,4,2,1);rect(L,9,35,4,1,3);
   // 5-й микрорайон и школа
-  rect(L,26,3,7,2,1);rect(L,26,7,6,2,1);rect(L,37,1,2,4,1);rect(L,36,12,4,2,2);rect(L,29,11,3,1,3);
-  // за проспектом: рынок, дома
-  rect(L,39,20,5,3,11);rect(L,41,22,1,1,10);rect(L,47,12,5,2,1);rect(L,44,16,4,2,1);rect(L,52,8,3,2,1);rect(L,43,23,1,1,4);
-  // вокзал-«парус»: фасад смотрит на север, на площадь с памятником
-  rect(L,32,28,2,2,21);rect(L,40,28,2,2,21);for(let i=0;i<6;i++){rect(L,34+i,28,1,1,120+5-i);L.ori[28*CW+34+i]=1;rect(L,34+i,29,1,1,106)}
-  // промзона между путями и Ольхонской
-  rect(L,47,26,2,2,2);rect(L,42,32,2,2,2);rect(L,37,37,2,2,2);rect(L,33,41,2,1,3);rect(L,50,22,1,2,3);
+  rect(L,28,2,7,2,1);rect(L,28,7,6,2,1);rect(L,36,2,2,4,1);rect(L,29,12,4,2,2);
+  // за проспектом 60 лет СССР: рынок, дома
+  rect(L,35,16,5,3,11);rect(L,37,18,1,1,10);rect(L,40,19,1,1,4);rect(L,43,3,4,2,1);rect(L,40,10,4,2,1);rect(L,32,22,1,1,4);
+  // вокзал-«парус» вдоль путей, фасадом к площади; крылья уступами
+  for(let i=0;i<6;i++){rect(L,34,27+i,1,1,120+i);L.ori[(27+i)*CW+34]=4;rect(L,35,27+i,1,1,106)}
+  rect(L,36,23,2,4,21);rect(L,32,33,2,3,21);
+  // промзона за поворотом проспекта
+  rect(L,26,39,3,2,2);rect(L,23,42,3,2,2);rect(L,29,43,2,1,3);rect(L,24,40,1,1,8);rect(L,25,40,1,1,8);
   // Шанхай: щитовые дома, бараки, сараи
   rect(L,2,39,3,2,12);rect(L,5,40,1,1,14);rect(L,10,39,4,2,13);rect(L,17,39,3,2,12);
   rect(L,1,42,3,2,13);rect(L,5,43,1,1,14);rect(L,10,42,3,2,12);rect(L,16,42,4,2,13);
   rect(L,13,42,2,2,84);rect(L,14,42,1,1,83);rect(L,15,29,1,1,85);
   rect(L,6,43,1,1,7);rect(L,7,43,1,1,2);rect(L,20,39,1,1,4);rect(L,11,44,3,1,8);
   for(let y=0;y<CH;y++)for(let x=0;x<CW;x++){L.pv[y*CW+x]=(((x*73856093)^(y*19349663))>>>0)%3}
-  const P=[];
-  for(const[x,y]of[[6.5,41.5],[14.5,40.5],[33.5,25.5],[44.5,30.5],[14.5,30.5],[22.5,29.6],[45.5,19.5],[8.5,13.5],[30.5,9.5],[46.5,34.5],[3.5,25.5],[22.6,18.4]])P.push({k:'barrel',x,y});
-  for(const x of[22,26,30,34,38,42,46,50])P.push({k:'lamp',x:x+.2,y:57.2-x});
-  for(const x of[10,16,22,28,34])P.push({k:'lamp',x,y:19.15});
-  P.push({k:'monument',x:36.95,y:25.9,r:.4});
+  const P=[],solid=(x,y)=>L.map[(y|0)*CW+(x|0)];
+  for(const[x,y]of[[6.5,41.5],[14.5,40.5],[30.5,24.5],[27.5,38.2],[14.5,30.5],[22.5,29.6],[38.5,13.5],[8.5,12.5],[30.5,9.5],[46.5,34.5],[3.5,25.5],[17.6,20.2]])P.push({k:'barrel',x,y});
+  for(let x=13;x<=27;x+=3.5){const y=10.9+.5*x;if(!solid(x,y))P.push({k:'lamp',x,y})}
+  for(let y=3;y<=35;y+=4.5){const x=40.1-.5*y;if(!solid(x,y))P.push({k:'lamp',x,y})}
+  for(let y=3;y<=43;y+=5){const x=55.6-.5*y;P.push({k:'lamp',x,y})}
+  P.push({k:'monument',x:31,y:28,r:.4});
   L.lights=P.filter(p=>p.k==='lamp').map(p=>({x:p.x+.15,y:p.y,r:4.6,c:[1,.62,.28],i:1.15})).concat(P.filter(p=>p.k==='barrel').map(p=>({x:p.x,y:p.y,r:3.4,c:[1,.5,.18],i:1.25,fire:1})));
   for(let y=0;y<CH;y++)for(let x=0;x<CW;x++)if(L.map[y*CW+x]===4)L.lights.push({x:x+.5,y:y+.5,r:2.6,c:[.9,.95,.8],i:.6});
   for(const[x,y]of[[47.5,36.3],[51.5,30.6],[44.2,40.6]])P.push({k:'boat',x,y,r:.35});
   for(const[x,y]of[[50,41],[53,38.5],[48,43.5]])P.push({k:'lunka',x,y,r:.3});L.lights.push({x:14.5,y:41.2,r:2.8,c:[1,.62,.3],i:.8});
   for(const st of STOPS)P.push({k:'stop',x:st.x,y:st.y,stop:st});P.push({k:'wood',x:4.5,y:44.3,r:.35});
-  // деревья: городской парк и «Байкальский берег»
-  const TR=rng(77),okT=(x,y)=>!L.map[(y|0)*CW+(x|0)]&&L.fl[(y|0)*CW+(x|0)]===0&&!P.some(p=>Math.hypot(p.x-x,p.y-y)<1.1);
-  for(let n=0,k=0;n<55&&k<2000;k++){const x=7+TR()*16,y=3.5+TR()*13;if(x+y<20||!okT(x,y))continue;P.push({k:TR()<.6?'pine':'birch',x,y,r:.22});n++}
-  for(let n=0,k=0;n<16&&k<2000;k++){const x=36+TR()*12,y=36+TR()*9;if(x+y<=73||isBeach(x,y)||isBaikal(x,y)||!okT(x,y))continue;P.push({k:TR()<.5?'pine':'birch',x,y,r:.22});n++}
+  // деревья: городской парк и лес вдоль берега
+  const TR=rng(77),okT=(x,y)=>!L.map[(y|0)*CW+(x|0)]&&L.fl[(y|0)*CW+(x|0)]===0&&!L.dg[(y|0)*CW+(x|0)]&&!P.some(p=>Math.hypot(p.x-x,p.y-y)<1.1);
+  for(let n=0,k=0;n<50&&k<2000;k++){const x=3+TR()*20,y=2.5+TR()*10;if(!okT(x,y))continue;P.push({k:TR()<.6?'pine':'birch',x,y,r:.22});n++}
+  for(let n=0,k=0;n<95&&k<6000;k++){const y=1.5+TR()*42.5,s=FOREST[0]+.4+TR()*(FOREST[1]-FOREST[0]-.8),x=s-.5*y;if(x<1.5||x>CW-2||!okT(x,y))continue;P.push({k:TR()<.65?'pine':'birch',x,y,r:.22});n++}
   L.props=P;
   return L;
 }
@@ -1331,16 +1335,16 @@ function buildInteriors(){
   TBC=buildInt('tbc',['WHHHHHWWWWWWWW','W.....W.....tW','WCCCC.W.BBB..W','W.....W......W','W...........tW','W.....W..t...W','W.....W......W','WVEVWWWWVFVWWW'],
     {W:60,H:76,C:63,B:64,t:70,V:74,E:61,F:61},x=>x<=6?5:10,
     {lights:[{x:3,y:3.5,r:5,c:[.85,.95,1],i:.75},{x:3,y:6,r:5,c:[.85,.95,1],i:.6},{x:9.5,y:3,r:4.5,c:[1,.7,.4],i:.8},{x:11.5,y:5.5,r:4.5,c:[1,.7,.4],i:.7}],amb:()=>.45,
-     exits:{'2,7':[24.4,15.5,Math.PI],'9,7':[26.5,17.4,Math.PI/2]}});
+     exits:{'2,7':[23.4,21.5,Math.PI],'9,7':[25.5,23.5,Math.PI/2]}});
   DK=buildInt('dk',['WWWWWQQQQQQWWWWW','W....ssssss....W','O..............O','W..............W','W..............W','O..............O','WWWWWW....WWWWWW','WX.............W','W.bb.....kkk...W','W.bb...........W','W..............W','WWWWWWWEWWWWWWWW'],
     {W:60,Q:77,s:71,O:73,X:75,b:69,k:78,E:61},()=>6,
     {lights:[{x:4,y:3,r:5,c:[1,.85,.6],i:.6,dk:1},{x:11,y:3,r:5,c:[1,.85,.6],i:.6,dk:1},{x:4,y:9,r:5,c:[1,.85,.6],i:.6},{x:11.5,y:9,r:5,c:[1,.85,.6],i:.6}],amb:()=>discoTime()?.22:.42,
-     exits:{'7,11':[19.5,18.4,Math.PI/2]},props:[{k:'pbag',x:13.5,y:8.3,r:.3}]});
+     exits:{'7,11':[11.6,17.5,0]},props:[{k:'pbag',x:13.5,y:8.3,r:.3}]});
   STATION=buildInt('station',['WVVVVVVEEVVVVVVW','W..............W','W.bbb....bbb...W','W..............W','W.bbb....bbb...W','W..............W','WWWWWWKKKKWWDDDW'],
     {W:60,V:74,E:61,b:69,K:65,D:66},()=>10,
     {lights:[{x:4,y:3,r:5.5,c:[1,.9,.7],i:.75},{x:11,y:3,r:5.5,c:[1,.9,.7],i:.75},{x:7.5,y:5,r:5,c:[1,.9,.7],i:.6}],amb:()=>.4,
-     exits:{'7,0':[37,27.2,-Math.PI/2],'8,0':[38,27.2,-Math.PI/2]}});
-  KPZ=buildInt('kpz',['#####','#b..#','#...#','#...#','XXEXX'],{'#':88,b:69,X:82,E:61},()=>11,{lights:[{x:2.5,y:2,r:4,c:[1,.9,.6],i:.6}],amb:()=>.25,exits:{'2,4':[22.5,20.2,-Math.PI/2]}});
+     exits:{'7,0':[32.6,29.6,Math.PI],'8,0':[32.6,30.4,Math.PI]}});
+  KPZ=buildInt('kpz',['#####','#b..#','#...#','#...#','XXEXX'],{'#':88,b:69,X:82,E:61},()=>11,{lights:[{x:2.5,y:2,r:4,c:[1,.9,.6],i:.6}],amb:()=>.25,exits:{'2,4':[21.5,19.6,Math.PI/2]}});
   KPZ.ceilTex=TX.ceilPod;for(const L of[PODEZD,TBC,DK,STATION,KPZ])buildBoxes(L);
   for(const L of[PODEZD,TBC,DK,STATION,FLAT,KPZ])bakeLights(L);buildInteriors2();
   mkNPC('zhen',3,1.45,'seller','Продавщица универмага',TBC,'tbc');mkNPC('zhen',9.5,1.4,'barmaid','Буфетчица',TBC,'cafe');
@@ -1348,7 +1352,7 @@ function buildInteriors(){
   for(const e of TBC.enemies)if(e.type==='ban'&&!e.named)e.guard=1;
   mkNPC('muzh',13.5,9.6,'trainer','Тренер по боксу',DK,'dk').v=0;mkNPC('babka',10.5,7.35,'dkcash','Вахтёрша',DK,'dk');
   mkNPC('muzh',3.5,5.2,'mih','Бригадир Михалыч',STATION);mkNPC('babka',5.5,3.4,'','',STATION);mkNPC('mil',12.5,5.3,'','',STATION);mkNPC('zhen',10.5,1.5,'','',STATION)}
-const STOPS=[{n:'Шанхай',x:12.5,y:36.4,a:Math.PI/2},{n:'Центр, ТБЦ',x:32.6,y:18.4,a:Math.PI},{n:'Вокзал',x:31.6,y:24.3,a:0},{n:'5-й микрорайон',x:25.6,y:10.4,a:Math.PI/2},{n:'Пляж и промзона',x:46.5,y:33.4,a:0}];
+const STOPS=[{n:'Шанхай',x:12.5,y:36.2,a:Math.PI/2},{n:'Центр, ТБЦ',x:27.2,y:23.9,a:Math.PI/2},{n:'Вокзал',x:30.2,y:24.6,a:Math.PI/4},{n:'5-й микрорайон',x:26.2,y:6.6,a:0},{n:'Пляж и промзона',x:27.5,y:36.0,a:Math.PI/2}];
 function moveCar(x,y){const c=CITY.props.find(p=>p.k==='car');let cx=x+1.3,cy=y;if(solidAt(CITY,cx,cy))cx=x-1.3;if(c){c.x=cx;c.y=cy}else CITY.props.push({k:'car',x:cx,y:cy,r:.45});G.carPos=[cx,cy]}
 function busHTML(st){const h=G.min/60,open=h>=6&&h<23,p=shopPrice(300);
   return`<div class="card"><div class="stamp">ПАЗ</div><h2>Остановка «${st.n}»</h2><p class="sub">${open?'Жёлтый ПАЗик ходит с 06:00 до 23:00. Ждать 0–20 минут, ехать 20.':'Автобусы не ходят. Последний ушёл в 23:00.'}</p><div class="rows">`+
@@ -1738,7 +1742,7 @@ let KIOSKS=null;
 function musContext(){if(!MUS.on||!G)return['',0,8000];if(G.state==='menu'||!P||!LV)return['menu',.5,8000];
   if(LV===DK)return discoTime()?['disco',.5,9000]:['',0,8000];
   if(LV===TBC)return['radio',.16,2400];
-  if(LV===CITY){if(discoTime()){const d=Math.hypot(19.5-P.x,17.5-P.y);if(d<10)return['disco',.06+.2*(1-d/10),500]}
+  if(LV===CITY){if(discoTime()){const d=Math.hypot(8-P.x,16.5-P.y);if(d<10)return['disco',.06+.2*(1-d/10),500]}
     if(!KIOSKS){KIOSKS=[];for(let y=0;y<CITY.h;y++)for(let x=0;x<CITY.w;x++)if(CITY.map[y*CITY.w+x]===4)KIOSKS.push([x+.5,y+.5])}
     let kd=99;for(const[x,y]of KIOSKS)kd=Math.min(kd,Math.hypot(x-P.x,y-P.y));if(kd<5)return['radio',.17*(1-kd/5)+.02,1400]}
   return['',0,8000]}
@@ -1776,8 +1780,8 @@ const ED={
   gosha:{hp:170,spd:1.25,dmg:[13,21],rng:1.0,wind:.5,rec:.6,cd:1.15,aggro:9,boss:1,name:'Гоша Цемент',say:['Ты кто такой? Сиплого шестёрка?','Промзона — моя. Понял?']},
   dolg:{hp:55,spd:1.75,dmg:[6,10],rng:.95,wind:.45,rec:.6,cd:1.1,aggro:7,name:'должник',say:['Нету денег! Нету!','Отстань, я всё отдам!']}
 };
-const ZONES={gop:[[1,39,20,6],[7,4,16,12],[10,25,14,10],[1,13,8,20],[26,2,10,9]],ban:[[38,23,7,5],[31,23,12,5],[42,26,8,10]],
-  dog:[[42,24,12,18],[1,39,20,6],[7,4,16,12],[30,30,10,12]],dolg:[[1,39,20,6]]};
+const ZONES={gop:[[1,39,20,6],[3,2,18,10],[10,25,14,10],[1,13,8,20],[27,1,10,9]],ban:[[33,12,8,6],[28,22,6,9],[23,36,8,8]],
+  dog:[[23,36,8,8],[1,39,20,6],[3,2,18,10],[40,1,8,8]],dolg:[[1,39,20,6]]};
 let P,G;
 function newGame(){
   CITY=buildCity();FLAT=buildFlat();LV=FLAT;
@@ -1798,8 +1802,8 @@ function emptyCell(zone,minD){const L=CITY;for(let k=0;k<300;k++){let x,y;if(zon
 function spawn(type){const z=pick(ZONES[type]);const c=emptyCell(z,9)||emptyCell(null,9);if(!c)return null;
   const e={type,v:Math.random()*SP[type].length|0,x:c[0],y:c[1],hp:ED[type].hp,st:'idle',tm:0,cd:0,t:Math.random()*5,hit:0,dead:0,wa:Math.random()*6.28,wt:0,fire:0,said:0,strikeT:0,angry:0};
   CITY.enemies.push(e);return e}
-const CIVS=[['babka',22.4,25.1,'nura','Баба Нюра'],['babka',13.5,25.2],['babka',4.5,41.5],['muzh',13.5,30.45,'tolya','Дядя Толя'],['muzh',45.6,30.5],['muzh',9.5,42],
-  ['zhen',28.5,18.4],['zhen',33.5,22.5],['mil',23.5,20.2,'kuzmin','Сержант Кузьмин'],['mil',37,22.7]];
+const CIVS=[['babka',22.4,25.1,'nura','Баба Нюра'],['babka',13.5,25.2],['babka',4.5,41.5],['muzh',13.5,30.45,'tolya','Дядя Толя'],['muzh',25.2,38.5],['muzh',9.5,42],
+  ['zhen',27,24.3],['zhen',31.5,26.2],['mil',22.5,20.0,'kuzmin','Сержант Кузьмин'],['mil',30.5,30]];
 function mkNPC(type,x,y,named,name,L,place){L=L||CITY;const e={type,v:Math.random()*SP[type].length|0,x,y,hx:x,hy:y,hp:ED[type].hp,st:'idle',tm:0,cd:0,t:Math.random()*5,hit:0,dead:0,wa:Math.random()*6.28,wt:0,fire:0,said:0,strikeT:0,angry:0,scared:0,named:named||'',name:name||''};
   if(named)e.v=0;e.place=place||'';L.enemies.push(e);return e}
 function ensureCivs(){for(const[t,x,y,n,nm]of CIVS){if(n?CITY.enemies.some(e=>e.named===n&&!e.dead):CITY.enemies.filter(e=>e.type===t&&!e.named&&!e.dead).length>=CIVS.filter(c=>c[0]===t&&!c[3]).length)continue;
@@ -1810,8 +1814,8 @@ function ensureDisco(dt){const on=discoTime(),d=DK.enemies.filter(e=>e.calm&&!e.
   if(!on)DK.enemies=DK.enemies.filter(e=>!e.calm);if(on&&P.y<6)P.danceT=(P.danceT||0)+dt}
 function ensureStory(){const S=G.story;if(!S)return;
   if(S.st>=2&&!S.betrayed&&!npcByName('serega'))mkNPC('serega',7.5,41.6,'serega','Серёга');
-  if(S.st===4&&!S.goshaDead&&!CITY.enemies.some(e=>e.type==='gosha'&&!e.dead)){const g=mkNPC('gosha',46.5,29.6);g.named='';g.angry=1;
-    for(const[x,y]of[[45.5,28.6],[47.6,30.4]]){const b=mkNPC('ban',x,y);b.angry=1;b.v=1}}}
+  if(S.st===4&&!S.goshaDead&&!CITY.enemies.some(e=>e.type==='gosha'&&!e.dead)){const g=mkNPC('gosha',27.5,37.6);g.named='';g.angry=1;
+    for(const[x,y]of[[26.5,37.0],[28.6,38.2]]){const b=mkNPC('ban',x,y);b.angry=1;b.v=1}}}
 function goalText(){const S=G.story;switch(S.st){
   case 0:return'Поговори с бабой Нюрой у подъезда';case 1:return'Найди дядю Толю у гаражей во дворе';
   case 2:return'Отнеси Серёге банку тушёнки — он прячется в Шанхае у стеклотары';case 10:return'Скажи Сиплому в «Северянке», где прячется Серёга';
@@ -1819,9 +1823,9 @@ function goalText(){const S=G.story;switch(S.st){
   case 5:return'Отдай чёрную тетрадь Гоши: Сиплому в «Северянку» или сержанту Кузьмину у администрации';
   case 6:return S.ledger==='sip'?'Сиплый зовёт в бригаду. Купи билет до Москвы — или останься':'Гошу посадили. Собери на билет до Москвы';}return''}
 function goalPos(){const S=G.story,n=k=>{const e=npcByName(k);return e?[e.x,e.y]:null};switch(S.st){
-  case 0:return n('nura');case 1:return n('tolya');case 2:return n('serega');case 10:return[26.5,17.3];
-  case 4:{const g=CITY.enemies.find(e=>e.type==='gosha'&&!e.dead);if(g)return[g.x,g.y];const l=CITY.items.find(i=>i.kind==='ledger');return l?[l.x,l.y]:[46.5,29.6]}
-  case 5:return[26.5,17.3];case 6:return S.ledger==='sip'?[26.5,17.3]:[37,27.4];}return null}
+  case 0:return n('nura');case 1:return n('tolya');case 2:return n('serega');case 10:return[25.5,23.5];
+  case 4:{const g=CITY.enemies.find(e=>e.type==='gosha'&&!e.dead);if(g)return[g.x,g.y];const l=CITY.items.find(i=>i.kind==='ledger');return l?[l.x,l.y]:[27.5,37.6]}
+  case 5:return[25.5,23.5];case 6:return S.ledger==='sip'?[25.5,23.5]:[32.6,29.6];}return null}
 function setStory(st,text){G.story.st=st;ensureStory();if(text)msg(text,'good');msg('Новая цель: '+goalText(),'say')}
 function dropRandom(kind){const c=emptyCell(null,3);if(c)CITY.items.push({kind,x:c[0]+rnd(-.3,.3),y:c[1]+rnd(-.3,.3),v:1})}
 const isNight=()=>G.min<6.5*60||G.min>=19*60;
@@ -1841,7 +1845,7 @@ const hasKrysha=()=>G.krysha>=G.day;
 
 /* ---------- сохранение: автослот и три ручных ---------- */
 const SLOTS=['auto','1','2','3'],SK=k=>'gansta_v3_'+k;
-const placeName=()=>LV===FLAT?'дома':LV===PODEZD2?'подъезд, 2-й этаж':LV===MARKET?'рынок':LV===BANYA?'баня':LV===GARAGE?'гараж':LV===ADMIN2?'администрация':LV===KPZ?'КПЗ':LV===PODEZD?'подъезд':LV===TBC?'ТБЦ':LV===DK?'ДК':LV===STATION?'вокзал':isBaikal(P.x,P.y)?'на Байкале':P.x+P.y>=70?'промзона':P.y>38&&P.x<22?'Шанхай':P.x+P.y<40&&P.y<17?'парк':'город';
+const placeName=()=>LV===FLAT?'дома':LV===PODEZD2?'подъезд, 2-й этаж':LV===MARKET?'рынок':LV===BANYA?'баня':LV===GARAGE?'гараж':LV===ADMIN2?'администрация':LV===KPZ?'КПЗ':LV===PODEZD?'подъезд':LV===TBC?'ТБЦ':LV===DK?'ДК':LV===STATION?'вокзал':isBaikal(P.x,P.y)?'на Байкале':isBeach(P.x,P.y)?'пляж':sOf(P.x,P.y)>=FOREST[0]?'лес у берега':sOf(P.x,P.y)>=HWY[0]?'автодорога':sOf(P.x,P.y)>=RAILB[0]?'пути':P.x>=22&&P.y>=36?'промзона':P.y>38&&P.x<22?'Шанхай':P.x+P.y<40&&P.y<17?'парк':'город';
 function inDanger(){return P.wanted>0||(LV.enemies.some(e=>!e.dead&&!ED[e.type].civ&&e.st!=='idle'&&Math.hypot(e.x-P.x,e.y-P.y)<10))}
 function snapshot(){const g={...G,state:'play',parts:[],hs:0};delete g.ret;return{v:3,ts:Date.now(),lvl:LV.id,place:placeName(),P:{...P,act:null,charging:false,blocking:false},G:g}}
 function saveTo(k){try{localStorage.setItem(SK(k),JSON.stringify(snapshot()));return true}catch(e){return false}}
@@ -2048,7 +2052,7 @@ function update(dt){
     G.spawnT+=gm;if(G.spawnT>30){G.spawnT=0;const n=isNight();const cnt=t=>CITY.enemies.filter(e=>e.type===t&&!e.dead).length;
       if(cnt('gop')<(n?9:6))spawn('gop');if(cnt('ban')<(n?5:3)){const b=spawn('ban');if(b&&G.sipWar)b.angry=1}if(cnt('dog')<5)spawn('dog');
       if(G.quest===1&&!cnt('dolg'))spawn('dolg');ensureStory();ensureS2();evTick();ensureQueues()}
-    G.hornT-=dt;if(G.hornT<=0){G.hornT=rnd(60,120);const d=Math.hypot(42-P.x,29-P.y);if(d<16){SND.horn();if(d<9)msg('С путей гудит тепловоз. БАМ живёт.')}}
+    G.hornT-=dt;if(G.hornT<=0){G.hornT=rnd(60,120);const d=Math.hypot(36-P.x,29-P.y);if(d<16){SND.horn();if(d<9)msg('С путей гудит тепловоз. БАМ живёт.')}}
   }else{
     for(const e of LV.enemies)updEnemy(e,dt);if(LV===DK)ensureDisco(dt);
     if(LV===FLAT)for(const c of FLAT.props)if(c.k==='cat'){c.t-=dt;
@@ -2123,7 +2127,7 @@ function lookProp(){if(LV!==CITY)return null;let best=null,bd=1.8;for(const p of
 const propTitle=p=>p.k==='boat'?'Лодка — рыбачить с лодки':p.k==='stop'?'Остановка «'+p.stop.n+'»':p.k==='car'?'«Копейка» — завести':p.k==='lunka'?'Лунка — рыбачить':p.k==='wagonX'?'Пропавший вагон':'Дрова бабы Шуры — наколоть';
 function lookCat(){if(LV!==FLAT)return null;const c=FLAT.props.find(p=>p.k==='cat');const rx=c.x-P.x,ry=c.y-P.y,d=Math.hypot(rx,ry);if(d>1.8)return null;const f=rx*Math.cos(P.a)+ry*Math.sin(P.a);return f>0&&Math.abs(-rx*Math.sin(P.a)+ry*Math.cos(P.a))<.6?c:null}
 function goTo(L,x,y,a,quiet){const from=LV;LV=L;P.x=x;P.y=y;P.a=a;P.pitch=0;G.fade=1;SND.door();
-  if(from===DK&&L===CITY&&discoTime()&&(P.danceT||0)>15&&!DK.fought){P.danceT=0;msg('На крыльце ДК тебя уже ждут.','bad');for(const[ex,ey]of[[17.5,19.6],[21.5,19.6]]){const e=mkNPC('gop',ex,ey,'','',CITY);e.named='';e.st='chase';e.angry=1;e.cd=.8;delete e.place}}
+  if(from===DK&&L===CITY&&discoTime()&&(P.danceT||0)>15&&!DK.fought){P.danceT=0;msg('На крыльце ДК тебя уже ждут.','bad');for(const[ex,ey]of[[12.6,15.8],[13.2,19.8]]){const e=mkNPC('gop',ex,ey,'','',CITY);e.named='';e.st='chase';e.angry=1;e.cd=.8;delete e.place}}
   if(L===DK&&discoTime()&&!quiet)msg('В зале гремит дискотека. Тепло, темно и громко.','say')}
 function interact(){if(!playing())return;const cat=lookCat();if(cat){SND.meow();if((G.petT||0)<G.day*1440+G.min-60){G.petT=G.day*1440+G.min;P.warm=Math.min(100,P.warm+5)}msg(pick(['Погладил Барсика. Мурчит, как трактор.','Барсик потёрся о ногу и мяукнул.','Кот лениво приоткрыл один глаз.']),'good');if(cat.mode==='walk'){cat.mode='sit';cat.t=4}return}
   const pr=lookProp();if(pr){if(pr.k==='stop'){curPlace='__bus';openModal(busHTML(pr.stop))}
@@ -2377,11 +2381,12 @@ const MAPCOL={1:'#6d7178',6:'#5fd16a',2:'#8a5240',7:'#5fb6d1',3:'#55574f',4:'#e6
   16:'#c4a87a',17:'#ff5a4a',19:'#e8d27a',18:'#d9d6cc',20:'#2f5aa8',21:'#eceff0',42:'#fff',43:'#fff',44:'#fff',45:'#fff',46:'#fff',47:'#fff',48:'#e4e8ea',49:'#e4e8ea',50:'#e4e8ea',51:'#e4e8ea',52:'#e4e8ea',53:'#e4e8ea',26:'#6a3a26',27:'#a5c4d6'};
 const FLCOL=['#dfe5ea','#b9b6ae','#9fbccb','#a8adb2','#cfd5da','#ddd','#ddd','#ddd','#8f8f94','#e3dccb'];
 MAPCOL[55]='#d9c48e';MAPCOL[56]='#24497a';
-const LABELS=[[14.5,7.6,'Городской парк'],[19.5,13.9,'ДК «Железнодорожник»'],[27.5,12.9,'ТБЦ'],[23,23.7,'Администрация'],[36.9,24.4,'Памятник'],[37,31,'Вокзал'],[41.5,18.9,'Рынок'],
-  [9.5,38.1,'ШАНХАЙ'],[52,38,'Пляж'],[55,43,'БАЙКАЛ'],[30,36.2,'пр. 60 лет СССР'],[45.5,35.6,'Промзона'],[30,6.1,'5-й мкр'],[5,4.5,'ул. Мира'],[21,25.1,'Дом']];
+const LABELS=[[13,6.5,'Городской парк'],[8,12.6,'ДК «Железнодорожник»'],[26.5,19.3,'ТБЦ'],[21.5,16.3,'Администрация'],[30.4,26.9,'Памятник'],[36.8,30.2,'Вокзал'],[37.5,15.3,'Рынок'],
+  [9.5,38.1,'ШАНХАЙ'],[52,38,'Пляж'],[55,43,'БАЙКАЛ'],[19.5,24.6,'Ленинградский пр.'],[33.2,17.6,'пр. 60 лет СССР'],[27,41.6,'Промзона'],[31.5,5.9,'5-й мкр'],[17.5,5.2,'ул. Мира'],[21,25.1,'Дом'],[49.5,13.5,'пути'],[53.2,20.5,'автодорога'],[56,28,'лес']];
 let MAPGRID=true,MAPMENU=false;
 function drawCityMap(c,sc,opt){opt=opt||{};const g=c.getContext('2d'),L=CITY;g.clearRect(0,0,c.width,c.height);
   for(let y=0;y<L.h;y++)for(let x=0;x<L.w;x++){const t=L.map[y*L.w+x];g.fillStyle=t?MAPCOL[t]||'#666':FLCOL[L.fl[y*L.w+x]]||'#ddd';g.fillRect(x*sc,y*sc,sc+.5,sc+.5)}
+  for(const p of L.props)if(p.k==='pine'||p.k==='birch'){g.fillStyle=p.k==='pine'?'#4f8a58':'#9cbf86';g.beginPath();g.arc(p.x*sc,p.y*sc,sc*.32,0,7);g.fill()}
   for(const p of L.props)if(p.k==='barrel'){g.fillStyle='#e8562a';g.beginPath();g.arc(p.x*sc,p.y*sc,sc*.3,0,7);g.fill()}
   for(const e of L.enemies)if(!e.dead&&e.type==='dolg'){g.fillStyle='#ffd04a';g.strokeStyle='#000';g.beginPath();g.arc(e.x*sc,e.y*sc,sc*.4,0,7);g.fill();g.stroke()}
   for(const it of L.items)if(it.kind==='debt'){g.fillStyle='#ffd04a';g.fillRect(it.x*sc-4,it.y*sc-4,8,8)}
@@ -2403,7 +2408,7 @@ function openMenuMap(){curPlace='__map';MAPMENU=true;
   <div class="legend"><span><i style="background:#5fd16a"></i>твой подъезд</span><span><i style="background:#e6c13b"></i>ларёк</span><span><i style="background:#f0a03a"></i>рынок</span><span><i style="background:#ff5a4a"></i>кафе «Северянка»</span><span><i style="background:#5fb6d1"></i>стеклотара</span><span><i style="background:#2f5aa8"></i>администрация</span><span><i style="background:#24497a"></i>ДК</span><span><i style="background:#e8562a"></i>бочка с огнём</span><span><i style="background:#ffd04a"></i>цель и должник</span><span><i style="background:#7ad0ff"></i>доп. дело</span><span><i style="background:#d9784a"></i>баня</span><span><i style="background:#c9ccd0"></i>гараж</span></div>
   <div class="cardFoot"><span style="display:flex;gap:8px;flex-wrap:wrap" id="mapBtns">${mapButtons()}</span><button class="btn" data-a="close">Закрыть</button></div></div>`);redrawMap()}
 function openMap(){if(!G||(G.state!=='play'&&G.state!=='modal'))return;curPlace='__map';MAPMENU=false;
-  openModal(`<div class="card wide"><div class="stamp">СХЕМА</div><h2>Северобайкальск</h2><p class="sub">Север вверху. Парк и ДК «Железнодорожник» на северо-западе, ТБЦ и администрация в центре, вокзал с памятником у проспекта 60 лет СССР, Шанхай на юго-западе, пляж и Байкал на юго-востоке.</p>
+  openModal(`<div class="card wide"><div class="stamp">СХЕМА</div><h2>Северобайкальск</h2><p class="sub">Север вверху. От вокзала с памятником Ленинградский проспект ведёт к ДК «Железнодорожник», вдоль путей идёт проспект 60 лет СССР. За путями автодорога, лес и пляж, дальше Байкал. Шанхай на юго-западе.</p>
   <div class="mapwrap"><canvas id="bigmap" width="1440" height="1104"></canvas></div>
   <div class="legend"><span><i style="background:#5fd16a"></i>твой подъезд</span><span><i style="background:#e6c13b"></i>ларёк</span><span><i style="background:#f0a03a"></i>рынок</span><span><i style="background:#ff5a4a"></i>кафе «Северянка»</span><span><i style="background:#5fb6d1"></i>стеклотара</span><span><i style="background:#2f5aa8"></i>администрация</span><span><i style="background:#24497a"></i>ДК</span><span><i style="background:#e8562a"></i>бочка с огнём</span><span><i style="background:#ffd04a"></i>цель и должник</span><span><i style="background:#7ad0ff"></i>доп. дело</span><span><i style="background:#d9784a"></i>баня</span><span><i style="background:#c9ccd0"></i>гараж</span></div>
   <div class="cardFoot"><span class="cash">${LV===FLAT?'Ты дома, кв. 17':'Красная стрелка — ты'}</span><span style="display:flex;gap:8px;flex-wrap:wrap" id="mapBtns">${mapButtons()}</span><button class="btn" data-a="close">Закрыть</button></div></div>`);
@@ -2505,12 +2510,12 @@ function achHTML(){const n=ACH.filter(a=>ACHS[a[0]]).length,back=(G.state==='men
 function statsLine(){const s=Object.assign(newStats(),G.stats||{});return'Дней: '+G.day+' · драк выиграно: '+(P.kills||0)+' · заработано: '+fmt(s.earned)+' р. · омулей: '+s.fish+' · в бане: '+s.banya+' · ночей в КПЗ: '+s.kpz+' · болел: '+s.ill+' · добрых дел: '+s.good}
 
 /* --- вторая глава: «Пропавший вагон» --- */
-const WAG=[39.5,31.5];
+const WAG=[30.4,40.2];
 function goalText2(){const s=G&&G.s2;if(!s)return'';return s.st===1?'Доп.: бригадир Михалыч на вокзале ищет помощника':s.st===2?'Доп.: найди пропавший вагон — ночью, в тупике у промзоны':s.st===3?'Доп.: вагон найден. Верни Михалычу, продай Сиплому или забери тушёнку':''}
-function goalPos2(){const s=G&&G.s2;if(!s)return null;return s.st===1?[37,27.3]:(s.st===2||s.st===3)?WAG:null}
+function goalPos2(){const s=G&&G.s2;if(!s)return null;return s.st===1?[32.6,29.6]:(s.st===2||s.st===3)?WAG:null}
 function ensureS2(){const s=G.s2;if(!s||!CITY)return;const w=CITY.props.find(p=>p.k==='wagonX');
   if(s.st===2&&isNight()){if(!w)CITY.props.push({k:'wagonX',x:WAG[0],y:WAG[1],r:.75});
-    if(!s.levDead&&!CITY.enemies.some(e=>e.type==='lev'&&!e.dead)){const b=mkNPC('lev',41.2,31.4);b.angry=1;for(const[x,y]of[[38.4,33.6],[41.5,29.8]]){const g=mkNPC('ban',x,y);g.angry=1;g.s2g=1;g.v=0}}}
+    if(!s.levDead&&!CITY.enemies.some(e=>e.type==='lev'&&!e.dead)){const b=mkNPC('lev',29.2,41.8);b.angry=1;for(const[x,y]of[[28.0,42.5],[30.4,38.5]]){const g=mkNPC('ban',x,y);g.angry=1;g.s2g=1;g.v=0}}}
   if(s.st===3&&!w)CITY.props.push({k:'wagonX',x:WAG[0],y:WAG[1],r:.75});
   if(s.st>=9&&w)CITY.props=CITY.props.filter(p=>p.k!=='wagonX')}
 function wagonHTML(){return`<div class="card"><div class="stamp">ПРОМЗОНА</div><h2>Пропавший вагон</h2><p class="sub">Пломба сорвана, внутри ящики с тушёнкой. Накладная у тебя в кармане.</p><div class="rows">`+
@@ -2627,7 +2632,7 @@ function updExtra(dt){if(!G.stats)G.stats=newStats();updExtra2(dt);
   if(P.money>=300000)ach('rich');
   if(G.tut===2&&LV===CITY)tutStep(3);if(G.tut===3&&G.story.st>=1)tutStep(4);
   if(LV===CITY&&G.evFight){const v=CITY.enemies.find(e=>e.ev==='victim'&&!e.dead);if(!v)G.evFight=0;else if(!CITY.enemies.some(e=>e.evf&&!e.dead)){G.evFight=0;v.ev='done';const r=price(1500);P.money+=r;rep('town',10);G.stats.good++;SND.coin();msg('— Спасибо, браток! Выручил. Вот, держи '+fmt(r)+' руб.','good');if(G.stats.good>=3)ach('good')}}
-  if(isSpring()&&LV===CITY&&P.x+.5*P.y>52&&Math.random()<dt/18){SND.ice();if(!G.iceMsg){G.iceMsg=1;msg('С Байкала доносится гул и треск: лёд начинает ломаться. Далеко от берега лучше не ходить.','bad')}}}
+  if(isSpring()&&LV===CITY&&P.x+.5*P.y>61&&Math.random()<dt/18){SND.ice();if(!G.iceMsg){G.iceMsg=1;msg('С Байкала доносится гул и треск: лёд начинает ломаться. Далеко от берега лучше не ходить.','bad')}}}
 
 
 /* ================= G001.014: логика ================= */
@@ -2668,7 +2673,7 @@ function buildInteriors2(){
     {lights:[{x:4.5,y:2.5,r:6,c:[1,.85,.6],i:.85}],amb:()=>.3});
   for(let i=0;i<PODEZD2.w*PODEZD2.h;i++)PODEZD2.pv[i]=((i*2246822519)>>>0)%97;PODEZD2.ceilTex=TX.ceilPod;PODEZD2.props.push({k:'bulb',x:4.5,y:2.5,z:1.9});
   MARKET=buildInt('market',['TTTTTTTTTTTT','T..........T','T000.111.33T','T..........T','T..........T','T222...444.T','T..........T','TTTTTEETTTTT'],{T:150,'0':151,'1':152,'2':153,'3':154,'4':155,E:157},()=>11,
-    {ceil:3,lights:[{x:3,y:3.5,r:5,c:[1,.9,.7],i:.7},{x:8,y:3.5,r:5,c:[1,.9,.7],i:.7},{x:5.5,y:6,r:4,c:[1,.9,.7],i:.5}],amb:()=>.55,exits:{'5,7':[41.5,23.4,Math.PI/2],'6,7':[41.5,23.4,Math.PI/2]}});
+    {ceil:3,lights:[{x:3,y:3.5,r:5,c:[1,.9,.7],i:.7},{x:8,y:3.5,r:5,c:[1,.9,.7],i:.7},{x:5.5,y:6,r:4,c:[1,.9,.7],i:.5}],amb:()=>.55,exits:{'5,7':[37.5,19.5,Math.PI/2],'6,7':[37.5,19.5,Math.PI/2]}});
   MARKET.ceilTex=TX.tentCeil;for(let x=1;x<11;x++){if([151,152,154].includes(MARKET.map[2*12+x]))MARKET.ori[2*12+x]=3;if([153,155].includes(MARKET.map[5*12+x]))MARKET.ori[5*12+x]=1}
   for(const[x,y]of[[3,3.5],[8,3.5]])MARKET.props.push({k:'bulb',x,y,z:2.3});
   mkNPC('zhen',2,1.5,'mk1','Продавщица кожанок',MARKET,'market');mkNPC('muzh',6,1.5,'mk2','Кассетчик',MARKET,'market');const bar=mkNPC('ban',9.6,1.5,'baryga','Барыга',MARKET,'market');bar.v=1;
@@ -2681,7 +2686,7 @@ function buildInteriors2(){
     {lights:[{x:2.5,y:2.5,r:4,c:[1,.9,.7],i:.85}],amb:()=>.35,exits:{'2,5':[15.5,30.4,Math.PI/2]}});
   for(const x of[1,2,3])GARAGE.ori[5+x]=3;
   ADMIN2=buildInt('admin2',['##1#2#3###','#........#','#........K','#........#','#........#','##B#E#####'],{'#':180,'1':181,'2':182,'3':183,K:184,B:186,E:185},()=>6,
-    {ceil:2.6,lights:[{x:3,y:2.5,r:5,c:[1,.95,.85],i:.75},{x:7,y:2.5,r:5,c:[1,.95,.85],i:.75}],amb:()=>.5,exits:{'4,5':[22.5,20.4,-Math.PI/2]}});
+    {ceil:2.6,lights:[{x:3,y:2.5,r:5,c:[1,.95,.85],i:.75},{x:7,y:2.5,r:5,c:[1,.95,.85],i:.75}],amb:()=>.5,exits:{'4,5':[21.5,19.6,Math.PI/2]}});
   ADMIN2.props.push({k:'plafon',x:3,y:2.5,z:2.15},{k:'plafon',x:7,y:2.5,z:2.15});
   [['babka',7.55,2.75],['muzh',6.85,2.8],['zhen',6.15,2.7],['babka',5.45,2.75],['muzh',4.75,2.8]].forEach(([t,x,y])=>{const m=mkNPC(t,x,y,'','В очереди',ADMIN2);m.queue=1;m.fa=0});
   GARAGE.props.push({k:'gcar',x:2.5,y:3.1},{k:'bulb',x:2.5,y:2.5,z:1.9});
@@ -2711,30 +2716,36 @@ function nbHTML(k){const n=NB[k],d=G.nb||(G.nb={}),ri=(G.day*7+k.charCodeAt(2))%
     (k==='n19'?row('Купить самогон','у Зины дешевле, чем на рынке · у тебя '+P.inv.samogon,fmt(price(800))+' р.','nb:n19:buy',P.money<price(800),'Купить'):'')+`</div>${cardFoot()}</div>`}
 
 /* --- транспорт: машины, ПАЗик, поезда --- */
-function initTraffic(Pr){const V=[['carB',0,[[6,19.45],[37.4,19.45],[37.4,20.55],[6,20.55]],1,3.2,0],['bus',2,[[6,19.45],[37.4,19.45],[37.4,20.55],[6,20.55]],1,2.1,2],
-  ['carW',0,[[1.8,24.5],[33.3,24.5]],0,2.8,0],['carG',0,[[20.5,38.0],[56.4,2.1]],0,3.0,0],['car',1,[[56.4,2.1],[20.5,38.0]],0,2.6,1]];
-  for(const[spr,_,path,loop,spd,seg]of V){const a=path[seg%path.length];Pr.push({k:'mcar',spr,path,loop,spd,seg:seg%path.length,dirS:1,x:a[0],y:a[1],dir:0,r:.42,wait:0})}}
+function initTraffic(Pr){const sl=(sv,y)=>[sv-.5*y,y],ul=(uv,x)=>[x,uv+.5*x];
+  const HW=[sl(56.7,1.3),sl(56.7,43.7),sl(57.9,43.7),sl(57.9,1.3)],
+    R2L=[sl(41.1,1.3),sl(41.1,37.5),[2.2,37.5],[2.2,38.5],sl(42.1,38.5),sl(42.1,1.3)],
+    BUS=[ul(12.1,12.4),[28.04,26.12],sl(41.1,37.5),[8,37.5],[8,38.5],sl(42.1,38.5),[28.44,27.32],ul(13.1,12.4)],
+    AV=[ul(12.1,12.4),[27.6,25.9],[27.9,27.05],ul(13.1,12.4)],
+    MR=[sl(21.4,1.3),sl(21.4,36.5),sl(22.2,36.5),sl(22.2,1.3)];
+  const V=[['carB',HW,3.4,0],['carG',HW,3.0,2],['carW',R2L,2.8,0],['car',R2L,2.6,3],['bus',BUS,2.1,0],['carB',AV,2.6,0],['carW',MR,2.8,0],['carG',MR,2.6,2]];
+  for(const[spr,path,spd,seg]of V){const a=path[seg];Pr.push({k:'mcar',spr,path,loop:1,spd,seg,dirS:1,x:a[0],y:a[1],dir:0,r:.42,wait:0})}}
 function vehNext(v){if(v.loop)return(v.seg+1)%v.path.length;const n=v.seg+v.dirS;if(n<0||n>=v.path.length){v.dirS=-v.dirS;return v.seg+v.dirS}return n}
 function updTraffic(dt){if(!CITY.trInit){CITY.trInit=1;initTraffic(CITY.props)}const Vs=CITY.props.filter(p=>p.k==='mcar');
   for(const v of Vs){const ni=vehNext(v),t=v.path[ni],dx=t[0]-v.x,dy=t[1]-v.y,d=Math.hypot(dx,dy);if(d<.1){v.seg=ni;continue}
     const ux=dx/d,uy=dy/d;v.dir=Math.atan2(uy,ux);let block=false;
     const px=P.x-v.x,py=P.y-v.y,f=px*ux+py*uy,l=Math.abs(-px*uy+py*ux);if(f>0&&f<1.7&&l<.75){block=true;if((v.beepT||0)<=0){v.beepT=2.5;if(Math.hypot(px,py)<9)SND.beep()}}
-    for(const o of Vs){if(o===v)continue;const ox=o.x-v.x,oy=o.y-v.y,of=ox*ux+oy*uy,ol=Math.abs(-ox*uy+oy*ux);if(of>0&&of<1.9&&ol<.6){block=true;break}}
-    for(const e of CITY.enemies){if(e.dead)continue;const ex=e.x-v.x,ey=e.y-v.y,ef=ex*ux+ey*uy;if(ef>0&&ef<1.3&&Math.abs(-ex*uy+ey*ux)<.6){block=true;break}}
-    v.beepT=(v.beepT||0)-dt;if(v.spr==='bus'&&Math.abs(v.x-32.6)<.2&&v.path===v.path&&v.y<20&&(v.stopT||0)<=0){v.stopT=4;v.wait=3}
+    let vb=false;for(const o of Vs){if(o===v||(v.ghost||0)>0)continue;const ox=o.x-v.x,oy=o.y-v.y,of=ox*ux+oy*uy,ol=Math.abs(-ox*uy+oy*ux);if(of>0&&of<1.9&&ol<.6){block=vb=true;break}}
+    if(!((v.ghost||0)>0))for(const e of CITY.enemies){if(e.dead)continue;const ex=e.x-v.x,ey=e.y-v.y,ef=ex*ux+ey*uy;if(ef>0&&ef<1.3&&Math.abs(-ex*uy+ey*ux)<.6){block=vb=true;break}}
+    v.ghost=(v.ghost||0)-dt;if(vb){v.bt=(v.bt||0)+dt;if(v.bt>4){v.bt=0;v.ghost=2.5}}else v.bt=0;
+    v.beepT=(v.beepT||0)-dt;if(v.spr==='bus'&&(v.stopT||0)<=0&&STOPS.some(q=>Math.hypot(q.x-v.x,q.y-v.y)<1.6)){v.stopT=6;v.wait=3}
     if(v.wait>0){v.wait-=dt;v.stopT-=dt;continue}v.stopT=(v.stopT||0)-dt;if(block)continue;const st=Math.min(d,v.spd*dt);v.x+=ux*st;v.y+=uy*st}
   /* поезд */
-  const TA=[58.6,14.0],TD=[-Math.SQRT1_2,Math.SQRT1_2],TL=43;G.trainT=(G.trainT===undefined?rnd(25,60):G.trainT)-dt;
+  const TA=[RT1-.3,.6],TD=[-.4472,.8944],TL=49;G.trainT=(G.trainT===undefined?rnd(25,60):G.trainT)-dt;
   let tr=CITY.train;if(!tr&&G.trainT<=0){G.trainT=rnd(90,170);const dirS=Math.random()<.5?1:-1,kinds=['loco',...Array.from({length:6},()=>pick(['tank','wagonX','flatcar','tank']))];
     tr=CITY.train={u:dirS>0?-1:TL+1,dirS,cars:kinds.map((spr,i)=>{const p={k:'train',spr,x:-9,y:-9,r:.6,dir:0};CITY.props.push(p);return p}),horn:0}}
   if(tr){tr.u+=3.4*dt*tr.dirS;let alive=false;tr.cars.forEach((c,i)=>{const u=tr.u-i*1.95*tr.dirS;c.x=TA[0]+TD[0]*u;c.y=TA[1]+TD[1]*u;c.dir=Math.atan2(TD[1]*tr.dirS,TD[0]*tr.dirS);if(u>-2&&u<TL+2)alive=true;
-      if(Math.hypot(P.x-c.x,P.y-c.y)<.8&&(G.trHit||0)<=0){G.trHit=1.2;hurtP(28,'поезд');const n=[Math.SQRT1_2,Math.SQRT1_2],sd=((P.x-c.x)*n[0]+(P.y-c.y)*n[1])>=0?1:-1;for(let k=0;k<6;k++){const nx=P.x+n[0]*sd*.3,ny=P.y+n[1]*sd*.3;if(free(nx,ny,.22)){P.x=nx;P.y=ny}}msg('Тебя задело вагоном! Под поезд не лезь.','bad')}});
+      if(Math.hypot(P.x-c.x,P.y-c.y)<.8&&(G.trHit||0)<=0){G.trHit=1.2;hurtP(28,'поезд');const n=[.8944,.4472],sd=((P.x-c.x)*n[0]+(P.y-c.y)*n[1])>=0?1:-1;for(let k=0;k<6;k++){const nx=P.x+n[0]*sd*.3,ny=P.y+n[1]*sd*.3;if(free(nx,ny,.22)){P.x=nx;P.y=ny}}msg('Тебя задело вагоном! Под поезд не лезь.','bad')}});
     G.trHit=(G.trHit||0)-dt;const hd=Math.hypot(P.x-tr.cars[0].x,P.y-tr.cars[0].y);if(hd<16&&tr.horn<=0){SND.horn();tr.horn=6}tr.horn-=dt;
     if(!alive||(tr.dirS>0?tr.u-12>TL+2:tr.u+12<-2)){CITY.props=CITY.props.filter(p=>p.k!=='train');CITY.train=null}}}
 function trafficLights(L){if(L!==CITY||!isNight())return;for(const p of CITY.props){if(p.k==='mcar'){addDyn(L,p.x+Math.cos(p.dir)*1.1,p.y+Math.sin(p.dir)*1.1,2.2,[1,.95,.7],.9)}else if(p.k==='train'&&p.spr==='loco')addDyn(L,p.x+Math.cos(p.dir)*1.6,p.y+Math.sin(p.dir)*1.6,3,[1,.95,.75],1.1)}}
 
 /* --- очереди у ларьков --- */
-const QK=[[31,17],[16,29],[43,23]];
+const QK=[[29,20],[16,29],[32,22],[20,39]];
 function ensureQueues(){const h=G.min/60,day=h>=9&&h<19;
   if(!day)CITY.enemies=CITY.enemies.filter(e=>!(e.queue&&(LV!==CITY||Math.hypot(e.x-P.x,e.y-P.y)>9)));
   if(!day)return;QK.forEach(([kx,ky],qi)=>{if(CITY.enemies.some(e=>e.queue===qi+2&&!e.dead))return;
@@ -2748,7 +2759,7 @@ function updExtra2(dt){
   if(isSummer()&&LV===CITY&&isBaikal(P.x,P.y)){for(let k=0;k<80&&isBaikal(P.x,P.y);k++){P.x-=.2;P.y-=.1}msg('Байкал вскрылся — по воде не пройти.','bad')}
   if(LV===CITY){updTraffic(dt)}
   if(LV===BANYA&&P.y<3){P.warm=Math.min(100,P.warm+dt*2);if(Math.random()<dt/3)nz(.6,800,.5,.04)}
-  if(isSummer()&&LV===CITY){const h=G.min/60,zone=(P.y<17&&P.x+P.y<44)||isBeach(P.x,P.y)||P.x+P.y>74||P.x<3||P.y>42,rp=(G.repel||0)>G.day*1440+G.min;
+  if(isSummer()&&LV===CITY){const h=G.min/60,zone=(P.y<13&&P.x<25)||isBeach(P.x,P.y)||sOf(P.x,P.y)>=FOREST[0]||P.x<3||P.y>42,rp=(G.repel||0)>G.day*1440+G.min;
     if(h>=17&&h<23.5&&zone&&!rp&&Math.random()<dt/3.5){SND.mosq();P.hp=Math.max(1,P.hp-.7);P.cause='комары';if(!G.mosqMsg||G.day*1440+G.min-G.mosqMsg>120){G.mosqMsg=G.day*1440+G.min;msg('Комары жрут нещадно! «ДЭТА» продают в аптеке ТБЦ.','bad')}}}}
 function clickExtra2(A,a){
   if(A==='nb'){const k=a[1],n=NB[k];if(a[2]==='rum'){passTime(10);msg(pick(n.rum),'say')}else if(a[2]==='buy'){const p=price(800);if(P.money>=p){P.money-=p;P.inv.samogon++;SND.coin();msg('Зина завернула бутылку в газету.','good')}}
@@ -2870,8 +2881,8 @@ function render(){
   for(let y=yH;y<H;y++){const p=y+.5-H2,rd=CAMZ*F/p;const stx=rd*(rdx1-rdx0)/W,sty=rd*(rdy1-rdy0)/W;let fx=P.x+rd*rdx0,fy=P.y+rd*rdy0;const f=fogAt(rd);const o=y*W;
     for(let x=0;x<W;x++){const cx=Math.floor(fx),cy=Math.floor(fy);let tex;
       let fi;if(cx>=0&&cy>=0&&cx<LW&&cy<LH){const ci=cy*LW+cx;fi=FL[ci];if(DG&&DG[ci]){const cf=FFN(fx,fy);fi=cf>=0?cf:FBASE[ci]}}else fi=out?(isBaikal(cx,cy)?2:0):6;
-      if(fi===8){const sv=fx+fy,d=Math.min(Math.abs(sv-70.85),Math.abs(sv-72.15));let c;
-        if(Math.abs(d-.24)<.035)c=0xff8a8580;else if(d<.42&&((fx-fy)*1.6-Math.floor((fx-fy)*1.6))<.34)c=0xff2c3a4a;else c=FLOORS[0].px[(((fy*64)|0)&63)*64+(((fx*64)|0)&63)]&0xffe0e0e0;
+      if(fi===8){const sv=fx+.5*fy,d=Math.min(Math.abs(sv-RT1),Math.abs(sv-RT2))*1.265;let c;
+        if(Math.abs(d-.24)<.035)c=0xff8a8580;else if(d<.42&&((fy-.5*fx)*2.02-Math.floor((fy-.5*fx)*2.02))<.34)c=0xff2c3a4a;else c=FLOORS[0].px[(((fy*64)|0)&63)*64+(((fx*64)|0)&63)]&0xffe0e0e0;
         buf[o+x]=CB&&cx>=0&&cy>=0&&cx<LW&&cy<LH?shadeL(c,Lf,CB,(((fy*LR)|0)*LMW+((fx*LR)|0))*3,f):shade(c,Lf,f)}
       else{const ft=FLOORS[fi],fs=ft.w||64,fm=fs-1,c=ft.px[(((fy*fs)|0)&fm)*fs+(((fx*fs)|0)&fm)];buf[o+x]=CB&&cx>=0&&cy>=0&&cx<LW&&cy<LH?shadeL(c,Lf,CB,(((fy*LR)|0)*LMW+((fx*LR)|0))*3,f):shade(c,Lf,f)}fx+=stx;fy+=sty}}
   const M=LV.map,thr=Math.max(.99,CAMZ),BX=LV.bx||null,OPEN=LV.open||null,ORI=LV.ori||null;
@@ -3095,7 +3106,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Новые помещения: рынок под навесом с прилавками, баня с парилкой, гараж с верстаком и ямой, второй этаж администрации с очередью на биржу','Второй этаж подъезда: соседи Пётр Ильич, тётя Зина и Валера — просьбы, награды и слухи','Живые улицы: «Жигули» и ПАЗик ездят по дорогам и сигналят, по путям ходят товарняки, днём у ларьков очереди','С 40-го дня лето: трава, открытый Байкал, рыбалка с лодки, дожди и комары («ДЭТА» в аптеке ТБЦ)'];
+const CHANGES=['Город перестроен по реальной схеме: пути, автодорога и лес вдоль берега Байкала идут под углом','Вокзал стоит вдоль путей, перед ним площадь с памятником и Т-образный перекрёсток','Ленинградский проспект ведёт от вокзала прямо к ДК «Железнодорожник», проспект 60 лет СССР идёт вдоль путей','ТБЦ, администрация, рынок, 5-й микрорайон и промзона расставлены вдоль новых улиц; машины, ПАЗик и поезда ездят по ним'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
