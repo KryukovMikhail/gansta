@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.023';
+const BUILD='G001.024';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1114,6 +1114,13 @@ TX.pnA=SQ((g,e,R)=>panelUnit(g,e,R,0),4001);TX.pnB=SQ((g,e,R)=>panelUnit(g,e,R,1
 TX.pnLA=SQ((g,e,R)=>panelUnit(g,e,R,0,1),4004);TX.pnLB=SQ((g,e,R)=>panelUnit(g,e,R,1,1),4005);TX.pnLC=SQ((g,e,R)=>panelUnit(g,e,R,2,1),4006);
 TX.pnTop=SQ((g,e,R)=>{mosaic(g,R,0,.4,1,.6);fwin(g,e,R,.13,.6,.24,.24,{});fwin(g,e,R,.6,.6,.24,.24,{});g.fillStyle='#6a3a24';g.fillRect(0,.4,1,.06);g.fillStyle='#8a5034';g.fillRect(0,.415,1,.012);
   g.fillStyle='rgba(0,0,0,.25)';g.fillRect(0,.46,1,.012);g.fillStyle='#eef3f6';g.fillRect(0,.4,1,.016)},4007);
+function brickRed(g,R,x,y,w,h){g.fillStyle='#9a3e2c';g.fillRect(x,y,w,h);for(let yy=y;yy<y+h;yy+=.032){const o=(Math.round(yy/.032)%2)*.045;for(let xx=x-o;xx<x+w;xx+=.09){g.fillStyle=`rgb(${150+R()*34|0},${56+R()*20|0},${40+R()*14|0})`;g.fillRect(xx+.004,yy+.004,.082,.025)}}g.fillStyle='rgba(230,200,180,.08)';g.fillRect(x,y,w,h)}
+function brickUnit(g,e,R,kind,lowFloor){brickRed(g,R,0,0,1,1);g.fillStyle='#e8e2d6';for(const fy of[0,.5])g.fillRect(0,fy+.35,1,.025);
+  if(kind===1){g.fillStyle='#d8d2c4';for(const fy of[0,.5]){if(lowFloor&&fy===.5)continue;g.fillRect(.52,fy+.36,.4,.03);g.fillStyle='#5a5e62';for(let k=0;k<6;k++)g.fillRect(.53+k*.075,fy+.29,.008,.07);g.fillRect(.52,fy+.29,.4,.008);g.fillStyle='#d8d2c4'}}
+  for(const fy of[0,.5]){if(lowFloor&&fy===.5)continue;fwin(g,e,R,.13,fy+.08,.24,.26,{frame:'#f2efe8'});fwin(g,e,R,.6,fy+.08,.24,.26,{frame:'#f2efe8'})}
+  if(lowFloor){fwin(g,e,R,.13,.58,.24,.24,{frame:'#f2efe8'});fwin(g,e,R,.6,.58,.24,.24,{frame:'#f2efe8'});g.fillStyle='#7a766e';g.fillRect(0,.9,1,.1);g.fillStyle='rgba(240,246,250,.85)';g.fillRect(0,.985,1,.015)}}
+TX.brA=SQ((g,e,R)=>brickUnit(g,e,R,0),4150);TX.brB=SQ((g,e,R)=>brickUnit(g,e,R,1),4151);TX.brLA=SQ((g,e,R)=>brickUnit(g,e,R,0,1),4152);TX.brLB=SQ((g,e,R)=>brickUnit(g,e,R,1,1),4153);
+TX.brTop=SQ((g,e,R)=>{brickRed(g,R,0,.4,1,.6);fwin(g,e,R,.13,.6,.24,.24,{frame:'#f2efe8'});fwin(g,e,R,.6,.6,.24,.24,{frame:'#f2efe8'});g.fillStyle='#5a2a1e';g.fillRect(0,.4,1,.06);g.fillStyle='#eef3f6';g.fillRect(0,.4,1,.016)},4154);
 TX.pnDoor=SQ((g,e,R)=>{panelUnit(g,e,R,0,1);mosaic(g,R,.25,.48,.5,.42);g.fillStyle='#8e8a82';g.fillRect(.2,.88,.6,.12);g.fillStyle='#a8a49a';g.fillRect(.18,.94,.64,.06);
   g.fillStyle='#d8d4cc';g.fillRect(.2,.45,.6,.04);g.fillStyle='rgba(0,0,0,.35)';g.fillRect(.22,.49,.56,.02);g.fillStyle='#eef3f6';g.fillRect(.2,.43,.6,.025);
   g.fillStyle='#3e4a52';g.fillRect(.33,.55,.34,.33);g.fillStyle='#56646e';g.fillRect(.35,.57,.14,.29);g.fillRect(.51,.57,.14,.29);g.fillStyle='#9ab0bc';g.fillRect(.37,.59,.1,.08);g.fillRect(.53,.59,.1,.08);
@@ -1233,6 +1240,7 @@ TX.vokRearTop=SQ((g,e,R)=>{g.clearRect(0,0,1,1);g.fillStyle='#ebe9e3';g.fillRect
 
 /* --- типы клеток --- */
 T[1]={h:2.6,segs:[['pnLA','pnLB','pnLC'],['pnA','pnB','pnC'],'pnTop']};
+T[111]={h:2.6,segs:[['brLA','brLB'],['brA','brB'],'brTop']};
 T[6]={h:2.6,segs:['pnDoor',['pnA','pnB','pnC'],'pnTop'],act:'home'};
 T[18]={h:2.3,segs:['admL',['admM','admM','admMF'],'admCap']};
 T[20]={h:2.7,segs:['admDoor2','admM','admT'],act:'admin'};
@@ -1308,10 +1316,10 @@ function cityF(fx,fy){const x=fx-OX,s=x+.5*fy,u=fy-.5*x,A=s/1.118,B=u/1.118;
   if(A>=RING[0]&&A<RING[2]&&B>=7&&B<RING[3])return 1;
   if(A>=-5&&A<13&&B>=4.5&&B<18)return 10;
   if(u>=AVE[0]&&u<AVE[1]&&A>=-5&&s<R2[1])return 1;
-  if(A>=14.6&&A<36.3){if((B>=8.2&&B<9.55)||(B>=12.99&&B<14.3))return 14;                           // тротуары
+  if(A>=(B>11?13:14.6)&&A<36.3){if((B>=8.2&&B<9.55)||(B>=12.99&&B<14.3))return 14;                           // тротуары
     if(B>=9.55&&B<10.38)return(B<9.65||B>=10.28)?11:0;if(B>=12.16&&B<12.99)return(B<12.26||B>=12.89)?11:0}  // газоны с бордюром
   if(s>=R2[1]&&s<48&&u>=5&&u<20)return 10;
-  if(s>=MIRA[0]&&s<MIRA[1]&&fy<38.6)return 1;
+  if(s>=MIRA[0]&&s<MIRA[1]&&u<AVE[1])return 1;
   if(B>=19&&B<20.6&&s>=MIRA[1]&&s<R2[0])return 1;
   return-1}
 const isBaikal=(x,y)=>x-OX+.5*y>=67,isBeach=(x,y)=>!isBaikal(x,y)&&x-OX+.5*y>=63.5;
@@ -1357,8 +1365,9 @@ function buildCity(){
   const kiosk=(a,b,dir)=>{const k=mkOBB(L,a,b,1,1,4,'ларёк');const c=AW(a+.5,b+.5);KSPEC.push({x:c[0],y:c[1],dir,o:k})};
   kiosk(11.2,3.2,3);kiosk(38.6,2.2,3);
   // по дороге к вокзалу — по три пятиэтажки с каждой стороны; средняя южная — дом 4 с нашим подъездом
-  for(const a of[15.5,22.5,29.5])mkOBB(L,a,6,6,2,1,'дом');
-  mkOBB(L,15.5,14.4,6,2,1,'дом');{const h=mkOBB(L,22.5,14.4,6,2,1,'дом 4');oset(h,2,0,6);DOORS.home=obbFront(h,2,0,1)}mkOBB(L,29.5,14.4,6,2,1,'дом');
+  for(const a of[22.5,29.5])mkOBB(L,a,6,6,2,1,'дом');
+  mkOBB(L,15.5,6,6,2,111,'угловой дом');mkOBB(L,15.5,1,2,5,111,'угловой дом');
+  mkOBB(L,15.5,14.4,6,2,111,'угловой дом');mkOBB(L,15.5,16.4,2,2,111,'угловой дом');{const h=mkOBB(L,22.5,14.4,6,2,1,'дом 4');oset(h,2,0,6);DOORS.home=obbFront(h,2,0,1)}mkOBB(L,29.5,14.4,6,2,1,'дом');
   // двор за домом 4: гаражи и ещё две пятиэтажки
   {const g=mkOBB(L,22.5,17.6,7,1,3,'гаражи');oset(g,5,0,85);DOORS.garage=obbFront(g,5,0,3);kiosk(29.9,17.6,3)}
   mkOBB(L,15.5,21.6,6,2,1,'дом');mkOBB(L,22.5,21.6,6,2,1,'дом');
@@ -2535,7 +2544,7 @@ TX.garage2=mkTex((g,e,R)=>{g.fillStyle='#64686a';g.fillRect(0,0,64,64);for(let x
 TX.slush=mkTex((g,e,R)=>{g.fillStyle='#a8a59c';g.fillRect(0,0,64,64);noise(g,R,700,['#8f8a7e','#c4c2ba','#7d776a','#b8b4aa'],.6);
   for(let i=0;i<4;i++){const x=R()*64,y=R()*64,w=6+R()*12,h=3+R()*5;ell(g,x,y,w,h,'#6c7880');ell(g,x-w*.3,y-h*.3,w*.3,h*.25,'#9fb0bc')}},134);
 T[83]={h:1.3,segs:['banyaDoor','roofW'],act:'banya'};T[84]={h:1.3,segs:['banyaWall','roofW']};T[85]={h:.95,segs:['garage2'],act:'garage'};
-MAPCOL[83]='#d9784a';Object.assign(MAPCOL,{108:'#d9b896',109:'#2f5aa8',110:'#2f5aa8',135:'#c4a87a',136:'#c4a87a',137:'#c4a87a',138:'#c4a87a',190:'#161616',106:'#eceff0',107:'#d9b896',115:'#8a8478',120:'#fff',121:'#fff',122:'#fff',123:'#fff',124:'#fff',125:'#fff',130:'#c4a87a',131:'#ff5a4a',132:'#c4a87a',133:'#e8d27a',134:'#c4a87a'});MAPCOL[84]='#8a5a3a';MAPCOL[85]='#c9ccd0';
+MAPCOL[83]='#d9784a';Object.assign(MAPCOL,{111:'#a04a36',108:'#d9b896',109:'#2f5aa8',110:'#2f5aa8',135:'#c4a87a',136:'#c4a87a',137:'#c4a87a',138:'#c4a87a',190:'#161616',106:'#eceff0',107:'#d9b896',115:'#8a8478',120:'#fff',121:'#fff',122:'#fff',123:'#fff',124:'#fff',125:'#fff',130:'#c4a87a',131:'#ff5a4a',132:'#c4a87a',133:'#e8d27a',134:'#c4a87a'});MAPCOL[84]='#8a5a3a';MAPCOL[85]='#c9ccd0';
 PLACE.banya='Баня «Лёгкий пар»';PLACE.garage='Гараж №17 во дворе';
 LABELS.push([OX+14,45.2,'Баня'],[...A2W(28,19.6),'Гараж']);
 VAR.lev=[{jacket:'#3e3a2e',pants:'#26262a',hat:'ushanka',hatCol:'#26221e',quilt:1,belt:1,shoe:'#0d0d0d'}];SP.lev=VAR.lev.map(humanSet);
@@ -2819,7 +2828,7 @@ function initTraffic(Pr){const w=(a,b)=>A2W(a,b),bY=(a,y)=>(y*SQ5-(a-0))/2,ay=(a
     R2L=[ay(36.8,1.3),ay(36.8,37.5),[OX-16.8,37.5],[OX-16.8,38.5],ay(37.6,38.5),ay(37.6,1.3)],
     BUS=[w(-3.8,10.8),...RE,w(36.8,10.8),ay(36.8,37.5),[OX+8,37.5],[OX+8,38.5],ay(37.6,38.5),w(37.6,11.75),...RW,w(-3.8,11.75)],
     AV=[w(-3.8,10.8),...RE,w(35.6,10.8),w(35.6,11.75),...RW,w(-3.8,11.75)],
-    MR=[ay(13.6,1.3),ay(13.6,36.4),ay(14.2,36.4),ay(14.2,1.3)],
+    MR=[ay(13.6,1.3),w(13.6,9.3),w(14.2,9.3),ay(14.2,1.3)],
     TL=[w(12.4,5.65),w(-1.65,5.65),w(-1.65,16.2),w(-1.68,17.32),w(-7.3,22.95),w(-7.95,22.3),w(-2.32,16.68),w(-2.55,16),w(-2.55,6.55),w(12.4,6.55)];
   const V=[['carB',HW,3.4,0],['carG',HW,3.0,2],['carW',R2L,2.8,0],['car',R2L,2.6,3],['bus',BUS,2.1,0],['carB',AV,2.6,0],['carW',MR,2.8,0],['carG',MR,2.6,2],['carW',TL,2.6,0],['carB',TL,2.4,3]];
   for(const[spr,path,spd,seg]of V){const a=path[seg];Pr.push({k:'mcar',spr,path,loop:1,spd,seg,dirS:1,x:a[0],y:a[1],dir:0,r:.42,wait:0})}}
@@ -3432,7 +3441,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Улица между ДК и горисполкомом идёт по диагонали ровно посередине между ними','Горисполком стал четырёхэтажным, вход — две стеклянные двери у башни','Улица вдоль ТБЦ и проезд у ДК продолжаются прямо до края города','Вокруг газона на площади — тротуар вдоль заборчика','В подъезде убраны окна'];
+const CHANGES=['Первые дома от площади к вокзалу — угловые, из красного кирпича','Убран кусок улицы Мира между горисполкомом и домами: теперь она доходит только до проспекта'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
