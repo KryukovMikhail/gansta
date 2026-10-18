@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.018';
+const BUILD='G001.019';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -470,8 +470,8 @@ TX.hummock=mkTex((g,e,R)=>{const C=['#b9d3e0','#a5c4d6','#d6e6ee','#8fb3c8'];for
   g.fillStyle='#e6eef2';g.fillRect(0,58,64,6)},621);
 /* полы */
 TX.snow=mkTex((g,e,R)=>{g.fillStyle='#dbe2e8';g.fillRect(0,0,64,64);noise(g,R,700,['#c7d0d8','#eef3f6','#bcc6cf'],.6)},121);
-TX.road=mkTex((g,e,R)=>{g.fillStyle='#bdbab2';g.fillRect(0,0,64,64);noise(g,R,700,['#a29e94','#cfccc4','#8f8b82','#b0a48c'],.7);
-  for(let i=0;i<6;i++){g.fillStyle='rgba(110,104,92,.35)';g.beginPath();g.ellipse(R()*64,R()*64,3+R()*6,1+R()*3,R()*3,0,7);g.fill()}},131);
+TX.road=mkTex((g,e,R)=>{g.fillStyle='#2c2d30';g.fillRect(0,0,64,64);noise(g,R,700,['#232427','#36373a','#1d1e20','#414246'],.7);
+  for(let i=0;i<6;i++){g.fillStyle='rgba(150,148,140,.12)';g.beginPath();g.ellipse(R()*64,R()*64,3+R()*6,1+R()*3,R()*3,0,7);g.fill()}},131);
 TX.ice=mkTex((g,e,R)=>{g.fillStyle='#a9c3d1';g.fillRect(0,0,64,64);noise(g,R,500,['#9ab6c6','#c3d7e2','#e0ecf2'],.6);
   g.strokeStyle='rgba(240,248,252,.7)';g.lineWidth=1;for(let i=0;i<4;i++){g.beginPath();let x=R()*64,y=R()*64;g.moveTo(x,y);for(let k=0;k<5;k++){x+=R()*20-10;y+=R()*20-10;g.lineTo(x,y)}g.stroke()}
   for(let i=0;i<5;i++)ell(g,R()*64,R()*64,4+R()*8,2+R()*4,'rgba(230,240,245,.6)')},141);
@@ -1137,7 +1137,7 @@ TX.admDoor2=SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='#b8946e';g.fillRect(0,.86,1,
   g.fillStyle='#24497a';g.fillRect(.18,.465,.64,.03);ftxt(g,128,'ГОРИСПОЛКОМ',.5,.481,.022,'#f2eee4','700 ');ell(g,.5,.43,.02,.008,'#ffd98a')},4105);
 TX.admTowL=SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='#b8946e';g.fillRect(0,.86,1,.14);for(const y of[.1,.55])fwin(g,e,R,.36,y,.28,.26,{frame:'#f0e8dc'});g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.05,1)},4106);
 TX.admTowM=SQ((g,e,R)=>{admBase2(g,R);for(const y of[.1,.58])fwin(g,e,R,.36,y,.28,.26,{frame:'#f0e8dc'});g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.05,1)},4107);
-TX.admTowU=SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.05,1);ell(g,.5,.38,.2,.2,'#c49e7c');ell(g,.5,.38,.16,.16,'#f0e8dc');ell(g,.5,.38,.13,.13,'#3a4a58');g.strokeStyle='#f0e8dc';g.lineWidth=.012;g.beginPath();g.moveTo(.37,.38);g.lineTo(.63,.38);g.moveTo(.5,.25);g.lineTo(.5,.51);g.stroke();
+TX.admTowU=SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.05,1);ell(g,.5,.38,.22,.22,'#c49e7c');ell(g,.5,.38,.19,.19,'#2a2a2a');ell(g,.5,.38,.165,.165,'#f6f2e2');e.fillStyle='#fff';e.beginPath();e.arc(.5,.38,.165,0,7);e.fill();for(let k=0;k<12;k++){const a=k*Math.PI/6,r0=k%3?.14:.125;g.strokeStyle='#1a1a1a';g.lineWidth=k%3?.008:.016;g.beginPath();g.moveTo(.5+Math.cos(a)*r0,.38+Math.sin(a)*r0);g.lineTo(.5+Math.cos(a)*.158,.38+Math.sin(a)*.158);g.stroke()}g.strokeStyle='#111';g.lineCap='round';g.lineWidth=.018;g.beginPath();g.moveTo(.5,.38);g.lineTo(.5+Math.cos(-2.6)*.08,.38+Math.sin(-2.6)*.08);g.stroke();g.lineWidth=.011;g.beginPath();g.moveTo(.5,.38);g.lineTo(.5+Math.cos(-.55)*.13,.38+Math.sin(-.55)*.13);g.stroke();g.lineCap='butt';ell(g,.5,.38,.014,.014,'#111');
   for(const x of[.2,.72])fwin(g,e,R,x,.7,.08,.22,{frame:'#f0e8dc',cross:false,p:0})},4108);
 TX.admTowTop=SQ((g,e,R)=>{g.clearRect(0,0,1,1);admBase2(g,R);g.clearRect(0,0,1,.55);g.fillStyle='#7a3e2a';g.fillRect(0,.55,1,.08);g.fillStyle='#eef3f6';g.fillRect(0,.53,1,.03);
   g.fillStyle='#8a8e92';g.fillRect(.495,.21,.012,.34);g.fillStyle='#e8e8ea';g.fillRect(.506,.22,.2,.045);g.fillStyle='#2a5ab8';g.fillRect(.506,.265,.2,.045);g.fillStyle='#d83a2a';g.fillRect(.506,.31,.2,.045);
@@ -1162,22 +1162,22 @@ TX.dkDoor=SQ((g,e,R)=>{g.fillStyle='#2c3238';g.fillRect(0,0,1,1);g.fillStyle='rg
 
 /* --- ТБЦ: тёмный кирпич, витрины, буквы на крыше --- */
 function brickDark(g,R,x,y,w,h){g.fillStyle='#6e3426';g.fillRect(x,y,w,h);for(let yy=y;yy<y+h;yy+=.032){const o=(Math.round(yy/.032)%2)*.045;for(let xx=x-o;xx<x+w;xx+=.09){g.fillStyle=`rgb(${112+R()*30|0},${50+R()*16|0},${36+R()*12|0})`;g.fillRect(xx+.004,yy+.004,.082,.025)}}g.fillStyle='rgba(200,170,150,.12)';g.fillRect(x,y,w,h)}
-const TBCN=['ОБУВЬ','ТКАНИ','РАДИОТОВАРЫ','СЕВЕРЯНКА','ГАЛАНТЕРЕЯ','УНИВЕРМАГ','СОЮЗПЕЧАТЬ','ИГРУШКИ','ХОЗТОВАРЫ'],TBCC=['#5a3a7a','#2a7a7a','#c83a2a','#a8262a','#2a5aa8','#24497a','#2a7a4a','#c8682a','#6a6a2a'];
+const TBCN=['ОБУВЬ','ТКАНИ','РАДИОТОВАРЫ','СЕВЕРЯНКА','УНИВЕРМАГ','ГАЛАНТЕРЕЯ','СОЮЗПЕЧАТЬ','ИГРУШКИ','ХОЗТОВАРЫ'],TBCC=['#5a3a7a','#2a7a7a','#c83a2a','#a8262a','#24497a','#2a5aa8','#2a7a4a','#c8682a','#6a6a2a'];
 const TBCF=stripU(9,2.75,(g,e,R,n,h,Z)=>{brickDark(g,R,0,Z(2.0),n,2.0);
   for(let i=0;i<n;i++){const x=i;g.fillStyle='rgba(0,0,0,.18)';g.fillRect(x,Z(1.9),.05,.95);g.fillStyle='rgba(255,220,200,.1)';g.fillRect(x+.05,Z(1.9),.015,.95);
     fwin(g,e,R,x+.14,Z(1.78),.3,.62,{frame:'#e8e4dc',reveal:'rgba(30,10,5,.4)'});fwin(g,e,R,x+.56,Z(1.78),.3,.62,{frame:'#e8e4dc',reveal:'rgba(30,10,5,.4)'});
     g.fillStyle='#e8e2d6';g.fillRect(x,Z(1.0),1,.04);
     g.fillStyle=TBCC[i];g.fillRect(x+.06,Z(.96),.88,.13);g.fillStyle='rgba(255,255,255,.2)';g.fillRect(x+.06,Z(.96),.88,.02);ftxt(g,128,TBCN[i],x+.5,Z(.895),i===3?.07:.058,'#fff8e0','800 ');e.fillStyle='#fff';e.fillRect(x+.08,Z(.94),.84,.09);
     g.fillStyle='#3a2a20';g.fillRect(x+.04,Z(.82),.92,.74);
-    if(i===3||i===5){g.fillStyle='#d8d4cc';g.fillRect(x+.3,Z(.8),.4,.72);for(const x0 of[x+.32,x+.51]){g.fillStyle=lgr(g,0,Z(.78),0,Z(.1),['#a8bcc8','#4a5a66']);g.fillRect(x0,Z(.78),.17,.68);g.fillStyle='#c9c9c9';g.fillRect(x0+(x0<x+.4?.15:.01),Z(.45),.012,.08)}
-      for(const x0 of[x+.06,x+.72]){g.fillStyle=lgr(g,0,Z(.78),0,Z(.12),['#ffe8b0','#d8a860']);g.fillRect(x0,Z(.78),.22,.66);e.fillStyle='#fff';e.fillRect(x0,Z(.78),.22,.66)}}
+    if(i===3||i===4){const dx=i===3?x+.56:x+.04;g.fillStyle='#d8d4cc';g.fillRect(dx,Z(.8),.4,.72);for(const x0 of[dx+.02,dx+.21]){g.fillStyle=lgr(g,0,Z(.78),0,Z(.1),['#a8bcc8','#4a5a66']);g.fillRect(x0,Z(.78),.17,.68);g.fillStyle='#c9c9c9';g.fillRect(x0+(x0<dx+.1?.15:.01),Z(.45),.012,.08)}
+      for(const x0 of(i===3?[x+.06,x+.31]:[x+.47,x+.72])){g.fillStyle=lgr(g,0,Z(.78),0,Z(.12),['#ffe8b0','#d8a860']);g.fillRect(x0,Z(.78),.22,.66);e.fillStyle='#fff';e.fillRect(x0,Z(.78),.22,.66)}}
     else{for(let k=0;k<3;k++){const x0=x+.06+k*.3;g.fillStyle=lgr(g,0,Z(.78),0,Z(.12),['#ffe8b0','#d8a860']);g.fillRect(x0,Z(.78),.27,.66);e.fillStyle='#fff';e.fillRect(x0,Z(.78),.27,.66);
       const C=['#c83a2a','#e8c84a','#3a7a3a','#e8e8e8','#5a3a7a','#2a5aa8'];for(let j=0;j<5;j++){g.fillStyle=C[R()*C.length|0];g.fillRect(x0+.02+j*.05,Z(.36)-R()*.1,.035,.1+R()*.08)}g.fillStyle='rgba(255,255,255,.3)';g.fillRect(x0+.02,Z(.76),.03,.6)}}
     g.fillStyle='#8a8478';g.fillRect(x,Z(.1),1,.1)}
   g.fillStyle='#d8d0c0';g.fillRect(0,Z(2.0),n,.06);g.fillStyle='#eef3f6';g.fillRect(0,Z(2.03),n,.03);
-  g.strokeStyle='#4a4e52';g.lineWidth=.012;g.strokeRect(.4,Z(2.65),n-.8,.55);for(let x=.4;x<n-.4;x+=.25){g.beginPath();g.moveTo(x,Z(2.65));g.lineTo(x+.25,Z(2.1));g.stroke()}
-  const str='ТОРГОВЫЙ ЦЕНТР',sp=(n-.8)/str.length;
-  for(let k=0;k<str.length;k++){const cx=.4+sp*(k+.5);ftxt(g,128,str[k],cx+.02,Z(2.36)+.02,.42,'rgba(0,0,0,.35)','900 ');ftxt(g,128,str[k],cx,Z(2.36),.42,'#f4f2ec','900 ');ftxt(e,128,str[k],cx,Z(2.36),.42,'#fff','900 ')}},4301);
+  const SW=Math.min(n-.8,5.6),S0=(n-SW)/2;g.strokeStyle='#4a4e52';g.lineWidth=.012;g.strokeRect(S0,Z(2.5),SW,.42);for(let x=S0;x<S0+SW-.01;x+=.2){g.beginPath();g.moveTo(x,Z(2.5));g.lineTo(x+.2,Z(2.08));g.stroke()}
+  const str='ТОРГОВЫЙ ЦЕНТР',sp=SW/str.length;
+  for(let k=0;k<str.length;k++){const cx=S0+sp*(k+.5);ftxt(g,128,str[k],cx+.015,Z(2.29)+.015,.3,'rgba(0,0,0,.35)','900 ');ftxt(g,128,str[k],cx,Z(2.29),.3,'#f4f2ec','900 ');ftxt(e,128,str[k],cx,Z(2.29),.3,'#fff','900 ')}},4301);
 TBCF.forEach((t,i)=>TX['tbcF'+i]=t);
 TX.tbcSideF=face(1,2.75,(g,e,R,w,h,s,Z)=>{brickDark(g,R,0,Z(2.0),1,2.0);g.fillStyle='#d8d0c0';g.fillRect(0,Z(2.0),1,.06);g.fillStyle='#8a8478';g.fillRect(0,Z(.1),1,.1);fwin(g,e,R,.35,Z(1.78),.3,.62,{frame:'#e8e4dc'})},4302,128);
 TX.tbcL2=SQ((g,e,R)=>{brickDark(g,R,0,0,1,1);fwin(g,e,R,.3,.22,.4,.5,{frame:'#e8e4dc',p:.5});g.fillStyle='#8a8478';g.fillRect(0,.9,1,.1)},4303);
@@ -1240,9 +1240,9 @@ T[107]={h:3.8,segs:['admTowL','admTowM','admTowU','admTowTop'],trans:true};
 T[55]={h:2.3,segs:['dkLow','dkUp','dkTop'],trans:true};
 T[56]={h:2.3,segs:['dkDoor','dkSign','dkTop'],act:'dk',trans:true};
 T[16]={h:2.0,segs:['tbcL2','tbcU2'],act:'tbc'};T[19]={h:2.0,segs:['tbcD2','tbcU2'],act:'tbc'};T[17]={h:2.0,segs:['tbcL2','tbcU2'],act:'cafe'};
-for(let i=0;i<9;i++)T[130+i]={h:2.75,segs:['tbcF'+i],stretch:true,trans:true,side:'tbcSideF',act:i===3?'cafe':i===5?'tbc':null};
+for(let i=0;i<9;i++)T[130+i]={h:2.75,segs:['tbcF'+i],stretch:true,trans:true,side:'tbcSideF',act:i===3?'cafe':i===4?'tbc':null};
 T[190]={h:.5,segs:['lawnFence'],stretch:true,trans:true,side:'lawnFence'};
-TX.lawnFence=face(1,.5,(g,e,R,w,h,s,Z)=>{g.clearRect(0,0,1,.5);g.fillStyle='#2f5a3a';g.fillRect(0,Z(.46),1,.035);g.fillRect(0,Z(.12),1,.03);for(let x=.02;x<1;x+=.1){g.fillRect(x,Z(.5),.022,.5);g.beginPath();g.moveTo(x-.01,Z(.48));g.lineTo(x+.011,Z(.53));g.lineTo(x+.032,Z(.48));g.fill()}g.fillStyle='rgba(255,255,255,.25)';g.fillRect(0,Z(.46),1,.008);g.fillStyle='#eef3f6';g.fillRect(0,Z(.465),1,.012)},4501,128);
+TX.lawnFence=face(1,.5,(g,e,R,w,h,s,Z)=>{g.clearRect(0,0,1,.5);g.fillStyle='#161616';g.fillRect(0,Z(.46),1,.035);g.fillRect(0,Z(.12),1,.03);for(let x=.02;x<1;x+=.1){g.fillRect(x,Z(.5),.022,.5);g.beginPath();g.moveTo(x-.01,Z(.48));g.lineTo(x+.011,Z(.53));g.lineTo(x+.032,Z(.48));g.fill()}g.fillStyle='rgba(255,255,255,.18)';g.fillRect(0,Z(.46),1,.008);g.fillStyle='#eef3f6';g.fillRect(0,Z(.465),1,.012)},4501,128);
 T[115]={h:.55,segs:['stoneWall'],top:'stoneTop',trans:true};
 T[21]={h:1.3,segs:['vokBrick','vokBrickTop'],act:'station',trans:true};
 for(let i=0;i<6;i++)T[120+i]={h:VOK_H,segs:['vokF'+i],stretch:true,trans:true,side:'vokS'+i,act:'station'};
@@ -1304,7 +1304,7 @@ function buildCity(){
   // ДК «Железнодорожник» в начале Ленинградского проспекта
   {const d=mkOBB(L,-11,AXB-4,6,8,55,'ДК');oset(d,5,4,56);DOORS.dk=obbFront(d,5,4,2)}
   // центральная площадь: ТБЦ на севере, горисполком на юге, газон посередине
-  {const t=mkOBB(L,1,1.5,9,3,16,'ТБЦ');for(let i=0;i<9;i++)oset(t,i,2,130+i,3);DOORS.tbc=obbFront(t,5,2,3);DOORS.cafe=obbFront(t,3,2,3)}
+  {const t=mkOBB(L,1,1.5,9,3,16,'ТБЦ');for(let i=0;i<9;i++)oset(t,i,2,130+i,3);DOORS.tbc=obbFront(t,4,2,3);DOORS.cafe=obbFront(t,3,2,3)}
   {const a=mkOBB(L,2.5,18,6,2,18,'горисполком');oset(a,1,0,20);DOORS.admin=obbFront(a,1,0,1);mkOBB(L,1.5,18,1,2,107,'горисполком')}
   // заборчик вокруг газона
   {const F=.08;mkOBB(L,LAWN[0],LAWN[1],5,1,190,'ограда',1,F);mkOBB(L,LAWN[0],LAWN[3]-F,5,1,190,'ограда',1,F);mkOBB(L,LAWN[0],LAWN[1],1,5,190,'ограда',F,1);mkOBB(L,LAWN[2]-F,LAWN[1],1,5,190,'ограда',F,1)}
@@ -2428,7 +2428,7 @@ function toMenu(){$('modal').hidden=true;document.body.classList.remove('playing
 /* ---------- карта города ---------- */
 const MAPCOL={1:'#6d7178',6:'#5fd16a',2:'#8a5240',7:'#5fb6d1',3:'#55574f',4:'#e6c13b',8:'#8f8b82',9:'#17271d',10:'#f0a03a',11:'#8a5a3a',12:'#7a6248',13:'#8a7450',14:'#4a3f34',
   16:'#c4a87a',17:'#ff5a4a',19:'#e8d27a',18:'#d9d6cc',20:'#2f5aa8',21:'#eceff0',42:'#fff',43:'#fff',44:'#fff',45:'#fff',46:'#fff',47:'#fff',48:'#e4e8ea',49:'#e4e8ea',50:'#e4e8ea',51:'#e4e8ea',52:'#e4e8ea',53:'#e4e8ea',26:'#6a3a26',27:'#a5c4d6'};
-const FLCOL=['#dfe5ea','#b9b6ae','#9fbccb','#a8adb2','#cfd5da','#ddd','#ddd','#ddd','#8f8f94','#e3dccb'];
+const FLCOL=['#dfe5ea','#3c3d40','#9fbccb','#a8adb2','#cfd5da','#ddd','#ddd','#ddd','#8f8f94','#e3dccb'];
 MAPCOL[55]='#d9c48e';MAPCOL[56]='#24497a';
 const LABELS=(()=>{const l=(a,b,t)=>{const p=A2W(a,b);return[p[0],p[1],t]};return[[6,12.8,'Городской парк'],l(-8,17.4,'ДК «Железнодорожник»'),l(5.5,.4,'ТБЦ'),l(5.5,21.2,'Горисполком'),l(6,9.6,'Центральная площадь'),l(40.5,9.6,'Памятник'),l(46.3,11.27,'Вокзал'),l(41,-2.6,'Рынок'),
   [OX+9.5,38.1,'ШАНХАЙ'],[OX+52,38,'Пляж'],[OX+55,43,'БАЙКАЛ'],l(25.5,11.27,'Ленинградский пр.'),l(37.2,-6,'пр. 60 лет СССР'),l(41.5,25,'Промзона'),l(28,-6.4,'5-й мкр'),l(13.9,-9,'ул. Мира'),l(25.5,13.2,'Дом'),l(48.3,-6,'пути'),l(51.2,6,'автодорога'),l(54.6,-4,'лес'),[8,33.4,'19-й квартал']]})();
@@ -2486,7 +2486,7 @@ TX.garage2=mkTex((g,e,R)=>{g.fillStyle='#64686a';g.fillRect(0,0,64,64);for(let x
 TX.slush=mkTex((g,e,R)=>{g.fillStyle='#a8a59c';g.fillRect(0,0,64,64);noise(g,R,700,['#8f8a7e','#c4c2ba','#7d776a','#b8b4aa'],.6);
   for(let i=0;i<4;i++){const x=R()*64,y=R()*64,w=6+R()*12,h=3+R()*5;ell(g,x,y,w,h,'#6c7880');ell(g,x-w*.3,y-h*.3,w*.3,h*.25,'#9fb0bc')}},134);
 T[83]={h:1.3,segs:['banyaDoor','roofW'],act:'banya'};T[84]={h:1.3,segs:['banyaWall','roofW']};T[85]={h:.95,segs:['garage2'],act:'garage'};
-MAPCOL[83]='#d9784a';Object.assign(MAPCOL,{135:'#c4a87a',136:'#c4a87a',137:'#c4a87a',138:'#c4a87a',190:'#2f5a3a',106:'#eceff0',107:'#d9b896',115:'#8a8478',120:'#fff',121:'#fff',122:'#fff',123:'#fff',124:'#fff',125:'#fff',130:'#c4a87a',131:'#ff5a4a',132:'#c4a87a',133:'#e8d27a',134:'#c4a87a'});MAPCOL[84]='#8a5a3a';MAPCOL[85]='#c9ccd0';
+MAPCOL[83]='#d9784a';Object.assign(MAPCOL,{135:'#c4a87a',136:'#c4a87a',137:'#c4a87a',138:'#c4a87a',190:'#161616',106:'#eceff0',107:'#d9b896',115:'#8a8478',120:'#fff',121:'#fff',122:'#fff',123:'#fff',124:'#fff',125:'#fff',130:'#c4a87a',131:'#ff5a4a',132:'#c4a87a',133:'#e8d27a',134:'#c4a87a'});MAPCOL[84]='#8a5a3a';MAPCOL[85]='#c9ccd0';
 PLACE.banya='Баня «Лёгкий пар»';PLACE.garage='Гараж №17 во дворе';
 LABELS.push([OX+14,45.2,'Баня'],[...A2W(28,19.6),'Гараж']);
 VAR.lev=[{jacket:'#3e3a2e',pants:'#26262a',hat:'ushanka',hatCol:'#26221e',quilt:1,belt:1,shoe:'#0d0d0d'}];SP.lev=VAR.lev.map(humanSet);
@@ -3366,7 +3366,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Машины, ПАЗик, «бобик» и поезда теперь настоящие 3D-модели и поворачивают плавно, а не едут боком','ТБЦ стал шире: девять витрин, «Северянка» и универмаг в середине','У горисполкома башня перенесена на левую сторону, вход сдвинут к башне, вдоль фасада ёлки','Газон на площади обнесён заборчиком','Дверь подъезда — одна створка с ручкой, без окон'];
+const CHANGES=['Заборчик вокруг газона теперь чёрный','На башне горисполкома вместо круглого окна — часы, ночью циферблат подсвечен','Входы в ТБЦ и «Северянку» перенесены в центр фасада, надпись «Торговый центр» стала меньше','Дороги теперь чёрный асфальт'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
