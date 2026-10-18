@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.019';
+const BUILD='G001.020';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1249,6 +1249,25 @@ for(let i=0;i<6;i++)T[120+i]={h:VOK_H,segs:['vokF'+i],stretch:true,trans:true,si
 T[106]={h:1.4,segs:['vokRear','vokRearTop'],act:'station',trans:true};
 
 
+/* --- башня горисполкома: боковые грани без часов и флага, на ширину 2 м --- */
+const towSide=(g,e,R,plinth,rows)=>{admBase2(g,R);if(plinth){g.fillStyle='#b8946e';g.fillRect(0,.86,1,.14)}for(const y of rows)for(const x of[.17,.69])fwin(g,e,R,x,y,.14,.26,{frame:'#f0e8dc'});g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.025,1)};
+TX.admTowSL=SQ((g,e,R)=>towSide(g,e,R,1,[.1,.55]),4111);TX.admTowSM=SQ((g,e,R)=>towSide(g,e,R,0,[.1,.58]),4112);
+TX.admTowSU=SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.025,1);for(const x of[.2,.72])fwin(g,e,R,x,.7,.06,.22,{frame:'#f0e8dc',cross:false,p:0});for(const x of[.17,.69])fwin(g,e,R,x,.18,.14,.26,{frame:'#f0e8dc'})},4113);
+TX.admTowSTop=SQ((g,e,R)=>{g.clearRect(0,0,1,1);admBase2(g,R);g.clearRect(0,0,1,.55);g.fillStyle='#7a3e2a';g.fillRect(0,.55,1,.08);g.fillStyle='#eef3f6';g.fillRect(0,.53,1,.03);for(const x of[.17,.69])fwin(g,e,R,x,.75,.14,.18,{frame:'#f0e8dc'})},4114);
+T[108]={h:3.8,segs:['admTowL','admTowM','admTowU','admTowTop'],side:'admTowSM',sides:['admTowSL','admTowSM','admTowSU','admTowSTop'],trans:true};
+/* --- стеклянный вход горисполкома: две клетки, по две двери в каждой --- */
+const admGlass=(sign)=>SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='#b8946e';g.fillRect(0,.86,1,.14);admRow(g,e,R,.08,.26);
+  g.fillStyle='#e8e2d6';g.fillRect(0,.4,1,.05);g.fillStyle='rgba(0,0,0,.3)';g.fillRect(0,.45,1,.03);g.fillStyle='#eef3f6';g.fillRect(0,.38,1,.025);
+  g.fillStyle='#8a8e92';g.fillRect(.02,.48,.96,.44);
+  for(const x0 of[.05,.52]){g.fillStyle='#c9ccd0';g.fillRect(x0,.5,.43,.42);g.fillStyle=lgr(g,0,.52,0,.9,['#9ab8c8','#5a7484','#3a4e5a']);g.fillRect(x0+.025,.52,.38,.38);
+    g.fillStyle='rgba(255,255,255,.28)';g.fillRect(x0+.06,.54,.05,.33);g.fillRect(x0+.13,.54,.02,.33);g.fillStyle='#c9ccd0';g.fillRect(x0+.2,.5,.025,.42);
+    g.fillStyle='#e8e8ea';g.fillRect(x0+.16,.64,.012,.12);g.fillRect(x0+.25,.64,.012,.12)}
+  g.fillStyle='#a8a090';g.fillRect(0,.92,1,.04);g.fillStyle='#bcb4a4';g.fillRect(0,.96,1,.04);
+  if(sign){g.fillStyle='#24497a';g.fillRect(.1,.465,1.8,.03);ftxt(g,128,'ГОРИСПОЛКОМ',1,.481,.024,'#f2eee4','700 ')}else{g.fillStyle='#24497a';g.fillRect(0,.465,.9,.03);ftxt(g,128,'ГОРИСПОЛКОМ',0,.481,.024,'#f2eee4','700 ')}
+  ell(g,sign?.95:.05,.43,.02,.008,'#ffd98a')},sign?4115:4116);
+TX.admGlassA=admGlass(1);TX.admGlassB=admGlass(0);
+T[109]={h:2.7,segs:['admGlassA','admM','admT'],act:'admin'};T[110]={h:2.7,segs:['admGlassB','admM','admT'],act:'admin'};
+
 /* ---------- уровни ---------- */
 function mkLevel(id,w,h,o){return Object.assign({id,w,h,ori:new Uint8Array(w*h),map:new Uint8Array(w*h),fl:new Uint8Array(w*h),pv:new Uint8Array(w*h),enemies:[],items:[],props:[]},o)}
 function rect(L,x,y,w,h,t){for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++)if(i>=0&&j>=0&&i<L.w&&j<L.h)L.map[j*L.w+i]=t}
@@ -1305,7 +1324,7 @@ function buildCity(){
   {const d=mkOBB(L,-11,AXB-4,6,8,55,'ДК');oset(d,5,4,56);DOORS.dk=obbFront(d,5,4,2)}
   // центральная площадь: ТБЦ на севере, горисполком на юге, газон посередине
   {const t=mkOBB(L,1,1.5,9,3,16,'ТБЦ');for(let i=0;i<9;i++)oset(t,i,2,130+i,3);DOORS.tbc=obbFront(t,4,2,3);DOORS.cafe=obbFront(t,3,2,3)}
-  {const a=mkOBB(L,2.5,18,6,2,18,'горисполком');oset(a,1,0,20);DOORS.admin=obbFront(a,1,0,1);mkOBB(L,1.5,18,1,2,107,'горисполком')}
+  {const a=mkOBB(L,2.5,18,6,2,18,'горисполком');oset(a,1,0,109);oset(a,0,0,110);DOORS.admin=obbFront(a,.5,0,1);const tw=mkOBB(L,1.5,18,1,1,108,'горисполком',1,2);oset(tw,0,0,108,1)}
   // заборчик вокруг газона
   {const F=.08;mkOBB(L,LAWN[0],LAWN[1],5,1,190,'ограда',1,F);mkOBB(L,LAWN[0],LAWN[3]-F,5,1,190,'ограда',1,F);mkOBB(L,LAWN[0],LAWN[1],1,5,190,'ограда',F,1);mkOBB(L,LAWN[2]-F,LAWN[1],1,5,190,'ограда',F,1)}
   // ларьки
@@ -2486,7 +2505,7 @@ TX.garage2=mkTex((g,e,R)=>{g.fillStyle='#64686a';g.fillRect(0,0,64,64);for(let x
 TX.slush=mkTex((g,e,R)=>{g.fillStyle='#a8a59c';g.fillRect(0,0,64,64);noise(g,R,700,['#8f8a7e','#c4c2ba','#7d776a','#b8b4aa'],.6);
   for(let i=0;i<4;i++){const x=R()*64,y=R()*64,w=6+R()*12,h=3+R()*5;ell(g,x,y,w,h,'#6c7880');ell(g,x-w*.3,y-h*.3,w*.3,h*.25,'#9fb0bc')}},134);
 T[83]={h:1.3,segs:['banyaDoor','roofW'],act:'banya'};T[84]={h:1.3,segs:['banyaWall','roofW']};T[85]={h:.95,segs:['garage2'],act:'garage'};
-MAPCOL[83]='#d9784a';Object.assign(MAPCOL,{135:'#c4a87a',136:'#c4a87a',137:'#c4a87a',138:'#c4a87a',190:'#161616',106:'#eceff0',107:'#d9b896',115:'#8a8478',120:'#fff',121:'#fff',122:'#fff',123:'#fff',124:'#fff',125:'#fff',130:'#c4a87a',131:'#ff5a4a',132:'#c4a87a',133:'#e8d27a',134:'#c4a87a'});MAPCOL[84]='#8a5a3a';MAPCOL[85]='#c9ccd0';
+MAPCOL[83]='#d9784a';Object.assign(MAPCOL,{108:'#d9b896',109:'#2f5aa8',110:'#2f5aa8',135:'#c4a87a',136:'#c4a87a',137:'#c4a87a',138:'#c4a87a',190:'#161616',106:'#eceff0',107:'#d9b896',115:'#8a8478',120:'#fff',121:'#fff',122:'#fff',123:'#fff',124:'#fff',125:'#fff',130:'#c4a87a',131:'#ff5a4a',132:'#c4a87a',133:'#e8d27a',134:'#c4a87a'});MAPCOL[84]='#8a5a3a';MAPCOL[85]='#c9ccd0';
 PLACE.banya='Баня «Лёгкий пар»';PLACE.garage='Гараж №17 во дворе';
 LABELS.push([OX+14,45.2,'Баня'],[...A2W(28,19.6),'Гараж']);
 VAR.lev=[{jacket:'#3e3a2e',pants:'#26262a',hat:'ushanka',hatCol:'#26221e',quilt:1,belt:1,shoe:'#0d0d0d'}];SP.lev=VAR.lev.map(humanSet);
@@ -2933,7 +2952,7 @@ function glWalls(groups,gw,gh,map,ori,pv,toW,rot){
       const lp=dir===1?[i+1,j]:dir===2?[i+1,j+1]:dir===3?[i,j+1]:[i,j],rp=dir===1?[i,j]:dir===2?[i+1,j]:dir===3?[i+1,j+1]:[i,j+1];
       const l=toW(lp[0],lp[1]),r=toW(rp[0],rp[1]),wn=rot(di,dj),k=1-.22*wn[1]*wn[1],useSide=D.side&&od&&dir!==od;
       if(D.stretch){const tex=TX[useSide?D.side:D.segs[0]];quad(tex,l,r,z0,dh,0,1,1-z0/dh,0,wn[0],wn[1],k)}
-      else for(let s=Math.floor(z0);s<dh;s++){const zb=Math.max(s,z0),zt=Math.min(s+1,dh);if(zt-zb<.001)continue;const tex=useSide?TX[D.side]:wt(D,s,c);quad(tex,l,r,zb,zt,0,1,1-(zb-s),1-(zt-s),wn[0],wn[1],k)}}
+      else for(let s=Math.floor(z0);s<dh;s++){const zb=Math.max(s,z0),zt=Math.min(s+1,dh);if(zt-zb<.001)continue;const tex=useSide?TX[D.sides?D.sides[Math.min(s,D.sides.length-1)]:D.side]:wt(D,s,c);quad(tex,l,r,zb,zt,0,1,1-(zb-s),1-(zt-s),wn[0],wn[1],k)}}
     if(D.top&&dh<1.2){const tex=TX[D.top],a=toW(i,j),b=toW(i+1,j),cc=toW(i+1,j+1),d=toW(i,j+1);let g=groups.get(tex);if(!g){g={p:[],u:[],n:[],k:[]};groups.set(tex,g)}
       const pts=[[a,0,0],[d,0,1],[cc,1,1],[b,1,0]];for(const idx of[0,1,2,0,2,3]){const q=pts[idx];g.p.push(q[0][0],dh,q[0][1]);g.u.push(q[1],q[2]);g.n.push(0,1,0);g.k.push(1.05)}}}}
 function glFloorMat(){const U=GL3.U;
@@ -3366,7 +3385,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Заборчик вокруг газона теперь чёрный','На башне горисполкома вместо круглого окна — часы, ночью циферблат подсвечен','Входы в ТБЦ и «Северянку» перенесены в центр фасада, надпись «Торговый центр» стала меньше','Дороги теперь чёрный асфальт'];
+const CHANGES=['Башня горисполкома: часы и флаг только на фасаде, боковые стороны без повторов','Вход в горисполком у самой башни: четыре стеклянные двери под общим козырьком'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
