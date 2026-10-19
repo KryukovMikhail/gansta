@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.027';
+const BUILD='G001.028';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1249,6 +1249,8 @@ T[111]={h:2.6,segs:[['brLA','brLB'],['brA','brB'],'brTop']};
 T[112]={h:1.25,segs:['annexW','annexTop']};
 TX.stepGr=SQ((g,e,R)=>{g.fillStyle='#8a8680';g.fillRect(0,0,1,1);speck(g,R,500,['#7a766e','#a29e96','#6a665e'],.6,0,0,1,1,.008);g.fillStyle='rgba(0,0,0,.25)';g.fillRect(0,.9,1,.1)},4175);
 TX.stepGrTop=SQ((g,e,R)=>{g.fillStyle='#a8a49c';g.fillRect(0,0,1,1);speck(g,R,500,['#9a968e','#bcb8b0','#8a867e'],.6,0,0,1,1,.008);g.fillStyle='rgba(240,246,250,.5)';for(let i=0;i<6;i++)g.fillRect(R(),R(),.2,.05);g.fillStyle='rgba(0,0,0,.2)';g.fillRect(0,0,1,.02)},4176);
+TX.parkTop=SQ((g,e,R)=>{g.fillStyle='#3c3d40';g.fillRect(0,0,1,1);speck(g,R,400,['#333437','#45464a','#2e2f32'],.6,0,0,1,1,.008);g.fillStyle='rgba(235,238,240,.85)';g.fillRect(0,0,.035,1);g.fillRect(.965,0,.035,1);g.fillStyle='rgba(240,246,250,.35)';for(let i=0;i<5;i++)g.fillRect(R(),R(),.25,.04)},4178);
+T[194]={h:.012,segs:['parkTop'],stretch:true,top:'parkTop'};
 for(let k=0;k<3;k++)T[191+k]={h:.07*(k+1),segs:['stepGr'],stretch:true,top:'stepGrTop'};
 T[6]={h:2.6,segs:['pnDoor',['pnA','pnB','pnC'],'pnTop'],act:'home'};
 T[18]={h:2.8,segs:['admL',['admM','admM','admMF'],'admAttic']};
@@ -1274,7 +1276,7 @@ TX.admTowSTop=SQ((g,e,R)=>{g.clearRect(0,0,1,1);admBase2(g,R);g.clearRect(0,0,1,
 TX.admTowSide=face(2,4.8,(g,e,R,w,h,s,Z)=>{g.fillStyle=ADMC;g.fillRect(0,Z(3.95),2,3.95);speck(g,R,2600,['#cfac88','#e4c6a6','#c49e7c'],.5,0,Z(3.95),2,3.95,.007);g.fillStyle='rgba(120,80,50,.12)';for(let z=0;z<3.95;z+=.06)g.fillRect(0,Z(z),2,.004);
   g.fillStyle='#b8946e';g.fillRect(0,Z(.14),2,.14);g.fillStyle='#7a3e2a';g.fillRect(0,Z(3.95),2,.07);g.fillStyle='#eef3f6';g.fillRect(0,Z(3.97),2,.025);g.fillStyle='rgba(0,0,0,.08)';g.fillRect(1.6,Z(3.88),.012,3.74);
   for(const z of[.35,.9,1.45,2.0,2.55,3.05,3.55]){fwin(g,e,R,1.74,Z(z+.34),.11,.34,{frame:'#f0e8dc',cross:false});g.fillStyle='#a88c70';g.fillRect(1.68,Z(z-.02),.23,.035);g.strokeStyle='#5a5a5a';g.lineWidth=.008;g.strokeRect(1.7,Z(z+.12),.19,.12)}
-  const px=.18,pw=1.3,pz=.9,ph=1.75,top=Z(pz+ph);g.fillStyle='#2a2a2e';g.fillRect(px-.03,top-.03,pw+.06,ph+.06);
+  const px=.18,pw=1.3,pz=1.85,ph=1.75,top=Z(pz+ph);g.fillStyle='#2a2a2e';g.fillRect(px-.03,top-.03,pw+.06,ph+.06);
   g.fillStyle=lgr(g,0,top,0,top+ph*.45,['#3a6ab8','#8ab8e0']);g.fillRect(px,top,pw,ph*.45);
   g.fillStyle='#4a5a8a';g.beginPath();g.moveTo(px,top+ph*.42);for(let k=0;k<=10;k++)g.lineTo(px+pw*k/10,top+ph*(.3+.08*Math.sin(k*1.7)+.03*(k%3)));g.lineTo(px+pw,top+ph*.45);g.closePath();g.fill();
   g.fillStyle='#eef3f6';for(let k=1;k<10;k+=2)g.fillRect(px+pw*k/10-.02,top+ph*(.3+.08*Math.sin(k*1.7)),.04,.02);
@@ -1287,9 +1289,9 @@ TX.admTowSide=face(2,4.8,(g,e,R,w,h,s,Z)=>{g.fillStyle=ADMC;g.fillRect(0,Z(3.95)
   g.fillStyle='#c83a2a';g.beginPath();for(let k=0;k<5;k++)g.arc(px+.2+k*.06,bb-.25+(k%2)*.05,.05,0,7);g.fill();
   ftxt(g,s,'нам здесь жить!',px+.86,bb+.03,.1,'#f8f4e8','italic 700 ')},4120,160);
 TX.admTowBack=face(2,4.8,(g,e,R,w,h,s,Z)=>{g.fillStyle=ADMC;g.fillRect(0,Z(3.95),2,3.95);speck(g,R,2600,['#cfac88','#e4c6a6','#c49e7c'],.5,0,Z(3.95),2,3.95,.007);g.fillStyle='rgba(120,80,50,.12)';for(let z=0;z<3.95;z+=.06)g.fillRect(0,Z(z),2,.004);g.fillStyle='#b8946e';g.fillRect(0,Z(.14),2,.14);g.fillStyle='#7a3e2a';g.fillRect(0,Z(3.95),2,.07);g.fillStyle='#eef3f6';g.fillRect(0,Z(3.97),2,.025);g.fillStyle='#8a4a2a';g.fillRect(.9,Z(.9),.22,.9);g.fillStyle='#5a3a2a';g.fillRect(.93,Z(.87),.16,.85)},4121,160);
-TX.admTowTop5=SQ((g,e,R)=>{admBase2(g,R);g.clearRect(0,0,1,.05);g.fillStyle='#7a3e2a';g.fillRect(0,.05,1,.08);g.fillStyle='#eef3f6';g.fillRect(0,.03,1,.03);g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.05,1);fwin(g,e,R,.45,.45,.1,.26,{frame:'#f0e8dc',cross:false})},4170);
+TX.admTowTop5=SQ((g,e,R)=>{admBase2(g,R);g.clearRect(0,0,1,.05);g.fillStyle='#7a3e2a';g.fillRect(0,.05,1,.08);g.fillStyle='#eef3f6';g.fillRect(0,.03,1,.03);g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.05,1);ell(g,.5,.58,.22,.22,'#c49e7c');ell(g,.5,.58,.19,.19,'#2a2a2a');ell(g,.5,.58,.165,.165,'#f6f2e2');e.fillStyle='#fff';e.beginPath();e.arc(.5,.58,.165,0,7);e.fill();for(let k=0;k<12;k++){const a=k*Math.PI/6,r0=k%3?.14:.125;g.strokeStyle='#1a1a1a';g.lineWidth=k%3?.008:.016;g.beginPath();g.moveTo(.5+Math.cos(a)*r0,.58+Math.sin(a)*r0);g.lineTo(.5+Math.cos(a)*.158,.58+Math.sin(a)*.158);g.stroke()}g.strokeStyle='#111';g.lineCap='round';g.lineWidth=.018;g.beginPath();g.moveTo(.5,.58);g.lineTo(.5+Math.cos(-2.6)*.08,.58+Math.sin(-2.6)*.08);g.stroke();g.lineWidth=.011;g.beginPath();g.moveTo(.5,.58);g.lineTo(.5+Math.cos(-.55)*.13,.58+Math.sin(-.55)*.13);g.stroke();g.lineCap='butt';ell(g,.5,.58,.014,.014,'#111');},4177);
 TX.admTowFlag=SQ((g,e,R)=>{g.clearRect(0,0,1,1);g.fillStyle='#8a8e92';for(const x of[.3,.5,.7])g.fillRect(x,.3,.012,.7);g.fillStyle='#e8e8ea';g.fillRect(.512,.32,.2,.045);g.fillStyle='#2a5ab8';g.fillRect(.512,.365,.2,.045);g.fillStyle='#d83a2a';g.fillRect(.512,.41,.2,.045);g.fillStyle='#c8282a';g.fillRect(.312,.34,.16,.1)},4171);
-T[108]={h:4.8,segs:['admTowL','admTowM','admTowU','admTowTop5','admTowFlag'],side:'admTowSide',sideBack:'admTowBack',sideTall:true,trans:true};
+T[108]={h:4.8,segs:['admTowL','admTowM','admTowM','admTowTop5','admTowFlag'],side:'admTowSide',sideBack:'admTowBack',sideTall:true,trans:true};
 /* --- стеклянный вход горисполкома: две клетки, по две двери в каждой --- */
 const admGlass=(sign)=>SQ((g,e,R)=>{admBase2(g,R);g.fillStyle='#b8946e';g.fillRect(0,.86,1,.14);admRow(g,e,R,.08,.26);
   g.fillStyle='#e8e2d6';g.fillRect(0,.4,1,.05);g.fillStyle='rgba(0,0,0,.3)';g.fillRect(0,.45,1,.03);g.fillStyle='#eef3f6';g.fillRect(0,.38,1,.025);
@@ -1330,7 +1332,8 @@ function cityF(fx,fy){const x=fx-OX,s=x+.5*fy,u=fy-.5*x,A=s/1.118,B=u/1.118;
   {const t=(-(A+2)+(B-17))/1.4142,q=((A+2)+(B-17))/1.4142;if(t>-1.5&&Math.abs(q)<.9)return 1}   // улица по диагонали между ДК и горисполкомом
   if(A>=2.7&&A<9.3&&B>=7&&B<14.57)return 14;                         // тротуар вокруг газона
   if(A>=RING[0]&&A<RING[2]&&B>=7&&B<RING[3])return 1;
-  if(A>=-5&&A<13&&B>=4.5&&B<18)return 10;
+  if(A>=4.4&&A<9.3&&B>=16.37&&B<18.32)return 1;                     // парковка
+  if(A>=-5&&A<13&&B>=4.5&&B<21)return 10;
   if(u>=AVE[0]&&u<AVE[1]&&A>=-5&&s<R2[1])return 1;
   if(A>=(B>11?13:14.6)&&A<36.3){if((B>=8.05&&B<9.1)||(B>=13.45&&B<14.35))return 14;                           // тротуары
     if(B>=9.1&&B<9.9)return(B<9.2||B>=9.8)?11:0;if(B>=12.65&&B<13.45)return(B<12.75||B>=13.35)?11:0}  // газоны с бордюром
@@ -1374,7 +1377,7 @@ function buildCity(){
   {const d=mkOBB(L,-11,AXB-4,6,8,55,'ДК');oset(d,5,4,56);DOORS.dk=obbFront(d,5,4,2)}
   // центральная площадь: ТБЦ на севере, горисполком на юге, газон посередине
   {const t=mkOBB(L,1,1.5,9,3,16,'ТБЦ');for(let i=0;i<9;i++)oset(t,i,2,130+i,3);DOORS.tbc=obbFront(t,4,2,3);DOORS.cafe=obbFront(t,3,2,3)}
-  {const a=mkOBB(L,2.5,18,6,2,18,'горисполком');oset(a,0,0,109);DOORS.admin=obbFront(a,0,0,1);const tw=mkOBB(L,1.5,18,1,1,108,'горисполком',1,2);oset(tw,0,0,108,1);mkOBB(L,-0.5,19.7,2,3,112,'кафе');for(let k=0;k<3;k++){const o=mkOBB(L,2.3,16.75+k*.38,1,1,191+k,'ступени',2.4,1.25-k*.38);o.nosolid=1}}
+  {const a=mkOBB(L,2.5,21,6,2,18,'горисполком');oset(a,0,0,109);DOORS.admin=obbFront(a,0,0,1);const tw=mkOBB(L,1.5,21,1,1,108,'горисполком',1,2);oset(tw,0,0,108,1);mkOBB(L,-0.5,22.7,2,3,112,'кафе');for(let k=0;k<3;k++){const o=mkOBB(L,2.3,19.75+k*.38,1,1,191+k,'ступени',2.4,1.25-k*.38);o.nosolid=1}}
   // заборчик вокруг газона
   {const F=.08;mkOBB(L,LAWN[0],LAWN[1],5,1,190,'ограда',1,F);mkOBB(L,LAWN[0],LAWN[3]-F,5,1,190,'ограда',1,F);mkOBB(L,LAWN[0],LAWN[1],1,5,190,'ограда',F,1);mkOBB(L,LAWN[2]-F,LAWN[1],1,5,190,'ограда',F,1)}
   // ларьки
@@ -1413,14 +1416,16 @@ function buildCity(){
   for(let b=-24;b<=22;b+=5)put(HWY[0]/1.118-.25,b,{k:'lamp'});
   for(const[a,b]of[[1.1,6.4],[10.9,6.4],[1.1,16.1],[10.9,16.1]])put(a,b,{k:'lamp'});
   {const[x,y]=AW(40.5,AXB);P.push({k:'monument',x,y,r:.4})}
-  {const[x,y]=AW(-1.3,23.2),[sx,sy]=AW(-2.4,20.9);P.push({k:'rotunda',x,y,r:2.65,face:Math.atan2(sy-y,sx-x)-.6})}
+  {const[x,y]=AW(-1.3,26.2),[sx,sy]=AW(-2.4,23.9);P.push({k:'rotunda',x,y,r:2.65,face:Math.atan2(sy-y,sx-x)-.6})}
   L.lights=P.filter(p=>p.k==='lamp').map(p=>({x:p.x+.15,y:p.y,r:4.6,c:[1,.62,.28],i:1.15})).concat(P.filter(p=>p.k==='barrel').map(p=>({x:p.x,y:p.y,r:3.4,c:[1,.5,.18],i:1.25,fire:1})));
   for(const k of KSPEC)L.lights.push({x:k.x,y:k.y,r:2.6,c:[.9,.95,.8],i:.6});
   for(const[x,y]of[[47.5,36.3],[51.5,30.6],[44.2,40.6]])P.push({k:'boat',x:x+SX,y,r:.35});
   for(const[x,y]of[[50,41],[53,38.5],[48,43.5]])P.push({k:'lunka',x:x+SX,y,r:.3});L.lights.push({x:SX+14.5,y:41.2,r:2.8,c:[1,.62,.3],i:.8});
   for(const st of STOPS)P.push({k:'stop',x:st.x,y:st.y,stop:st});P.push({k:'wood',x:SX+4.5,y:44.3,r:.35});
   // ёлки по углам газона на площади
-  for(const a of[5.6,6.9,8.2,9.5]){const[x,y]=AW(a,17.25);P.push({k:'pine',x,y,r:.22})}
+  for(const a of[5.6,6.9,8.2,9.5]){const[x,y]=AW(a,20.25);P.push({k:'pine',x,y,r:.22})}
+  // парковка перед горисполкомом
+  {const fwd=Math.atan2(2,-1),cols=['carW','carB',0,'carG','car','carW'];for(let k=0;k<6;k++){const o=mkOBB(L,4.4+k*.82,16.37,1,1,194,'парковка',.82,1.95);o.nosolid=1;const sp=cols[k];if(!sp)continue;const[x,y]=AW(4.4+k*.82+.41,17.3);P.push({k:'pcar',spr:sp,x,y,dir:k%2?fwd:fwd+Math.PI,r:.5})}}
   // деревья: городской парк и лес вдоль берега
   const TR=rng(77),okT=(x,y)=>x>1.3&&y>1.3&&x<CW-1.3&&y<CH-1.3&&!L.map[(y|0)*CW+(x|0)]&&cityF(x,y)<0&&L.fb[(y|0)*CW+(x|0)]===0&&!obbBlocks(L,x,y,.6)&&!P.some(p=>Math.hypot(p.x-x,p.y-y)<(p.k==='rotunda'?p.r+.9:1.1));
   for(let n=0,k=0;n<60&&k<4000;k++){const x=1.5+TR()*14,y=9+TR()*15;if(!okT(x,y))continue;P.push({k:TR()<.6?'pine':'birch',x,y,r:.22});n++}
@@ -1925,7 +1930,7 @@ function spawn(type){const z=pick(ZONES[type]);const c=emptyCell(z,9)||emptyCell
   CITY.enemies.push(e);return e}
 const CIVS=(()=>{const c=(t,a,b,n,nm)=>{const p=A2W(a,b);return[t,p[0],p[1],n,nm]};
   return[c('babka',26.6,13.6,'nura','Баба Нюра'),c('babka',31.5,17),['babka',OX+4.5,41.5],c('muzh',24,19.8,'tolya','Дядя Толя'),c('muzh',38.9,20.2),['muzh',OX+9.5,42],
-  c('zhen',6.5,4.85),c('zhen',40,8),c('mil',4.9,16.5,'kuzmin','Сержант Кузьмин'),c('mil',41,15)]})();
+  c('zhen',6.5,4.85),c('zhen',40,8),c('mil',4.9,19.3,'kuzmin','Сержант Кузьмин'),c('mil',41,15)]})();
 function mkNPC(type,x,y,named,name,L,place){L=L||CITY;const e={type,v:Math.random()*SP[type].length|0,x,y,hx:x,hy:y,hp:ED[type].hp,st:'idle',tm:0,cd:0,t:Math.random()*5,hit:0,dead:0,wa:Math.random()*6.28,wt:0,fire:0,said:0,strikeT:0,angry:0,scared:0,named:named||'',name:name||''};
   if(named)e.v=0;e.place=place||'';L.enemies.push(e);return e}
 function ensureCivs(){for(const[t,x,y,n,nm]of CIVS){if(n?CITY.enemies.some(e=>e.named===n&&!e.dead):CITY.enemies.filter(e=>e.type===t&&!e.named&&!e.dead).length>=CIVS.filter(c=>c[0]===t&&!c[3]).length)continue;
@@ -2560,7 +2565,7 @@ TX.garage2=mkTex((g,e,R)=>{g.fillStyle='#64686a';g.fillRect(0,0,64,64);for(let x
 TX.slush=mkTex((g,e,R)=>{g.fillStyle='#a8a59c';g.fillRect(0,0,64,64);noise(g,R,700,['#8f8a7e','#c4c2ba','#7d776a','#b8b4aa'],.6);
   for(let i=0;i<4;i++){const x=R()*64,y=R()*64,w=6+R()*12,h=3+R()*5;ell(g,x,y,w,h,'#6c7880');ell(g,x-w*.3,y-h*.3,w*.3,h*.25,'#9fb0bc')}},134);
 T[83]={h:1.3,segs:['banyaDoor','roofW'],act:'banya'};T[84]={h:1.3,segs:['banyaWall','roofW']};T[85]={h:.95,segs:['garage2'],act:'garage'};
-MAPCOL[83]='#d9784a';Object.assign(MAPCOL,{191:'#a8a49c',192:'#a8a49c',193:'#a8a49c',111:'#d8b49a',112:'#d9c8a6',108:'#d9b896',109:'#2f5aa8',110:'#2f5aa8',135:'#c4a87a',136:'#c4a87a',137:'#c4a87a',138:'#c4a87a',190:'#161616',106:'#eceff0',107:'#d9b896',115:'#8a8478',120:'#fff',121:'#fff',122:'#fff',123:'#fff',124:'#fff',125:'#fff',130:'#c4a87a',131:'#ff5a4a',132:'#c4a87a',133:'#e8d27a',134:'#c4a87a'});MAPCOL[84]='#8a5a3a';MAPCOL[85]='#c9ccd0';
+MAPCOL[83]='#d9784a';Object.assign(MAPCOL,{194:'#3c3d40',191:'#a8a49c',192:'#a8a49c',193:'#a8a49c',111:'#d8b49a',112:'#d9c8a6',108:'#d9b896',109:'#2f5aa8',110:'#2f5aa8',135:'#c4a87a',136:'#c4a87a',137:'#c4a87a',138:'#c4a87a',190:'#161616',106:'#eceff0',107:'#d9b896',115:'#8a8478',120:'#fff',121:'#fff',122:'#fff',123:'#fff',124:'#fff',125:'#fff',130:'#c4a87a',131:'#ff5a4a',132:'#c4a87a',133:'#e8d27a',134:'#c4a87a'});MAPCOL[84]='#8a5a3a';MAPCOL[85]='#c9ccd0';
 PLACE.banya='Баня «Лёгкий пар»';PLACE.garage='Гараж №17 во дворе';
 LABELS.push([OX+14,45.2,'Баня'],[...A2W(28,19.6),'Гараж']);
 VAR.lev=[{jacket:'#3e3a2e',pants:'#26262a',hat:'ushanka',hatCol:'#26221e',quilt:1,belt:1,shoe:'#0d0d0d'}];SP.lev=VAR.lev.map(humanSet);
@@ -3189,7 +3194,7 @@ function vehMat(tex){const U=GL3.U;return new THREE.ShaderMaterial({uniforms:{ma
     fragmentShader:`precision highp float;uniform sampler2D map;${GLSL_FOG}varying vec2 vUv;varying float vK;varying vec2 vW;varying float vD;
       void main(){vec4 c=texture2D(map,vUv);if(c.a<.3)discard;float f=fogAt(vD);vec3 col;if(c.a<.8){col=c.rgb;f*=.45;}else col=min(c.rgb*(uL*vK+lmAt(vW)),1.);gl_FragColor=vec4(mix(col,uFogC,f),1.);}`})}
 function vehModel(kind){let k=VEHK[kind];if(k)return k;const{geo,tex}=vehSkin(kind);k=VEHK[kind]={geo,mat:vehMat(tex)};return k}
-function vehKind(p){return p.k==='mcar'||p.k==='train'?p.spr:p.k==='car'?'car':p.k==='uaz'?'uaz':p.k==='wagonX'?'wagonX':null}
+function vehKind(p){return p.k==='mcar'||p.k==='pcar'||p.k==='train'?p.spr:p.k==='car'?'car':p.k==='uaz'?'uaz':p.k==='wagonX'?'wagonX':null}
 function glVehicles(){const seen=new Set();GL3.veh=GL3.veh||new Map();
   for(const p of LV.props){const kind=vehKind(p);if(!kind)continue;let m=GL3.veh.get(p);
     if(!m||m.userData.kind!==kind){if(m)GL3.scene.remove(m);const M=vehModel(kind);m=new THREE.Mesh(M.geo,M.mat);m.userData.kind=kind;m.frustumCulled=false;GL3.scene.add(m);GL3.veh.set(p,m)}
@@ -3340,7 +3345,7 @@ function spriteList(plX,plY){
     else if(p.k==='stop'){tex=SP.stop;h=1.5}else if(p.k==='car'){tex=SP.car;h=1.05}else if(p.k==='uaz'){tex=SP.uaz;h=1.15}else if(p.k==='wood'){tex=SP.wood;h=.9}
     else if(p.k==='rail'){tex=SP.rail;h=.95}else if(p.k==='bulb'){tex=SP.bulb;h=.5}else if(p.k==='lustra'){tex=SP.lustra;h=.68}else if(p.k==='plafon'){tex=SP.plafon;h=.45}else if(p.k==='tap'){tex=SP.tap;h=.4}else if(p.k==='stool'){tex=SP.stool;h=.55}
     else if(p.k==='lunka'){if(isSummer())continue;tex=SP.lunka;h=.5}
-    else if(p.k==='mcar'||p.k==='train'){tex=SP[p.spr];h=p.spr==='bus'?1.45:p.k==='train'?(p.spr==='loco'?2.1:1.9):1.05;fl=Math.cos(p.dir)*plX+Math.sin(p.dir)*plY<0}else if(p.k==='gcar'){if(!P.car)continue;tex=SP.car;h=1.05}else if(p.k==='wagonX'){tex=SP.wagonX;h=1.55}
+    else if(p.k==='mcar'||p.k==='pcar'||p.k==='train'){tex=SP[p.spr];h=p.spr==='bus'?1.45:p.k==='train'?(p.spr==='loco'?2.1:1.9):1.05;fl=Math.cos(p.dir)*plX+Math.sin(p.dir)*plY<0}else if(p.k==='gcar'){if(!P.car)continue;tex=SP.car;h=1.05}else if(p.k==='wagonX'){tex=SP.wagonX;h=1.55}
     else if(p.k==='pine'){tex=isSummer()?(SP.pineSum||(SP.pineSum=summerTex(SP.pine))):SP.pine;h=1.8}else if(p.k==='birch'){tex=SP.birch;h=1.6}
     list.push({x:p.x,y:p.y,tex,h,z:p.z||0,flip:fl,veh:!!vehKind(p)})}
   return list}
@@ -3461,7 +3466,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Горисполком выше: над четвёртым этажом глухой пятый ярус с гербом над входом','Балконы над входом теперь на 2-м, 3-м и 4-м этажах','Башня стала выше на этаж, флаги на крыше','Перед входом в горисполком гранитные ступени'];
+const CHANGES=['Часы на башне горисполкома подняты на верхний ярус, окно опущено под них','Плакат на боковой стене башни поднят выше','Горисполком отодвинут от центрального газона','Перед горисполкомом парковка с разметкой и машинами'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
