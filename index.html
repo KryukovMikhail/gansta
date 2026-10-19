@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.025';
+const BUILD='G001.026';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1366,7 +1366,7 @@ function buildCity(){
   {const d=mkOBB(L,-11,AXB-4,6,8,55,'ДК');oset(d,5,4,56);DOORS.dk=obbFront(d,5,4,2)}
   // центральная площадь: ТБЦ на севере, горисполком на юге, газон посередине
   {const t=mkOBB(L,1,1.5,9,3,16,'ТБЦ');for(let i=0;i<9;i++)oset(t,i,2,130+i,3);DOORS.tbc=obbFront(t,4,2,3);DOORS.cafe=obbFront(t,3,2,3)}
-  {const a=mkOBB(L,2.5,18,6,2,18,'горисполком');oset(a,0,0,109);DOORS.admin=obbFront(a,0,0,1);const tw=mkOBB(L,1.5,18,1,1,108,'горисполком',1,2);oset(tw,0,0,108,1);mkOBB(L,-0.5,18.3,2,3,112,'кафе')}
+  {const a=mkOBB(L,2.5,18,6,2,18,'горисполком');oset(a,0,0,109);DOORS.admin=obbFront(a,0,0,1);const tw=mkOBB(L,1.5,18,1,1,108,'горисполком',1,2);oset(tw,0,0,108,1);mkOBB(L,-0.5,19.7,2,3,112,'кафе')}
   // заборчик вокруг газона
   {const F=.08;mkOBB(L,LAWN[0],LAWN[1],5,1,190,'ограда',1,F);mkOBB(L,LAWN[0],LAWN[3]-F,5,1,190,'ограда',1,F);mkOBB(L,LAWN[0],LAWN[1],1,5,190,'ограда',F,1);mkOBB(L,LAWN[2]-F,LAWN[1],1,5,190,'ограда',F,1)}
   // ларьки
@@ -1405,7 +1405,7 @@ function buildCity(){
   for(let b=-24;b<=22;b+=5)put(HWY[0]/1.118-.25,b,{k:'lamp'});
   for(const[a,b]of[[1.1,6.4],[10.9,6.4],[1.1,16.1],[10.9,16.1]])put(a,b,{k:'lamp'});
   {const[x,y]=AW(40.5,AXB);P.push({k:'monument',x,y,r:.4})}
-  {const[x,y]=AW(-1.3,23.2),[sx,sy]=AW(-2.4,20.9);P.push({k:'rotunda',x,y,r:2.65,face:Math.atan2(sy-y,sx-x)})}
+  {const[x,y]=AW(-1.3,23.2),[sx,sy]=AW(-2.4,20.9);P.push({k:'rotunda',x,y,r:2.65,face:Math.atan2(sy-y,sx-x)-.6})}
   L.lights=P.filter(p=>p.k==='lamp').map(p=>({x:p.x+.15,y:p.y,r:4.6,c:[1,.62,.28],i:1.15})).concat(P.filter(p=>p.k==='barrel').map(p=>({x:p.x,y:p.y,r:3.4,c:[1,.5,.18],i:1.25,fire:1})));
   for(const k of KSPEC)L.lights.push({x:k.x,y:k.y,r:2.6,c:[.9,.95,.8],i:.6});
   for(const[x,y]of[[47.5,36.3],[51.5,30.6],[44.2,40.6]])P.push({k:'boat',x:x+SX,y,r:.35});
@@ -2238,7 +2238,7 @@ function lookNPC(){const dx=Math.cos(P.a),dy=Math.sin(P.a);let best=null,bd=LV.o
   for(const e of LV.enemies){if(e.dead||(!ED[e.type].civ&&!e.place)||e.scared>0||(e.type==='mil'&&P.wanted>0))continue;const rx=e.x-P.x,ry=e.y-P.y,d=Math.hypot(rx,ry);if(d>bd)continue;const f=rx*dx+ry*dy;if(f<=0||Math.abs(-rx*dy+ry*dx)>.5)continue;best=e;bd=d}return best}
 const npcTitle=e=>(e.name&&e.name.trim())||ED[e.type].title;
 function lookProp(){if(LV!==CITY)return null;let best=null,bd=1.8;for(const p of CITY.props){if(!['stop','car','wood','lunka','wagonX','rotunda'].includes(p.k)&&!(p.k==='boat'&&isSummer()))continue;if(p.k==='lunka'&&isSummer())continue;const rx=p.x-P.x,ry=p.y-P.y,d=Math.hypot(rx,ry)-(p.k==='rotunda'?p.r:0);if(d>bd)continue;const f=rx*Math.cos(P.a)+ry*Math.sin(P.a);if(f>0&&Math.abs(-rx*Math.sin(P.a)+ry*Math.cos(P.a))<.75+(p.k==='rotunda'?p.r:0)){best=p;bd=d}}return best}
-const propTitle=p=>p.k==='rotunda'?'Кинотеатр «Байкал»':p.k==='boat'?'Лодка — рыбачить с лодки':p.k==='stop'?'Остановка «'+p.stop.n+'»':p.k==='car'?'«Копейка» — завести':p.k==='lunka'?'Лунка — рыбачить':p.k==='wagonX'?'Пропавший вагон':'Дрова бабы Шуры — наколоть';
+const propTitle=p=>p.k==='rotunda'?'ЗАГС':p.k==='boat'?'Лодка — рыбачить с лодки':p.k==='stop'?'Остановка «'+p.stop.n+'»':p.k==='car'?'«Копейка» — завести':p.k==='lunka'?'Лунка — рыбачить':p.k==='wagonX'?'Пропавший вагон':'Дрова бабы Шуры — наколоть';
 function lookCat(){if(LV!==FLAT)return null;const c=FLAT.props.find(p=>p.k==='cat');const rx=c.x-P.x,ry=c.y-P.y,d=Math.hypot(rx,ry);if(d>1.8)return null;const f=rx*Math.cos(P.a)+ry*Math.sin(P.a);return f>0&&Math.abs(-rx*Math.sin(P.a)+ry*Math.cos(P.a))<.6?c:null}
 function goTo(L,x,y,a,quiet){const from=LV;LV=L;P.x=x;P.y=y;P.a=a;P.pitch=0;G.fade=1;SND.door();
   if(from===DK&&L===CITY&&discoTime()&&(P.danceT||0)>15&&!DK.fought){P.danceT=0;msg('На крыльце ДК тебя уже ждут.','bad');for(const[ex,ey]of[A2W(16.2,9.4),A2W(16.2,13.2)]){const e=mkNPC('gop',ex,ey,'','',CITY);e.named='';e.st='chase';e.angry=1;e.cd=.8;delete e.place}}
@@ -2246,7 +2246,7 @@ function goTo(L,x,y,a,quiet){const from=LV;LV=L;P.x=x;P.y=y;P.a=a;P.pitch=0;G.fa
 function interact(){if(!playing())return;const cat=lookCat();if(cat){SND.meow();if((G.petT||0)<G.day*1440+G.min-60){G.petT=G.day*1440+G.min;P.warm=Math.min(100,P.warm+5)}msg(pick(['Погладил Барсика. Мурчит, как трактор.','Барсик потёрся о ногу и мяукнул.','Кот лениво приоткрыл один глаз.']),'good');if(cat.mode==='walk'){cat.mode='sit';cat.t=4}return}
   const pr=lookProp();if(pr){if(pr.k==='stop'){curPlace='__bus';openModal(busHTML(pr.stop))}
     else if(pr.k==='wood'){if(G.woodDay===G.day){msg('Баба Шура: «Хватит на сегодня, сынок, завтра приходи».');return}curPlace='__wood';openModal(`<div class="card"><div class="stamp">ШАНХАЙ</div><h2>Дрова бабы Шуры</h2><p>«Сынок, наколи дровишек, а? Заплачу, сколько смогу».</p><div class="cardFoot"><span></span><span style="display:flex;gap:8px"><button class="btn" data-a="wood">Наколоть</button><button class="btn" data-a="close">Уйти</button></span></div></div>`)}
-    else if(pr.k==='rotunda'){const h=G.min/60;msg(h>=10&&h<23?pick(['Афиша: «Терминатор 2», «Бриллиантовая рука», вечером — «Эммануэль». Билет '+fmt(price(500))+' р. Касса закрыта на обед.','У кассы табличка: «Сеанс отменён — нет плёнки». Видеосалон в фойе работает.','Из-за двери слышно, как Шварценеггер кого-то стреляет. Видеосалон, 20 человек в зале.']):'Кинотеатр закрыт. На двери: «Сеансы с 10:00».','say');return}
+    else if(pr.k==='rotunda'){const h=G.min/60;msg(h>=9&&h<18?pick(['ЗАГС. На двери: «Регистрация браков по пятницам и субботам». Внутри играет марш Мендельсона с кассеты.','Из ЗАГСа выходит пара, за ними родня с шампанским и баяном. Кто-то кричит «Горько!».','Табличка: «Выдача свидетельств о рождении — каб. 3». Очередь из трёх мамаш с колясками.']):'ЗАГС закрыт. Приём с 9:00 до 18:00.','say');return}
     else if(pr.k==='boat'){if(!P.has.rod){msg('Без удочки тут делать нечего. Удочку продают на рынке.');return}
       startMG(Object.assign({},MGSET.fishBoat,{onDone:(h)=>{P.inv.fish+=h;G.stats.fish+=h;passTime(120);P.food=Math.max(0,P.food-6);if(G.stats.fish>=10)ach('fisher');return h?'Наловил с лодки: '+h+' омулей. Байкал летом щедрее.':'Покачался на волнах впустую. Омуль ушёл на глубину.'}}))}
     else if(pr.k==='lunka'){if(!P.has.rod){msg('Без удочки тут делать нечего. Удочку и ледобур продают на рынке.');return}
@@ -3020,14 +3020,14 @@ function glAtlas(){const S=128,c=document.createElement('canvas');c.width=c.heig
   if(!GL3.atlasTex){GL3.atlasTex=new THREE.DataTexture(d,S*4,S*4,THREE.RGBAFormat);const a=GL3.atlasTex;a.magFilter=a.minFilter=THREE.NearestFilter;a.generateMipmaps=false}
   else GL3.atlasTex.image.data.set(d);GL3.atlasTex.needsUpdate=true;GL3.atlasKey=FLOORS[0];GL3.atlasKey2=FLOORS[2]}
 
-/* --- круглое здание кинотеатра --- */
+/* --- круглое здание ЗАГСа --- */
 TX.rotWall=face(1,1.4,(g,e,R,w,h,s,Z)=>{g.fillStyle='#d9c8a6';g.fillRect(0,0,1,1.4);speck(g,R,500,['#cdb998','#e4d4b4','#c4ae8c'],.5,0,0,1,1.4,.006);g.fillStyle='#b8a482';g.fillRect(0,Z(.12),1,.12);
   fwin(g,e,R,.3,Z(1.15),.4,.85,{frame:'#f4f0e6',p:.25});g.fillStyle='#f4f0e6';g.fillRect(.3,Z(.72),.4,.02);g.fillStyle='rgba(0,0,0,.1)';g.fillRect(0,0,.02,1.4);g.fillStyle='#c8b490';g.fillRect(0,Z(1.4),1,.06)},4130,96);
 TX.rotRoof=SQ((g,e,R)=>{g.fillStyle='#6a3a2a';g.fillRect(0,0,1,1);for(let y=0;y<1;y+=.08){g.fillStyle='rgba(0,0,0,.18)';g.fillRect(0,y,1,.01)}g.fillStyle='#eef3f6';for(let i=0;i<14;i++)g.fillRect(R(),R()*.7,.15+R()*.2,.05);g.fillRect(0,0,1,.12)},4131);
 TX.rotFront=face(1.3,1.4,(g,e,R,w,h,s,Z)=>{g.clearRect(0,0,1.3,1.4);g.fillStyle='#d9c8a6';g.fillRect(.1,Z(1.4),1.1,1.4);g.fillStyle='#b8a482';g.fillRect(.1,Z(.12),1.1,.12);
-  g.fillStyle='#2a3a4a';g.fillRect(.35,Z(.85),.6,.73);for(const x0 of[.38,.66]){g.fillStyle=lgr(g,0,Z(.82),0,Z(.14),['#8aa6b4','#3a4a56']);g.fillRect(x0,Z(.82),.26,.68);g.fillStyle='#c9ccd0';g.fillRect(x0+(x0<.5?.22:.02),Z(.5),.015,.1)}
-  g.fillStyle='#24497a';g.fillRect(.12,Z(1.3),1.06,.24);ftxt(g,s,'КИНОТЕАТР',.65,Z(1.24),.09,'#f4f0e6','800 ');ftxt(g,s,'«БАЙКАЛ»',.65,Z(1.135),.08,'#ffd04a','800 ');e.fillStyle='#fff';e.fillRect(.14,Z(1.28),1.02,.2);
-  g.fillStyle='#f4f0e6';g.fillRect(.15,Z(.95),.16,.3);ftxt(g,s,'АФИША',.23,Z(.9),.03,'#c83a2a','800 ');g.fillStyle='#c83a2a';g.fillRect(.17,Z(.86),.12,.18)},4132,128);
+  g.fillStyle='#e8dcc0';g.fillRect(.3,Z(1.02),.7,.06);g.fillStyle='rgba(0,0,0,.25)';g.fillRect(.32,Z(.96),.66,.02);
+  g.fillStyle='#2a3a4a';g.fillRect(.35,Z(.9),.6,.78);for(const x0 of[.38,.66]){g.fillStyle=lgr(g,0,Z(.87),0,Z(.14),['#8aa6b4','#3a4a56']);g.fillRect(x0,Z(.87),.26,.73);g.fillStyle='#c9ccd0';g.fillRect(x0+(x0<.5?.22:.02),Z(.5),.015,.1)}
+  g.fillStyle='#a8a090';g.fillRect(.3,Z(.12),.7,.05);g.fillStyle='#bcb4a4';g.fillRect(.26,Z(.07),.78,.07)},4132,128);
 function glCTower(sc,p){const N=14,H=2.9,w=new THREE.CylinderGeometry(p.r,p.r,H,N,1,true),uv=w.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)*N/2,1-uv.getY(i));
   const tx=glTex(TX.ctWall);tx.wrapS=THREE.RepeatWrapping;tx.needsUpdate=true;const m1=new THREE.Mesh(w,vehMat(TX.ctWall));m1.position.set(p.x,H/2,p.y);m1.frustumCulled=false;sc.add(m1);
   const m2=new THREE.Mesh(new THREE.ConeGeometry(p.r+.12,.75,N),vehMat(TX.ctRoof));m2.position.set(p.x,H+.375,p.y);m2.frustumCulled=false;sc.add(m2)}
@@ -3453,7 +3453,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Горисполком: над входом балконы, на самом верху — герб; окна башни по центру, над часами окна больше нет','Кинотеатр отодвинут вглубь и соединён с горисполкомом одноэтажной пристройкой','Угловые дома светлее, с красными кирпичными полосами и балкончиками; у дома возле ТБЦ — круглая угловая башня','Ленинградский проспект к вокзалу стал шире'];
+const CHANGES=['Пристройка у горисполкома отодвинута вглубь — плакат на башне виден целиком','Круглое здание — теперь ЗАГС, без вывески кинотеатра, вход сдвинут правее'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
