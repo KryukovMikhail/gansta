@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.028';
+const BUILD='G001.029';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1332,7 +1332,7 @@ function cityF(fx,fy){const x=fx-OX,s=x+.5*fy,u=fy-.5*x,A=s/1.118,B=u/1.118;
   {const t=(-(A+2)+(B-17))/1.4142,q=((A+2)+(B-17))/1.4142;if(t>-1.5&&Math.abs(q)<.9)return 1}   // улица по диагонали между ДК и горисполкомом
   if(A>=2.7&&A<9.3&&B>=7&&B<14.57)return 14;                         // тротуар вокруг газона
   if(A>=RING[0]&&A<RING[2]&&B>=7&&B<RING[3])return 1;
-  if(A>=4.4&&A<9.3&&B>=16.37&&B<18.32)return 1;                     // парковка
+  if(A>=-1.25&&A<9.3&&B>=16.37&&B<18.32)return 1;if(A>=-1.25&&A<RING[0]&&B>=14.57&&B<16.37)return 1;   // съезд с кольца на дорогу у ДК                     // парковка
   if(A>=-5&&A<13&&B>=4.5&&B<21)return 10;
   if(u>=AVE[0]&&u<AVE[1]&&A>=-5&&s<R2[1])return 1;
   if(A>=(B>11?13:14.6)&&A<36.3){if((B>=8.05&&B<9.1)||(B>=13.45&&B<14.35))return 14;                           // тротуары
@@ -1425,7 +1425,8 @@ function buildCity(){
   // ёлки по углам газона на площади
   for(const a of[5.6,6.9,8.2,9.5]){const[x,y]=AW(a,20.25);P.push({k:'pine',x,y,r:.22})}
   // парковка перед горисполкомом
-  {const fwd=Math.atan2(2,-1),cols=['carW','carB',0,'carG','car','carW'];for(let k=0;k<6;k++){const o=mkOBB(L,4.4+k*.82,16.37,1,1,194,'парковка',.82,1.95);o.nosolid=1;const sp=cols[k];if(!sp)continue;const[x,y]=AW(4.4+k*.82+.41,17.3);P.push({k:'pcar',spr:sp,x,y,dir:k%2?fwd:fwd+Math.PI,r:.5})}}
+  {const fwd=Math.atan2(2,-1),cols=['carW','carB',0,'carG','car','carW'];for(let k=0;k<6;k++){const o=mkOBB(L,4.4+k*.82,16.37,1,1,194,'парковка',.82,1.95);o.nosolid=1;const sp=cols[k];if(!sp)continue;const[x,y]=AW(4.4+k*.82+.41,17.3);P.push({k:'pcar',spr:sp,x,y,dir:k%2?fwd:fwd+Math.PI,r:.5})}
+   const c2=['carG',0,'carB',0];for(let k=0;k<4;k++){const o=mkOBB(L,1.12+k*.82,16.37,1,1,194,'парковка',.82,1.95);o.nosolid=1;const sp=c2[k];if(!sp)continue;const[x,y]=AW(1.12+k*.82+.41,17.3);P.push({k:'pcar',spr:sp,x,y,dir:fwd,r:.5})}}
   // деревья: городской парк и лес вдоль берега
   const TR=rng(77),okT=(x,y)=>x>1.3&&y>1.3&&x<CW-1.3&&y<CH-1.3&&!L.map[(y|0)*CW+(x|0)]&&cityF(x,y)<0&&L.fb[(y|0)*CW+(x|0)]===0&&!obbBlocks(L,x,y,.6)&&!P.some(p=>Math.hypot(p.x-x,p.y-y)<(p.k==='rotunda'?p.r+.9:1.1));
   for(let n=0,k=0;n<60&&k<4000;k++){const x=1.5+TR()*14,y=9+TR()*15;if(!okT(x,y))continue;P.push({k:TR()<.6?'pine':'birch',x,y,r:.22});n++}
@@ -3466,7 +3467,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Часы на башне горисполкома подняты на верхний ярус, окно опущено под них','Плакат на боковой стене башни поднят выше','Горисполком отодвинут от центрального газона','Перед горисполкомом парковка с разметкой и машинами'];
+const CHANGES=['Парковка у горисполкома расширена вправо, вдоль всего фасада','Кольцо у газона и парковка соединены с дорогой у ДК, которая уходит по диагонали'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
