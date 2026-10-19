@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.029';
+const BUILD='G001.030';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1071,6 +1071,60 @@ T[97]={h:3.6,segs:['landDoor'],stretch:true,stop:true,act:'stairs'};T[99]={h:3.6
 T[96]={h:.46,vh:.46,segs:['stoolF'],stretch:true,trans:true,top:'stoolT',boxTop:true,boxes:(x,y)=>y===4?[[x+.32,y+.04,x+.68,y+.4]]:[[x+.32,y+.58,x+.68,y+.94]]};
 T[93]={h:2.4,segs:['radWall'],stretch:true,stop:true,act:'window'};
 for(const t of[61,62,67,88,93])T[t].cap='podTop';
+/* --- G001.030: ванна, раковина-«тюльпан», почтовые ящики, подъём по лестнице --- */
+const bathBody=(i)=>face(.92,.6,(g,e,R,w,h,s,Z)=>{const L0=i===0;
+  g.fillStyle='#4e4840';g.fillRect(0,Z(.08),w,.08);g.fillStyle='rgba(0,0,0,.25)';g.fillRect(0,Z(.02),w,.02);
+  const fx=L0?.16:w-.16;g.fillStyle=lgr(g,0,Z(.1),0,Z(0),['#f2f0ea','#bdb8ae']);g.beginPath();g.moveTo(fx-.05,Z(.09));g.lineTo(fx+.05,Z(.09));g.lineTo(fx+.035,Z(.0));g.lineTo(fx-.045,Z(.0));g.closePath();g.fill();
+  g.fillStyle=lgr(g,0,Z(.53),0,Z(.07),['#ffffff','#f3f1eb','#dcd8ce','#c9c4b8']);g.beginPath();
+  if(L0){g.moveTo(0,Z(.53));g.lineTo(0,Z(.2));g.quadraticCurveTo(0,Z(.07),.12,Z(.07));g.lineTo(w,Z(.07));g.lineTo(w,Z(.53))}else{g.moveTo(0,Z(.53));g.lineTo(0,Z(.07));g.lineTo(w-.12,Z(.07));g.quadraticCurveTo(w,Z(.07),w,Z(.2));g.lineTo(w,Z(.53))}g.closePath();g.fill();
+  g.fillStyle=lgr(g,L0?0:w-.08,0,L0?.08:w,0,L0?['rgba(0,0,0,.12)','rgba(0,0,0,0)']:['rgba(0,0,0,0)','rgba(0,0,0,.12)']);g.fillRect(L0?0:w-.08,Z(.53),.08,.46);
+  g.fillStyle='#ffffff';g.fillRect(0,Z(.6),w,.07);g.fillStyle='rgba(255,255,255,.9)';g.fillRect(0,Z(.585),w,.01);g.fillStyle='rgba(90,80,60,.22)';g.fillRect(0,Z(.535),w,.012);g.fillStyle='rgba(90,80,60,.1)';g.fillRect(0,Z(.52),w,.015);
+  g.fillStyle='rgba(255,255,255,.55)';g.fillRect(L0?.1:0,Z(.42),L0?w-.1:w-.1,.01);g.fillStyle='rgba(140,120,90,.12)';for(let k=0;k<4;k++)ell(g,.1+R()*.7,Z(.15+R()*.25),.015,.006,'rgba(130,110,80,.18)')},3040+i,128);
+TX.bathB0=bathBody(0);TX.bathB1=bathBody(1);
+TX.bathE=face(.72,.6,(g,e,R,w,h,s,Z)=>{g.fillStyle='#4e4840';g.fillRect(0,Z(.08),w,.08);
+  for(const fx of[.14,w-.14]){g.fillStyle=lgr(g,0,Z(.1),0,Z(0),['#f2f0ea','#bdb8ae']);g.fillRect(fx-.04,Z(.09),.08,.09)}
+  g.fillStyle=lgr(g,0,Z(.53),0,Z(.07),['#fbfaf6','#eceae2','#d2cec4','#c2bdb0']);g.beginPath();g.moveTo(0,Z(.53));g.lineTo(0,Z(.2));g.quadraticCurveTo(0,Z(.07),.12,Z(.07));g.lineTo(w-.12,Z(.07));g.quadraticCurveTo(w,Z(.07),w,Z(.2));g.lineTo(w,Z(.53));g.closePath();g.fill();
+  g.fillStyle='#ffffff';g.fillRect(0,Z(.6),w,.07);g.fillStyle='rgba(90,80,60,.22)';g.fillRect(0,Z(.535),w,.012)},3042,128);
+const bathTop2=(i)=>SQ((g,e,R)=>{const A=i===0;g.fillStyle='#fdfcf8';g.fillRect(0,0,1,1);g.fillStyle='rgba(0,0,0,.06)';g.fillRect(.95,0,.05,1);
+  const y0=A?.12:0,y1=A?1:.88;g.fillStyle=lgr(g,.12,0,.88,0,['#d6d3ca','#efede6','#f6f5f0','#e2dfd6']);g.beginPath();
+  if(A){g.moveTo(.13,1);g.lineTo(.13,.42);g.quadraticCurveTo(.13,.12,.5,.12);g.quadraticCurveTo(.87,.12,.87,.42);g.lineTo(.87,1)}else{g.moveTo(.13,0);g.lineTo(.13,.58);g.quadraticCurveTo(.13,.88,.5,.88);g.quadraticCurveTo(.87,.88,.87,.58);g.lineTo(.87,0)}g.closePath();g.fill();
+  g.strokeStyle='rgba(120,110,90,.25)';g.lineWidth=.012;g.stroke();
+  g.fillStyle='rgba(170,200,215,.22)';g.beginPath();g.ellipse(.5,A?.75:.25,.3,A?.45:.45,0,0,7);g.fill();
+  if(A){ell(g,.5,.3,.045,.045,'#b8bcc0');ell(g,.5,.3,.03,.03,'#5a5a5a');for(let k=-1;k<=1;k++){g.fillStyle='#9a9ea2';g.fillRect(.5+k*.012-.003,.28,.006,.04)}
+    g.strokeStyle='#8a8e92';g.lineWidth=.008;g.beginPath();g.moveTo(.5,.26);g.quadraticCurveTo(.56,.2,.62,.24);g.stroke();ell(g,.63,.245,.02,.012,'#2a2a2a')}
+  else{g.fillStyle='#e8c84a';rr(g,.66,.86,.16,.08,.02);g.fillStyle='rgba(255,255,255,.6)';rr(g,.68,.87,.06,.02,.01)}},3043+i);
+TX.bathT2a=bathTop2(0);TX.bathT2b=bathTop2(1);
+{const BA={h:.6,vh:.6,segs:['bathB0'],stretch:true,trans:true,side:'bathE',top:'bathT2a',boxTop:true},BB=Object.assign({},BA,{segs:['bathB1'],top:'bathT2b'});
+ T[40]={h:.6,vh:.6,segs:['bathB0'],stretch:true,act:'bath',grp:'bath',boxes:(x,y)=>[[x+.02,y+.08,x+.78,y+1,.6,BA]]};
+ T[89]={h:.6,vh:.6,segs:['bathB1'],stretch:true,act:'bath',grp:'bath',boxes:(x,y)=>[[x+.02,y,x+.78,y+.92,.6,BB]]};}
+
+/* тюльпан: чаша парит на ножке — отдельные коробки */
+TX.basinF=face(.56,.88,(g,e,R,w,h,s,Z)=>{g.clearRect(0,0,w,h);
+  g.fillStyle=lgr(g,0,0,w,0,['#dcd8ce','#f8f7f2','#ffffff','#e4e0d6']);g.beginPath();g.moveTo(0,Z(.82));g.quadraticCurveTo(.01,Z(.66),w/2-.08,Z(.6));g.lineTo(w/2+.08,Z(.6));g.quadraticCurveTo(w-.01,Z(.66),w,Z(.82));g.closePath();g.fill();
+  g.fillStyle='rgba(0,0,0,.08)';g.beginPath();g.moveTo(.04,Z(.7));g.quadraticCurveTo(w/2,Z(.6),w-.04,Z(.7));g.lineTo(w-.06,Z(.69));g.quadraticCurveTo(w/2,Z(.61),.06,Z(.69));g.fill();
+  g.fillStyle='#fdfcf8';rr(g,0,Z(.88),w,.065,.02);g.fillStyle='rgba(255,255,255,.9)';g.fillRect(.02,Z(.875),w-.04,.008);g.fillStyle='rgba(100,90,70,.2)';g.fillRect(0,Z(.82),w,.008)},3045,128);
+TX.basinS=face(.44,.88,(g,e,R,w,h,s,Z)=>{g.clearRect(0,0,w,h);
+  g.fillStyle=lgr(g,0,0,w,0,['#e8e5dc','#ffffff','#d8d4ca']);g.beginPath();g.moveTo(0,Z(.82));g.lineTo(0,Z(.64));g.lineTo(.14,Z(.6));g.lineTo(.3,Z(.6));g.quadraticCurveTo(w-.01,Z(.66),w,Z(.82));g.closePath();g.fill();
+  g.fillStyle='#fdfcf8';rr(g,0,Z(.88),w,.065,.02);g.fillStyle='rgba(100,90,70,.2)';g.fillRect(0,Z(.82),w,.008)},3046,128);
+TX.basinT=SQ((g,e,R)=>{g.fillStyle='#fdfcf8';g.fillRect(0,0,1,1);g.fillStyle=lgr(g,0,.25,0,.95,['#cfccc3','#ebe9e2','#f6f5f0']);g.beginPath();g.ellipse(.5,.6,.4,.32,0,0,7);g.fill();
+  g.strokeStyle='rgba(110,100,80,.3)';g.lineWidth=.015;g.stroke();ell(g,.5,.62,.05,.05,'#a8acb0');ell(g,.5,.62,.03,.03,'#3a3a3a');ell(g,.5,.3,.025,.02,'#7a7e82');
+  g.fillStyle='#b8bcc0';g.fillRect(.46,.04,.08,.24);ell(g,.5,.27,.05,.035,'#d8dce0');for(const[x,c]of[[.26,'#3a6ad8'],[.74,'#d83a3a']]){ell(g,x,.12,.07,.06,'#e8ecf0');ell(g,x,.12,.025,.025,c)}
+  g.fillStyle='#e8e2c8';rr(g,.08,.3,.12,.08,.02);g.fillStyle='#f0d0a0';rr(g,.095,.31,.09,.05,.015)},3047);
+TX.pedF=face(.16,.62,(g,e,R,w,h,s,Z)=>{g.fillStyle=lgr(g,0,0,w,0,['#cfcabe','#f6f4ee','#ffffff','#d8d4c8']);g.fillRect(0,0,w,h);g.fillStyle='rgba(0,0,0,.18)';g.fillRect(0,Z(.03),w,.03);g.fillStyle='rgba(255,255,255,.5)';g.fillRect(w*.45,0,.012,h)},3048,64);
+{const BS={h:.88,vh:.86,segs:['basinF'],stretch:true,trans:true,side:'basinS',top:'basinT',boxTop:true},PD={h:.62,segs:['pedF'],stretch:true,side:'pedF',top:'basinT',boxTop:true};
+ T[91]={h:.88,vh:.86,segs:['basinF'],stretch:true,trans:true,act:'sink',boxes:(x,y,o)=>[[x+.43,y+.12,x+.57,y+.27,.62,PD],[x+.22,y+.01,x+.78,y+.45,.88,BS]]};}
+/* почтовые ящики выступают из стены */
+TX.mailBoxF=face(.88,1.7,(g,e,R,w,h,s,Z)=>{g.clearRect(0,0,w,h);g.fillStyle='rgba(0,0,0,.25)';g.fillRect(0,Z(1.02),w,.03);
+  g.fillStyle='#24406a';g.fillRect(0,Z(1.68),w,.66);for(let r=0;r<4;r++)for(let c=0;c<5;c++){const x=.02+c*.172,y=Z(1.66)+r*.155;g.fillStyle=lgr(g,0,y,0,y+.145,['#4a6c9a','#33557f','#2a4670']);g.fillRect(x,y,.162,.145);
+    g.fillStyle='rgba(255,255,255,.2)';g.fillRect(x,y,.162,.008);g.fillStyle='#101c2e';g.fillRect(x+.02,y+.025,.12,.016);ftxt(g,s,String(1+r*5+c),x+.135,y+.115,.032,'#e8e8e8','700 ');g.fillStyle='#b0b4b8';ell(g,x+.035,y+.105,.012,.012,'#b0b4b8');g.fillStyle='#3a3a3a';g.fillRect(x+.032,y+.1,.006,.012);
+    if(r*5+c===16){g.fillStyle='#f4f0e2';g.fillRect(x+.03,y+.012,.08,.03);g.fillStyle='#c8463a';g.fillRect(x+.03,y+.012,.08,.006)}}
+  g.fillStyle='#1a3050';g.fillRect(0,Z(1.7),w,.02)},3049,128);
+TX.mailBoxS=face(.16,1.7,(g,e,R,w,h,s,Z)=>{g.clearRect(0,0,w,h);g.fillStyle=lgr(g,0,0,w,0,['#2a4670','#1e3554']);g.fillRect(0,Z(1.7),w,.68);g.fillStyle='rgba(255,255,255,.12)';for(let r=1;r<4;r++)g.fillRect(0,Z(1.66)+r*.155,w,.006)},3050,32);
+TX.mailBoxT=SQ((g,e,R)=>{g.fillStyle='#2a4670';g.fillRect(0,0,1,1);g.fillStyle='rgba(255,255,255,.15)';g.fillRect(0,0,1,.05)},3051);
+{const MB={h:1.7,vh:1.7,segs:['mailBoxF'],stretch:true,trans:true,side:'mailBoxS',top:'mailBoxT',boxTop:true};
+ T[196]={h:1.7,vh:1.7,segs:['mailBoxF'],stretch:true,trans:true,act:'mail',boxes:(x,y)=>[[x,y+.06,x+.17,y+.94,1.7,MB]]};}
+STEP.walk=1;LAND.walk=1;
+
 function buildBoxes(L){L.bx=new Array(L.w*L.h).fill(null);let any=false;
   const wallish=(x,y)=>{if(x<0||y<0||x>=L.w||y>=L.h)return true;const t=L.map[y*L.w+x];return!!(t&&T[t].wall)};
   for(let y=0;y<L.h;y++)for(let x=0;x<L.w;x++){const i=y*L.w+x,t=L.map[i];if(!t)continue;const D=T[t];let bl=null;
@@ -1332,7 +1386,8 @@ function cityF(fx,fy){const x=fx-OX,s=x+.5*fy,u=fy-.5*x,A=s/1.118,B=u/1.118;
   {const t=(-(A+2)+(B-17))/1.4142,q=((A+2)+(B-17))/1.4142;if(t>-1.5&&Math.abs(q)<.9)return 1}   // улица по диагонали между ДК и горисполкомом
   if(A>=2.7&&A<9.3&&B>=7&&B<14.57)return 14;                         // тротуар вокруг газона
   if(A>=RING[0]&&A<RING[2]&&B>=7&&B<RING[3])return 1;
-  if(A>=-1.25&&A<9.3&&B>=16.37&&B<18.32)return 1;if(A>=-1.25&&A<RING[0]&&B>=14.57&&B<16.37)return 1;   // съезд с кольца на дорогу у ДК                     // парковка
+  if(A>=-1.25&&A<9.3&&B>=16.37&&B<18.32)return 1;if(A>=-1.25&&A<RING[0]&&B>=12.6&&B<16.37)return 1;
+  if(u>=AVE[0]&&u<AVE[1]&&A>=-3&&A<14.6)return 1;                    // проспект пересекает полосы плитки   // съезд с кольца на дорогу у ДК                     // парковка
   if(A>=-5&&A<13&&B>=4.5&&B<21)return 10;
   if(u>=AVE[0]&&u<AVE[1]&&A>=-5&&s<R2[1])return 1;
   if(A>=(B>11?13:14.6)&&A<36.3){if((B>=8.05&&B<9.1)||(B>=13.45&&B<14.35))return 14;                           // тротуары
@@ -1444,7 +1499,7 @@ function buildFlat(){
   for(let i=0;i<3;i++)L.map[9*16+10+i]=81-i;
   frect(L,0,0,16,11,6);frect(L,1,1,7,4,5);frect(L,5,5,3,5,5);frect(L,1,6,3,4,7);
   const O=(x,y,d)=>L.ori[y*16+x]=d;O(1,1,3);O(2,1,3);O(3,1,3);O(13,1,3);O(14,1,4);O(14,2,4);O(10,9,1);O(11,9,1);O(12,9,1);O(1,7,2);O(1,8,2);O(3,6,3);O(4,3,3);O(5,3,3);
-  L.props=[{k:'cat',x:11.5,y:6.5,a:0,t:0,mode:'walk'},{k:'lustra',x:11.5,y:5,z:1.72},{k:'plafon',x:4.5,y:2.2,z:1.95},{k:'plafon',x:2.3,y:7.6,z:1.95},{k:'tap',x:1.12,y:8,z:.6}];L.map[4*16+4]=96;L.map[2*16+5]=96;buildBoxes(L);
+  L.props=[{k:'cat',x:11.5,y:6.5,a:0,t:0,mode:'walk'},{k:'lustra',x:11.5,y:5,z:1.72},{k:'plafon',x:4.5,y:2.2,z:1.95},{k:'plafon',x:2.3,y:7.6,z:1.95},{k:'tap',x:1.06,y:7.32,z:.5}];L.map[4*16+4]=96;L.map[2*16+5]=96;buildBoxes(L);
   L.lights=[{x:11.5,y:5,r:6,c:[1,.82,.55],i:.55},{x:4,y:2.5,r:5,c:[1,.95,.8],i:.5},{x:6.5,y:7.5,r:3.5,c:[1,.8,.5],i:.35},{x:2,y:7.5,r:3,c:[.9,.95,1],i:.3}];
   L.amb=()=>isNight()?.42:.66;
   return L;
@@ -1455,7 +1510,7 @@ function buildInteriors(){
   PODEZD=buildInt('podezd',['######PQ#','#.....LL#','#.....LL#','D.....SS#','#.....SS#','#.....SS#','M.......#','#.......W','##W#E####'],{'#':88,S:92,L:98,P:97,Q:88,M:67,D:62,E:61,W:88},()=>11,
     {ceil:3.6,lights:[{x:3.2,y:3.6,r:6.5,c:[1,.85,.6],i:.95},{x:4.5,y:7,r:3.5,c:[1,.85,.6],i:.5},{x:6.8,y:1.4,r:3.5,c:[1,.85,.6],i:.7}],amb:()=>.3,exits:{'4,8':'home'}});
   {const L=PODEZD;for(let y=1;y<=5;y++)for(const x of[6,7])L.ori[y*L.w+x]=3;for(let i=0;i<L.w*L.h;i++)L.pv[i]=((i*2654435761)>>>0)%97;L.ceilTex=TX.ceilPod;
-    L.props.push({k:'bulb',x:3.2,y:3.6,z:2.8},{k:'bulb',x:6.9,y:1.2,z:2.9})}
+    L.props.push({k:'bulb',x:3.2,y:3.6,z:2.8},{k:'bulb',x:6.9,y:1.2,z:2.9});L.map[6*L.w]=88;L.map[6*L.w+1]=196;L.ori[6*L.w+1]=2}
   TBC=buildInt('tbc',['WHHHHHWWWWWWWW','W.....W.....tW','WCCCC.W.BBB..W','W.....W......W','W...........tW','W.....W..t...W','W.....W......W','WVEVWWWWVFVWWW'],
     {W:60,H:76,C:63,B:64,t:70,V:74,E:61,F:61},x=>x<=6?5:10,
     {lights:[{x:3,y:3.5,r:5,c:[.85,.95,1],i:.75},{x:3,y:6,r:5,c:[.85,.95,1],i:.6},{x:9.5,y:3,r:4.5,c:[1,.7,.4],i:.8},{x:11.5,y:5.5,r:4.5,c:[1,.7,.4],i:.7}],amb:()=>.45,
@@ -1502,7 +1557,8 @@ let CITY,FLAT,LV,PODEZD,TBC,DK,STATION,KPZ;
 const LEVELS=()=>({city:CITY,flat:FLAT,podezd:PODEZD,tbc:TBC,dk:DK,station:STATION,kpz:KPZ,podezd2:PODEZD2,market:MARKET,banya:BANYA,garage:GARAGE,admin2:ADMIN2});
 const solidGrid=(L,x,y)=>{const ix=Math.floor(x),iy=Math.floor(y);if(ix<0||iy<0||ix>=L.w||iy>=L.h)return true;const i=iy*L.w+ix;if(!L.map[i])return false;const bl=L.bx&&L.bx[i];if(!bl)return true;for(const b of bl)if(x>=b[0]&&x<=b[2]&&y>=b[1]&&y<=b[3])return true;return false};
 const solidAt=(L,x,y)=>solidGrid(L,x,y)||(L.obbs?!!obbCell(L,x,y):false);
-function free(x,y,r){const L=LV;if(L===CITY&&isSummer()&&isBaikal(x,y))return false;for(let j=Math.floor(y-r);j<=Math.floor(y+r);j++)for(let i=Math.floor(x-r);i<=Math.floor(x+r);i++){if(i<0||j<0||i>=L.w||j>=L.h)return false;const k=j*L.w+i;if(!L.map[k])continue;const bl=L.bx&&L.bx[k];if(!bl)return false;for(const b of bl)if(x+r>b[0]&&x-r<b[2]&&y+r>b[1]&&y-r<b[3])return false}
+let FREEZ=-1;function groundAt(L,x,y){const ix=Math.floor(x),iy=Math.floor(y);if(!L.bx||ix<0||iy<0||ix>=L.w||iy>=L.h)return 0;const bl=L.bx[iy*L.w+ix];let h=0;if(bl)for(const b of bl)if(b[5]&&b[5].walk&&x>=b[0]&&x<b[2]&&y>=b[1]&&y<b[3])h=Math.max(h,b[4]);return h}
+function free(x,y,r){const L=LV;if(L===CITY&&isSummer()&&isBaikal(x,y))return false;for(let j=Math.floor(y-r);j<=Math.floor(y+r);j++)for(let i=Math.floor(x-r);i<=Math.floor(x+r);i++){if(i<0||j<0||i>=L.w||j>=L.h)return false;const k=j*L.w+i;if(!L.map[k])continue;const bl=L.bx&&L.bx[k];if(!bl)return false;for(const b of bl){if(FREEZ>=0&&b[5]&&b[5].walk&&b[4]<=FREEZ+.42)continue;if(x+r>b[0]&&x-r<b[2]&&y+r>b[1]&&y-r<b[3])return false}}
   if(L.obbs&&obbBlocks(L,x,y,r))return false;for(const p of LV.props)if(p.r&&Math.hypot(p.x-x,p.y-y)<p.r+r)return false;return true}
 function los(ax,ay,bx,by){const d=Math.hypot(bx-ax,by-ay),n=Math.ceil(d/.12);for(let i=1;i<n;i++){const t=i/n;const x=ax+(bx-ax)*t,y=ay+(by-ay)*t;const tt=LV.map[Math.floor(y)*LV.w+Math.floor(x)];if(tt&&(T[tt].vh||T[tt].h)>.7)return false;const oc=LV.obbs&&obbCell(LV,x,y);if(oc&&(T[oc.t].vh||T[oc.t].h)>.7)return false}return true}
 function wallTex(D,seg,x,y){let n=D.segs[Math.min(seg,D.segs.length-1)];if(Array.isArray(n))n=n[LV.pv[y*LV.w+x]%n.length];return TX[n]}
@@ -1697,6 +1753,12 @@ SP.lustra=mkTex((g,e)=>{g.fillStyle='#b8943a';g.fillRect(31,0,2,22);ell(g,32,24,
 SP.plafon=mkTex((g,e)=>{g.fillStyle='#1a1a1a';g.fillRect(31,0,2,26);ell(g,32,34,13,9,'rgba(245,240,230,.95)');ell(g,32,30,13,4,'#e8e0d0');e.fillStyle='#fff';e.beginPath();e.ellipse(32,34,13,9,0,0,7);e.fill()});
 SP.stool=mkTex(g=>{ell(g,32,62,14,2,'rgba(0,0,0,.25)');g.fillStyle='#7a5234';g.fillRect(19,36,26,4);g.fillStyle='#9a6a40';g.fillRect(19,35,26,2);g.fillStyle='#5a3a22';for(const x of[21,40])g.fillRect(x,40,3,23);g.fillRect(23,52,18,2)});
 SP.tap=mkTex(g=>{g.fillStyle='#c9ccd0';g.fillRect(14,30,36,4);ell(g,18,28,4,3,'#e8ecf0');ell(g,46,28,4,3,'#e8ecf0');ell(g,18,28,1.5,1.5,'#3a6ad8');ell(g,46,28,1.5,1.5,'#d83a3a');g.fillRect(31,34,3,10);g.fillStyle='#d8dce0';g.fillRect(31,44,12,3);
+SP.tap=mkTex(g=>{g.fillStyle='#a8acb0';g.fillRect(10,40,44,5);g.fillStyle='#d8dce0';g.fillRect(10,40,44,2);
+  for(const[x,c]of[[12,'#3a6ad8'],[52,'#d83a3a']]){g.fillStyle='#c9ccd0';g.fillRect(x-3,33,6,8);ell(g,x,32,6,3,'#e8ecf0');ell(g,x,32,2.2,1.6,c)}
+  g.fillStyle='#b8bcc0';g.fillRect(30,45,4,6);g.fillRect(30,50,16,3);g.fillStyle='#8a8e92';g.fillRect(44,52,3,3);
+  g.strokeStyle='#9a9ea2';g.lineWidth=2.2;g.beginPath();g.moveTo(32,40);g.bezierCurveTo(30,20,20,8,24,4);g.stroke();
+  g.fillStyle='#c9ccd0';g.beginPath();g.ellipse(25,4,6,3,-.3,0,7);g.fill();g.fillStyle='#8a8e92';for(let k=-2;k<=2;k++)g.fillRect(24+k*2,4,1,1);
+  g.fillStyle='#d8dce0';g.fillRect(22,6,4,5)});
   g.strokeStyle='#b8bcc0';g.lineWidth=2;g.beginPath();g.moveTo(32,34);g.bezierCurveTo(10,40,8,10,22,4);g.stroke();ell(g,23,4,4,3,'#d8dce0')});
 
 /* ================= G001.014: интерьеры, соседи, транспорт, лето ================= */
@@ -2133,7 +2195,8 @@ function update(dt){
   const run=(keys.ShiftLeft||keys.ShiftRight)&&P.st>5&&!P.blocking,dx=Math.cos(P.a),dy=Math.sin(P.a),spd=(run?3.5:2.5)*(P.blocking?.55:1)*dt;
   if(run&&m>.1)P.st-=10*dt;
   const mx=(dx*f-dy*s)*spd,my=(dy*f+dx*s)*spd;
-  if(free(P.x+mx,P.y,.22))P.x+=mx;if(free(P.x,P.y+my,.22))P.y+=my;
+  FREEZ=LV===PODEZD?(P.gz||0):-1;if(free(P.x+mx,P.y,.22))P.x+=mx;if(free(P.x,P.y+my,.22))P.y+=my;FREEZ=-1;
+  if(LV===PODEZD){const gt=groundAt(LV,P.x,P.y);P.gz=(P.gz||0)+(gt-(P.gz||0))*Math.min(1,dt*12);if(P.y<1.55&&P.gz>1.3&&!G.fade){goTo(PODEZD2,2.5,4.2,-Math.PI/2);P.gz=0}}else P.gz=0;
   const moving=Math.hypot(mx,my)>0.0005;P.moving=moving;
   if(moving){const pp=P.phase;P.phase+=dt*(run?11:9)*Math.min(1,m);if(Math.floor(pp/Math.PI)!==Math.floor(P.phase/Math.PI))SND.step(LV.outdoor);P.bob=Math.sin(P.phase)*1.1*(H/180)}else P.bob*=.85;
   if(P.charging)P.charge+=dt;
@@ -2272,7 +2335,7 @@ function interact(){if(!playing())return;const cat=lookCat();if(cat){SND.meow();
   if(LV===CITY){if(a==='home'){goTo(PODEZD,4.5,7.3,-Math.PI/2);return}if(a==='tbc'){goTo(TBC,2.5,6.3,-Math.PI/2);return}if(a==='cafe'){goTo(TBC,9.5,6.3,-Math.PI/2);return}
     if(a==='station'){goTo(STATION,7.5,1.4,Math.PI/2);return}if(a==='dk'){goTo(DK,7.5,10.3,-Math.PI/2);return}
     if(a==='market'){goTo(MARKET,5.5,6.3,-Math.PI/2);return}if(a==='banya'){goTo(BANYA,4.5,5.3,-Math.PI/2);return}if(a==='admin'){goTo(ADMIN2,4.5,4.3,-Math.PI/2);return}if(a==='garage'&&G.gar){goTo(GARAGE,2.5,4.3,-Math.PI/2);return}}
-  if(a==='down'){goTo(PODEZD,5.5,6.5,Math.PI/2);return}if(NB[a]){curPlace='__nb';openModal(nbHTML(a));return}
+  if(a==='down'){goTo(PODEZD,7,2.3,Math.PI/2);P.gz=1.5;return}if(NB[a]){curPlace='__nb';openModal(nbHTML(a));return}
   if(a==='kab'){msg(pick(['Табличка: «Приём по вторникам с 14 до 16». Сегодня не вторник.','Дверь заперта. За ней стучит печатная машинка.','«Без стука не входить». Постучал — тишина.']));return}
   if(a==='exit'){let d=LV.exits&&lookTile&&LV.exits[lookTile[0]+','+lookTile[1]];if(typeof d==='string')d=DOORS[d];if(d)goTo(CITY,d[0],d[1],d[2]);return}
   if(a==='toflat'){enterFlat();return}
@@ -3204,7 +3267,7 @@ function glVehicles(){const seen=new Set();GL3.veh=GL3.veh||new Map();
   for(const[p,m]of GL3.veh)if(!seen.has(p)){GL3.scene.remove(m);GL3.veh.delete(p)}}
 
 function render(){
-  CAMZ=LV.camz;FLOORS[0]=isSummer()?TX.grass:isSpring()?TX.slush:TX.snow;FLOORS[2]=isSummer()?TX.water:TX.ice;FLOORS[8]=isSummer()?TX.grass:TX.snow;const out=LV.outdoor,WX=G.wx||{k:'snow'},L=out?lightLevel()*(WX.k==='blizzard'?.8:WX.k==='clear'?1.05:1):(LV.amb?LV.amb():.8),dirX=Math.cos(P.a),dirY=Math.sin(P.a),pl=(W/2)/F,plX=-dirY*pl,plY=dirX*pl;
+  CAMZ=LV.camz+(LV===PODEZD?(P.gz||0):0);FLOORS[0]=isSummer()?TX.grass:isSpring()?TX.slush:TX.snow;FLOORS[2]=isSummer()?TX.water:TX.ice;FLOORS[8]=isSummer()?TX.grass:TX.snow;const out=LV.outdoor,WX=G.wx||{k:'snow'},L=out?lightLevel()*(WX.k==='blizzard'?.8:WX.k==='clear'?1.05:1):(LV.amb?LV.amb():.8),dirX=Math.cos(P.a),dirY=Math.sin(P.a),pl=(W/2)/F,plX=-dirY*pl,plY=dirX*pl;
   const shk=P.shake*(Math.random()-.5)*H*.05;
   const H2=H/2+P.bob+P.pitch*H+shk+(P.recoil*H*.01);
   Object.assign(CAM,{ok:1,dirX,dirY,plX,plY,H2,inv:1/(plX*dirY-dirX*plY)});
@@ -3253,7 +3316,7 @@ function render(){
     if(gs)return;
     const lineH=F/perp,bottom=H2+CAMZ*lineH,top=bottom-dh*lineH;
     const fdir=side===0?(rdx>0?4:2):(rdy>0?1:3),od=ORI?ORI[ci]:0,useSide=D.side&&od&&fdir!==od;
-    if(vh>=thr){if(!full){zbuf[x]=perp;full=true}}else if(!lowSet&&!full){zl[x]=perp;yl[x]=Math.max(0,bottom-vh*lineH);lowSet=true}
+    if(vh>=thr||(D.cap&&!b&&D.stop)){if(!full){zbuf[x]=perp;full=true}}else if(!lowSet&&!full){zl[x]=perp;yl[x]=Math.max(0,bottom-vh*lineH);lowSet=true}
     let wf;if(b&&!D.world){wf=side===0?(wxw-b[1])/(b[3]-b[1]):(wxw-b[0])/(b[2]-b[0])}else wf=wxw-Math.floor(wxw);
     if((side===0&&rdx<0)||(side===1&&rdy>0))wf=1-wf;if(wf<0)wf=0;else if(wf>.9999)wf=.9999;
     const lw=L*(side?.78:1),f=fogAt(perp),fe=f*.45,inv=perp/F,lk=CB?lightAt(P.x+rdx*(perp-.06),P.y+rdy*(perp-.06)):-1;
@@ -3344,7 +3407,7 @@ function spriteList(plX,plY){
     else if(p.k==='cat'){tex=p.mode==='sleep'||p.mode==='sofa'?SP.catSleep:p.mode==='sit'?SP.catSit:(performance.now()/180|0)%2?SP.catWalkA:SP.catWalkB;h=.75}
     else if(p.k==='pbag'){tex=SP.pbag;h=1.9}
     else if(p.k==='stop'){tex=SP.stop;h=1.5}else if(p.k==='car'){tex=SP.car;h=1.05}else if(p.k==='uaz'){tex=SP.uaz;h=1.15}else if(p.k==='wood'){tex=SP.wood;h=.9}
-    else if(p.k==='rail'){tex=SP.rail;h=.95}else if(p.k==='bulb'){tex=SP.bulb;h=.5}else if(p.k==='lustra'){tex=SP.lustra;h=.68}else if(p.k==='plafon'){tex=SP.plafon;h=.45}else if(p.k==='tap'){tex=SP.tap;h=.4}else if(p.k==='stool'){tex=SP.stool;h=.55}
+    else if(p.k==='rail'){tex=SP.rail;h=.95}else if(p.k==='bulb'){tex=SP.bulb;h=.5}else if(p.k==='lustra'){tex=SP.lustra;h=.68}else if(p.k==='plafon'){tex=SP.plafon;h=.45}else if(p.k==='tap'){tex=SP.tap;h=.55}else if(p.k==='stool'){tex=SP.stool;h=.55}
     else if(p.k==='lunka'){if(isSummer())continue;tex=SP.lunka;h=.5}
     else if(p.k==='mcar'||p.k==='pcar'||p.k==='train'){tex=SP[p.spr];h=p.spr==='bus'?1.45:p.k==='train'?(p.spr==='loco'?2.1:1.9):1.05;fl=Math.cos(p.dir)*plX+Math.sin(p.dir)*plY<0}else if(p.k==='gcar'){if(!P.car)continue;tex=SP.car;h=1.05}else if(p.k==='wagonX'){tex=SP.wagonX;h=1.55}
     else if(p.k==='pine'){tex=isSummer()?(SP.pineSum||(SP.pineSum=summerTex(SP.pine))):SP.pine;h=1.8}else if(p.k==='birch'){tex=SP.birch;h=1.6}
@@ -3467,7 +3530,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Парковка у горисполкома расширена вправо, вдоль всего фасада','Кольцо у газона и парковка соединены с дорогой у ДК, которая уходит по диагонали'];
+const CHANGES=['Ванна: эмалированная, с закруглёнными краями, ножками, сливом и смесителем с душем у торца','Раковина-«тюльпан»: чаша на одной ножке, без «столика»','В подъезде почтовые ящики выступают из стены','По лестнице в подъезде можно подняться пешком — наверху сразу второй этаж; спуск ведёт на площадку','Проспект на площади проходит через полосы плитки — дороги соединены'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
