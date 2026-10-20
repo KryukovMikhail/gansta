@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.043';
+const BUILD='G001.044';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -270,7 +270,8 @@ function rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15
 const rnd=(a,b)=>a+Math.random()*(b-a);
 const clamp=(v,a,b)=>v<a?a:v>b?b:v;
 const lerp=(a,b,t)=>a+(b-a)*t;
-const fmt=n=>Math.round(n).toLocaleString('ru-RU');
+// деньги внутри игры — в прежних единицах; после деноминации 1998 года показываем в новых рублях (÷100, с копейками)
+const fmt=n=>{const v=Math.round(n)/100;return(Math.abs(v)>=100||Number.isInteger(v))?Math.round(v).toLocaleString('ru-RU'):v.toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2})};
 const pick=a=>a[Math.random()*a.length|0];
 const TS=64;
 function toTex(c,ec){const w=c.width,h=c.height,g=c.getContext('2d'),d=g.getImageData(0,0,w,h).data,ed=ec?ec.getContext('2d').getImageData(0,0,w,h).data:null;
@@ -1409,7 +1410,7 @@ const OY=33,CW=102,CH=46+OY,OX=42,DXO=OX-20,DYO=OY-3;   // G001.039: карта 
 const SQ5=Math.sqrt(5),FA=Math.atan2(1,2),A2W=(a,b)=>[(2*a-b)/SQ5+OX,(a+2*b)/SQ5+OY],W2A=(x,y)=>{x-=OX;y-=OY;return[(2*x+y)/SQ5,(-x+2*y)/SQ5]},LAWN=[3.5,8.77,8.5,13.77],RING=[0.9,6.97,11.1,16.37],AVE_B=12.6/1.118;
 const RAILB=[52.4,55.6],RT1=53.2,RT2=54.8,HWY=[56,58.6],FOREST=[58.6,63.5],R2=[40.6,42.6],AVE=[11.07,14.14],MIRA=[14.76,16.32];
 // новые улицы (G001.039): [A0,A1,B0,B1]; тротуары по 0.9 м с обеих сторон
-const NST=[[-17.8,36.3,-19.6,-17.8,'ул. Строителей'],[-12,36.3,-31,-29.2,'ул. Северная'],[-17.8,-16,-40,45,'ул. Космонавтов'],[-34,-32.2,-22,26,'ул. Лесная'],[-34,-16,22,23.8,'ул. Заречная']],
+const NST=[[-34,36.3,-19.6,-17.8,'ул. Строителей'],[-12,36.3,-31,-29.2,'ул. Северная'],[-17.8,-16,-40,-17.8,'ул. Космонавтов'],[-34,-32.2,-22,26,'ул. Лесная'],[-34,-9,22,23.8,'ул. Заречная']],
   STAD=[0,0,0,0];   // стадиона нет
 function newF(A,B){for(const r of NST)if(A>=r[0]&&A<r[1]&&B>=r[2]&&B<r[3])return 1;
   if(A>=STAD[0]&&A<STAD[1]&&B>=STAD[2]&&B<STAD[3])return(A>=STAD[0]+1.5&&A<STAD[1]-1.5&&B>=STAD[2]+1.4&&B<STAD[3]-1.4)?-1:4;
@@ -1435,7 +1436,7 @@ function cityF(fx,fy){const x=fx-OX,fw=fy-OY,s=x+.5*fw,u=fw-.5*x,A=s/1.118,B=u/1
   if(A>=-3.6&&A<-1.25&&B>=16.37&&B<18.32&&A+B>=13)return 1;           // полоса у горисполкома доходит до косой улицы             // стык парковки у горисполкома с дорогой
   if(A>=-3&&A<-1.2&&B<18&&fy>1)return 1;                              // проезд у ДК
   if(A>=-1.2&&A<-.1&&B>=-16.9&&B<5)return 14;                         // тротуар у ТБЦ вдоль проезда
-  {const t=(-(A+2)+(B-17))/1.4142,q=((A+2)+(B-17))/1.4142;if(t>-1.5){if(Math.abs(q)<.9)return(t>=2.6&&t<3.5)?22:1;if(q>=.9&&q<1.8&&B>=18.32)return 14;if(q<=-.9&&q>-1.8&&A<-3.6)return 14}}   // улица по диагонали между ДК и горисполкомом
+  {const t=(-(A+2)+(B-17))/1.4142,q=((A+2)+(B-17))/1.4142;if(t>-1.5){if(Math.abs(q)<.9)return(t>=2.5&&t<3.6)?22:1;if(q>=.9&&q<1.8&&B>=18.32)return 14;if(q<=-.9&&q>-1.8&&A<-3.6)return 14}}   // улица по диагонали между ДК и горисполкомом
   if(A>=2.7&&A<9.3&&B>=7&&B<14.57)return 14;                         // тротуар вокруг газона
   if(A>=RING[0]&&A<RING[2]&&B>=7&&B<RING[3])return 1;
   if(A>=-1.25&&A<13&&B>=16.37&&B<18.32)return 1;if(A>=-1.25&&A<RING[0]&&B>=7&&B<16.37)return 1;if(A>=RING[2]&&A<13&&B>=7&&B<16.37)return 1;
@@ -1524,11 +1525,11 @@ function buildCity(){
   for(const[a,b,n]of[[17,-35,8],[17,-38.5,8],[27.5,-38.5,6],[27.5,-42,6]])mkOBB(L,a,b,n,1,3,'гаражи');mkOBB(L,28,-34.8,3,2,2,'котельная');
   // Западный микрорайон между ул. Космонавтов и Лесной
   for(const a of[-30,-25.5,-21])for(const b of[-14,-5,4,13])if(!(a===-21&&b===-14))mkOBB(L,a,b,2,6,1,'дом');mkOBB(L,-22,-14.5,3,5,2,'школа №3');
-  {const h=mkOBB(L,-24.4,25.6,4,2,249,'кирпичный дом',1,1.1);oset(h,1,0,250,1);oset(h,2,0,250,1)}   // 4 этажа, напротив ул. Заречной
+  {const h=mkOBB(L,-9.4,28.6,4,2,249,'кирпичный дом',1,1.1);oset(h,1,0,250,1);oset(h,2,0,250,1)}   // 4 этажа, клетка E12 за косой улицей
   // частный сектор: за ул. Лесной и за ул. Заречной
   {const R=rng(391);for(let a=-46;a<=-36;a+=3.6)for(let b=-15;b<=20;b+=3.2){if(2*a-b<-88||a+2*b<-68)continue;mkOBB(L,a+R()*.4,b+R()*.4,2,1,R()<.5?12:13,'дом',1.1,1.4)}
    for(let a=-14;a<=-4;a+=3.4)for(let b=33;b<=46;b+=3.2){if(2*(a+2.4)-b<-88)continue;mkOBB(L,a+R()*.4,b+R()*.4,2,1,R()<.5?12:13,'дом',1.1,1.4)}
-   for(let a=-31;a<=-25;a+=3.6)for(let b=26;b<=40;b+=3.2){if(2*a-(b+1.4)<-88||Math.abs(a+b+1.8-15)<2.6)continue;mkOBB(L,a+R()*.4,b+R()*.4,2,1,R()<.5?12:13,'дом',1.1,1.4)}}
+   for(let a=-31;a<=-23;a+=3.6)for(let b=26;b<=40;b+=3.2){if(2*a-(b+1.4)<-88||Math.abs(a+b+1.8-15)<3.6)continue;mkOBB(L,a+R()*.4,b+R()*.4,2,1,R()<.5?12:13,'дом',1.1,1.4)}}
   const rect=(L,x,y,w,h,t)=>rect0(L,x,y+OY,w,h,t);
   // 19-й квартал за ул. Мира
   {const rq=(x,y,w,h,t)=>rect(L,x+DXO,y,w,h,t);rq(8,23,5,2,1);rq(9,27,4,2,1);rq(15,29,3,2,1);rq(9,31,5,2,1);rq(4,35,4,1,3)}
@@ -1548,7 +1549,7 @@ function buildCity(){
   for(let a=16.4;a<=35.5;a+=3.6)put(a,13.05,{k:'lamp'});for(let a=-2;a<=12.5;a+=3.6)put(a,4.85,{k:'lamp'});for(let b=9;b<=15;b+=4.5)put(-3.85,b,{k:'lamp'});for(let t=1.5;t<=8;t+=3.2)put(-2-.707*t+.75,17+.707*t+.75,{k:'lamp'});
   for(let b=-24;b<=22;b+=5)put(HWY[0]/1.118-.25,b,{k:'lamp'});
   for(const[a,b]of[[0.55,4.75],[10.5,4.75],[1.1,16.1],[10.9,16.1]])put(a,b,{k:'lamp'});
-  for(let a=-15;a<=35;a+=4.2){put(a,-17.35,{k:'lamp'});put(a+2.1,-28.75,{k:'lamp'})}for(let b=-26;b<=44;b+=4.6)put(-15.55,b,{k:'lamp'});for(let b=-20;b<=25;b+=4.6)put(-31.75,b,{k:'lamp'});for(let a=-31;a<=-17;a+=4.6)put(a,24.25,{k:'lamp'});
+  for(let a=-15;a<=35;a+=4.2){put(a,-17.35,{k:'lamp'});put(a+2.1,-28.75,{k:'lamp'})}for(let b=-26;b<=-20;b+=4.6)put(-15.55,b,{k:'lamp'});for(let b=-20;b<=25;b+=4.6)put(-31.75,b,{k:'lamp'});for(let a=-31;a<=-11;a+=4.6)put(a,24.25,{k:'lamp'});for(let a=-31;a<=-19;a+=4.2)put(a,-17.35,{k:'lamp'});
   {const[x,y]=AW(40.5,AXB);P.push({k:'monument',x,y,r:.4})}
   {const[x,y]=AW(-1.3,26.2),[sx,sy]=AW(-2.4,23.9);P.push({k:'rotunda',x,y,r:2.65,face:Math.atan2(sy-y,sx-x)-.6})}
   L.lights=P.filter(p=>p.k==='lamp').map(p=>({x:p.x+.15,y:p.y,r:4.6,c:[1,.62,.28],i:1.15})).concat(P.filter(p=>p.k==='barrel').map(p=>({x:p.x,y:p.y,r:3.4,c:[1,.5,.18],i:1.25,fire:1})));
@@ -2059,7 +2060,7 @@ let P,G;
 function newGame(){
   CITY=buildCity();FLAT=buildFlat();LV=FLAT;
   P={x:10.5,y:7.6,a:-Math.PI/2,pitch:0,hp:100,food:75,warm:85,st:100,money:3000,bottles:0,ammo:0,
-    inv:{bread:1,tush:0,thermos:1,band:0,medkit:0,potato:0,pickle:0,aspirin:0,antibio:0,fish:0,samogon:0,deta:0},fridge:{bread:1,tush:1,potato:2,pickle:2},
+    usd:20,inv:{bread:1,tush:0,thermos:1,band:0,medkit:0,potato:0,pickle:0,aspirin:0,antibio:0,fish:0,samogon:0,deta:0},fridge:{bread:1,tush:1,potato:2,pickle:2},
     has:{kastet:false,arm:false,pm:false,coat:false,hat:false,valenki:false},w:0,side:1,act:null,charging:false,charge:0,blocking:false,
     bob:0,phase:0,hurt:0,shake:0,cause:'',kills:0,flash:0,recoil:0,gunCd:0,debtBag:0,wanted:0,boxing:false,
     rep:{sh:0,sip:0,town:0},ill:'',illT:0,expo:0,car:false,fuel:0};
@@ -2105,6 +2106,7 @@ function dropRandom(kind){const c=emptyCell(null,3);if(c)CITY.items.push({kind,x
 const isNight=()=>G.min<6.5*60||G.min>=19*60;
 function lightLevel(){const h=G.min/60,n=.13;if(h<6)return n;if(h<9)return n+(h-6)/3*(1-n);if(h<16)return 1;if(h<19)return 1-(h-16)/3*(1-n);return n}
 const dd=()=>Math.min(G.day,40)-1,infl=()=>Math.pow(1.03,dd()),wage=()=>Math.pow(1.02,dd()),tick=()=>Math.pow(1.015,dd());
+const usdRate=()=>16+dd()*.15+Math.sin(G.day*1.7)*.35;   // курс доллара после дефолта
 const ticketPrice=()=>Math.round(140000*tick()*DF().ticket/100)*100;
 const price=b=>Math.round(b*infl()/10)*10;
 const townMul=()=>{const t=(P.rep||{}).town||0;return t>=40?.9:t<=-40?1.15:1};
@@ -2449,7 +2451,7 @@ function talkHTML(e){const S=G.story,D=ED[e.type];let line=pick(D.lines||['…']
     else if(S.betrayed)line='Не о чем мне с тобой разговаривать. Серёжку сдал, ирод.';else if(S.helped)line='Спасибо, что за Серёжку заступился. Мать его вся извелась.'}
   if(e.named==='tolya'){if(S.st===1){line='Серёга в Шанхае прячется, в бараке у стеклотары. Сидит голодный. Отнеси ему тушёнки — тогда и поговорит. Только хвост за собой не тащи.';btns=B('st:s2','Понял, отнесу')}
     else if(S.st>=4)line='Слыхал, ты на Гошу Цемента полез? Ну ты даёшь. Он на промзоне с двумя быками ходит.'}
-  if(e.named==='serega'){if(S.st===2){if(P.inv.tush>0){line='Тушёнка? Спасибо. Слушай. Я Сиплому должен пятьдесят тысяч — брал на ларёк. А ларёк мне спалили люди Гоши Цемента с промзоны. Если докажем, что это Гоша, Сиплый с меня спишет. У Гоши есть чёрная тетрадь, он туда всё пишет.';
+  if(e.named==='serega'){if(S.st===2){if(P.inv.tush>0){line='Тушёнка? Спасибо. Слушай. Я Сиплому должен пятьсот рублей — брал на ларёк. А ларёк мне спалили люди Гоши Цемента с промзоны. Если докажем, что это Гоша, Сиплый с меня спишет. У Гоши есть чёрная тетрадь, он туда всё пишет.';
         btns=B('st:help','Помогу тебе')+B('st:betray','Сдам тебя Сиплому')}else line='Пожрать принёс? Нет? Тогда уходи, пока тебя тут не заметили. Тушёнку в ларьке купи, ну.'}
     else if(S.st===4)line='Гоша на промзоне, между путями и Ольхонской. Осторожно, он здоровый как шкаф.';else if(S.st>=5)line='Ну что, тетрадь у тебя? Всё теперь от тебя зависит, брат.'}
   if(e.named==='kuzmin'){if(S.st===5){line='Тетрадь Гоши Цемента? Покажи-ка. Тут и поджоги, и рынок, и Сиплый. Отдашь мне — Гошу закрою, а премию выпишу. Только Сиплый тебе этого не простит.';btns=B('st:ledmil','Отдать тетрадь милиции')}
@@ -2487,7 +2489,7 @@ function placeHTML(k){
     return`<div class="card"><div class="stamp">ТБЦ</div><h2>Универмаг ТБЦ</h2><p class="sub">Торгово-бытовой центр. Полки полупустые, но тепло.</p><div class="rows">`+
     it.map(([id,n,d,b,own])=>{const p=shopPrice(b);return row(n,own?'уже есть':d,own?'—':fmt(p)+' р.','buy:'+id+':'+p,own||P.money<p)}).join('')+`</div>${cardFoot()}</div>`}
   if(k==='market'){const it=[['kastet','Кастет','удар тяжелее',1800,P.has.kastet],['arm','Арматура','длиннее и тяжелее',2500,P.has.arm],['pm','Пистолет ПМ','без лишних вопросов',65000,P.has.pm],['ammo','Патроны 9×18, 8 шт.','в кармане: '+P.ammo,6000,false],['car','«Жигули» ВАЗ-2101 с рук','ездить без автобуса · стоят у дома',60000,P.car],['fuel','Канистра бензина','одна поездка · в канистрах: '+P.fuel,800,false],['rod','Удочка и ледобур','рыбалка у лунок на льду Байкала',1500,P.has.rod]];
-    const bizP=price(45000),fishP=price(700),samP=price(900),sellR=row('Сдать рыбу перекупщику','свежий омуль · у тебя: '+(P.inv.fish||0),fmt(fishP)+' р./шт.','sellfish:'+fishP,!P.inv.fish,'Продать')+
+    const ur=usdRate(),usdR=row('Валютчик Гиви у ворот','заначка: $'+(P.usd||0)+' · курс сегодня '+ur.toFixed(2).replace('.',',')+' р. за доллар',(P.usd?fmt(P.usd*ur*100)+' р.':'—'),'usd',!P.usd,'Поменять'),bizP=price(45000),fishP=price(700),samP=price(900),sellR=usdR+row('Сдать рыбу перекупщику','свежий омуль · у тебя: '+(P.inv.fish||0),fmt(fishP)+' р./шт.','sellfish:'+fishP,!P.inv.fish,'Продать')+
       row('Толкнуть самогон из-под полы','рискованно: могут стукнуть милиции · у тебя: '+(P.inv.samogon||0)+' бут.',fmt(samP)+' р./бут.','samsell:'+samP,!P.inv.samogon,'Продать');
     const biz=G.biz?row('Твоя точка: выручка','копится каждый день'+(hasKrysha()?' · крыша есть':' · без крыши могут наехать'),fmt(G.till)+' р.','till',G.till<=0,'Забрать')+row('Постоять за прилавком','мини-игра: торгуйся с покупателями · 3 часа · раз в день',G.tradeDay===G.day?'завтра':'до '+fmt(price(1400)*5)+' р.','trade',G.tradeDay===G.day,'Торговать')
       :row('Купить точку на рынке','прилавок с куртками · около '+fmt(price(3200))+' р. в день',fmt(bizP)+' р.','biz:'+bizP,P.money<bizP);
@@ -2659,7 +2661,7 @@ const MAPCOL={1:'#6d7178',6:'#5fd16a',2:'#8a5240',7:'#5fb6d1',3:'#55574f',4:'#e6
 const FLCOL=['#dfe5ea','#3c3d40','#9fbccb','#a8adb2','#cfd5da','#ddd','#ddd','#ddd','#8f8f94','#e3dccb','#cdbfae','#bdbcb6','#ddd','#ddd','#5a5b5f','#6a6b6f'];FLCOL[20]=FLCOL[21]=FLCOL[22]='#a4a6aa';
 MAPCOL[55]='#d9c48e';MAPCOL[241]=MAPCOL[242]='#e3cf98';MAPCOL[243]='#8a3a2a';MAPCOL[244]='#c9ccd0';MAPCOL[245]='#8a8478';MAPCOL[249]=MAPCOL[250]='#8a3a2a';MAPCOL[56]='#24497a';
 const LABELS=(()=>{const l=(a,b,t)=>{const p=A2W(a,b);return[p[0],p[1],t]};return[[6+DXO,12.8+DYO,'Городской парк'],l(-7.5,6.4,'ДК «Железнодорожник»'),l(5.5,.4,'ТБЦ'),l(5.5,21.2,'Горисполком'),l(6,9.6,'Центральная площадь'),l(40.5,9.6,'Памятник'),l(46.3,11.27,'Вокзал'),l(41,-2.6,'Рынок'),
-  [OX+9.5,38.1+OY,'ШАНХАЙ'],[OX+52,38+OY,'Пляж'],[OX+55,43+OY,'БАЙКАЛ'],l(25.5,11.27,'Ленинградский пр.'),l(37.2,-6,'пр. 60 лет СССР'),l(36.5,23.6,'Промзона'),l(-10.5,-13.6,'Школа №1'),l(-11.5,-4.8,'Детсад'),l(9,-18.7,'ул. Строителей'),l(12,-30.1,'ул. Северная'),l(-16.9,-8,'ул. Космонавтов'),l(-33.1,-2,'ул. Лесная'),l(-25,22.9,'ул. Заречная'),l(-24,1.5,'Западный мкр'),l(-41,2,'Частный сектор'),l(-9,40,'Частный сектор'),l(22,-41,'Гаражи'),l(20.5,-22.2,'Северный мкр'),l(40.4,24.4,'Поликлиника'),l(28,-6.4,'5-й мкр'),l(13.9,-9,'ул. Мира'),l(25.5,13.2,'Дом'),l(48.3,-6,'пути'),l(51.2,6,'автодорога'),l(54.6,-4,'лес'),[8+DXO,33.4+DYO,'19-й квартал']]})();
+  [OX+9.5,38.1+OY,'ШАНХАЙ'],[OX+52,38+OY,'Пляж'],[OX+55,43+OY,'БАЙКАЛ'],l(25.5,11.27,'Ленинградский пр.'),l(37.2,-6,'пр. 60 лет СССР'),l(36.5,23.6,'Промзона'),l(-10.5,-13.6,'Школа №1'),l(-11.5,-4.8,'Детсад'),l(9,-18.7,'ул. Строителей'),l(12,-30.1,'ул. Северная'),l(-16.9,-23.5,'ул. Космонавтов'),l(-33.1,-2,'ул. Лесная'),l(-25,22.9,'ул. Заречная'),l(-24,1.5,'Западный мкр'),l(-41,2,'Частный сектор'),l(-9,40,'Частный сектор'),l(22,-41,'Гаражи'),l(20.5,-22.2,'Северный мкр'),l(40.4,24.4,'Поликлиника'),l(28,-6.4,'5-й мкр'),l(13.9,-9,'ул. Мира'),l(25.5,13.2,'Дом'),l(48.3,-6,'пути'),l(51.2,6,'автодорога'),l(54.6,-4,'лес'),[8+DXO,33.4+DYO,'19-й квартал']]})();
 let MAPGRID=true,MAPMENU=false;
 function drawCityMap(c,sc,opt){opt=opt||{};const g=c.getContext('2d'),L=CITY;g.clearRect(0,0,c.width,c.height);
   g.drawImage(cityMapLayer(sc),0,0);
@@ -2774,7 +2776,7 @@ $('modal').addEventListener('change',e=>{if(e.target&&e.target.id==='impFile'&&e
 /* --- достижения и статистика --- */
 const ACH=[['first','Первая драка','победить в первой драке'],['bottles','Стеклотара','сдать 30 бутылок за игру'],['worker','Стахановец','разгрузить вагон без единого промаха'],
   ['fisher','Рыбак','поймать 10 омулей'],['banya','С лёгким паром','попариться в бане'],['kpz','Сутки в КПЗ','переночевать в камере'],['pneu','Выкарабкался','вылечить воспаление лёгких'],
-  ['rich','Новый русский','накопить 300 000 руб.'],['krysha','Под крышей','встать под крышу Сиплого'],['car','Автолюбитель','купить «Копейку»'],['garage','Гаражный кооператив','купить гараж'],
+  ['rich','Новый русский','накопить 3 000 руб.'],['krysha','Под крышей','встать под крышу Сиплого'],['car','Автолюбитель','купить «Копейку»'],['garage','Гаражный кооператив','купить гараж'],
   ['samogon','Первач','выгнать самогон'],['wagon','Пропавший вагон','закрыть историю с вагоном'],['good','Добрая душа','помочь людям три раза'],['gosha','Цемент раскрошен','одолеть Гошу Цемента'],
   ['spring','Дожил до весны','дожить до 25-го дня'],['hard','Сибирский характер','пройти игру на сибирской сложности'],
   ['end_honest','Честный путь','концовка'],['end_together','Вдвоём','концовка'],['end_alone','Один','концовка'],['end_ticket','Выехал','концовка'],['end_brigade','Правая рука','концовка'],['end_market','Хозяин рынка','концовка']];
@@ -2810,7 +2812,7 @@ function talkMih(e){const s=G.s2,B=(a,l)=>`<button class="btn" data-a="${a}">${l
   return[s.how==='ret'?'Спасибо тебе, сынок. Тушёнку рабочим раздали, всё по-честному.':'Эх… Не нашли мы вагон. Мне выговор, а тебе — бог судья.','']}
 
 /* --- случайные события --- */
-const GOSSIP=['Мужики говорят: в депо к весне обещают зарплату. Никто не верит.','Говорят, Сиплый в Иркутске квартиру купил. А рынок всё дорожает.',
+const GOSSIP=['Мужики говорят: в депо к весне обещают зарплату. Никто не верит.','Доллар на рынке уже по семнадцать. В августе был по шесть!','У Зины на сберкнижке всё сгорело — на «Жигули» копила.','После дефолта в ТБЦ ценники каждую неделю переписывают.','По телевизору говорят: Кириенко сняли, теперь Примаков. А зарплаты как не было, так и нет.','Валютчик Гиви на рынке советует доллары не менять — мол, ещё вырастут.','Банк «Байкальский» лопнул в сентябре. Люди у дверей до сих пор стоят.','Говорят, Сиплый в Иркутске квартиру купил. А рынок всё дорожает.',
   'Слышал? Гоша Цемент на промзоне склад держит, туда даже менты не суются.','Дед-банщик ругается: дрова дорожают, а пар всё тот же.','На Байкале у лунок омуль хорошо идёт. Удочку на рынке продают.',
   'Кузьмин, сержант, мужик неплохой. Если сам с повинной придёшь — может и отпустить.','Тётя Валя бутылки опять по старой цене принимает. Хоть что-то не меняется.'];
 function evCell(){for(let k=0;k<50;k++){const a=Math.random()*6.283,r=rnd(5,8),x=Math.floor(P.x+Math.cos(a)*r)+.5,y=Math.floor(P.y+Math.sin(a)*r)+.5;
@@ -3078,6 +3080,7 @@ function clickExtra(A,a,b){
   if(A==='still'){G.brew=0;P.inv.samogon+=5;passTime(60);ach('samogon');msg('Пять бутылок первача. Горит синим пламенем.','good');rerender();return true}
   if(A==='cwarm'){G.carWarm=G.day;passTime(20);msg('Паяльная лампа погудела под картером. Сегодня «Копейка» заведётся легче.','good');rerender();return true}
   if(A==='fryfish'){if(!P.inv.fish)return true;P.inv.fish--;passTime(20);P.food=Math.min(100,P.food+45);P.warm=Math.min(100,P.warm+10);SND.eat();msg('Жареный омуль с луком. Байкал кормит.','good');rerender();return true}
+  if(A==='usd'){const n=P.usd||0;if(!n)return true;const v=Math.round(n*usdRate()*100);P.money+=v;P.usd=0;SND.coin();msg('Гиви пересчитал доллары на свет: «Курс хороший, брат». Выдал '+fmt(v)+' руб.','good');rerender();return true}
   if(A==='sellfish'){const p=+a[1],n=P.inv.fish;if(!n)return true;P.money+=p*n;P.inv.fish=0;SND.coin();msg('Перекупщик забрал '+n+' омул. за '+fmt(p*n)+' руб.','good');rerender();return true}
   if(A==='samsell'){const p=+a[1],n=P.inv.samogon;if(!n)return true;P.money+=p*n;P.inv.samogon=0;SND.coin();
     if(Math.random()<.25){P.wanted=Math.max(P.wanted,70);closeModal();msg('Продал '+n+' бут., но кто-то стукнул. К рынку едет «бобик»!','bad');if(LV===CITY)callUaz()}else{msg('Самогон ушёл за '+fmt(p*n)+' руб. Никто не видел.','good');rerender()}return true}
@@ -3180,7 +3183,7 @@ function glFloorMat(up,outer){const U=GL3.U;
         if(uUp>.5){if(swAt(p)!=1.)discard;if(idx!=14.&&idx!=15.)idx=15.;}
         vec3 c;
         if(uUp>.5&&(swAt(p+eA)==2.||swAt(p-eA)==2.||swAt(p+eB)==2.||swAt(p-eB)==2.)){c=vec3(.70,.71,.69);if(fract(dot(p,vec2(.894,.447))*2.)<.03)c*=.8;}
-        else if(idx==20.||idx==21.||idx==22.){float x=p.x-${OX}.,fw=p.y-${OY}.,A=(x+.5*fw)/1.118,B=(fw-.5*x)/1.118,t=idx==20.?A:idx==21.?B:(-(A+2.)+(B-17.))/1.4142;c=slot(1.,p);if(fract(t*2.5)<.5)c=vec3(.84,.86,.86)*(.9+.1*fract(sin(dot(floor(p*16.),vec2(12.9,78.2)))*43758.5));}
+        else if(idx==20.||idx==21.||idx==22.){float x=p.x-${OX}.,fw=p.y-${OY}.,A=(x+.5*fw)/1.118,B=(fw-.5*x)/1.118,t=idx==20.?A:idx==21.?B:((A+2.)+(B-17.))/1.4142;c=slot(1.,p);if(fract(t*2.5)<.5)c=vec3(.84,.86,.86)*(.9+.1*fract(sin(dot(floor(p*16.),vec2(12.9,78.2)))*43758.5));}
         else if(idx==8.){float sv=p.x-${OX}.+.5*(p.y-${OY}.),d=min(abs(sv-uR.x),abs(sv-uR.y))*1.265;
           if(abs(d-.24)<.035)c=vec3(128.,133.,138.)/255.;else if(d<.42&&fract((p.y-${OY}.-.5*(p.x-${OX}.))*2.02)<.34)c=vec3(74.,58.,44.)/255.;else c=floor(slot(0.,p)*255./32.)*32./255.;}
         else c=slot(idx,p);
@@ -3637,13 +3640,14 @@ function startFromData(s){newGame();
 function launch(){$('menu').hidden=true;$('build').hidden=true;$('over').hidden=true;$('modal').hidden=true;document.body.classList.add('playing');last=performance.now();
   const g=G;setTimeout(()=>{if(g)g.hintOff=1},16000)}
 function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp">СПРАВКА</div><h2>Ноябрь 1998</h2><p class="sub">Северобайкальск, столица БАМа · −21° · квартира 17</p>
-  <p>Депо встало, зарплату не платят пятый месяц. Билет до Москвы стоит ${fmt(ticketPrice())} руб. и понемногу дорожает.</p>
+  <p>В августе грянул дефолт: доллар за неделю подскочил с шести рублей до двадцати, цены в ТБЦ выросли втрое, на сберкнижке всё сгорело. Депо встало, зарплату не платят пятый месяц. Билет до Москвы стоит ${fmt(ticketPrice())} руб. и дорожает каждый день.</p>
+  <p>Под матрасом лежит заначка — ${P.usd||0} долларов, отложенных ещё до кризиса. Валютчик на рынке меняет их по курсу дня, а курс всё растёт.</p>
   <p>Утром баба Нюра у подъезда что-то хотела тебе сказать. Про Серёгу.</p>
   <p>Сдавай бутылки в Шанхае, разгружай вагоны на вокзале, стой в очереди в горисполкоме. В ДК «Железнодорожник» есть видеосалон и секция бокса. В кафе «Северянка» в ТБЦ сидит Сиплый: у него можно купить крышу или взять дело.</p>
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Действие игры перенесено в 1998 год','ТБЦ стоит на цоколе, к входам ведут ступени','Пешеходный переход через косую улицу у ДК','Кирпичный четырёхэтажный дом напротив ул. Заречной'];
+const CHANGES=['Дефолт 1998 года: цены в новых рублях, слухи про кризис, заначка в долларах и валютчик Гиви на рынке — курс растёт с каждым днём','Переход у ДК нарисован правильно: полосы вдоль дороги','Кирпичный четырёхэтажный дом — в клетке E12 за косой улицей','Убрана ул. Космонавтов южнее ул. Строителей; Строителей продлена до ул. Лесной, Заречная — до косой улицы'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
