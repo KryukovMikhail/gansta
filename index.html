@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.035';
+const BUILD='G001.036';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1304,13 +1304,14 @@ TX.vokRearTop=SQ((g,e,R)=>{g.clearRect(0,0,1,1);g.fillStyle='#ebe9e3';g.fillRect
 T[1]={h:2.6,segs:[['pnLA','pnLB','pnLC'],['pnA','pnB','pnC'],'pnTop']};
 T[111]={h:2.6,segs:[['brLA','brLB'],['brA','brB'],'brTop']};
 {const L2=stripU(2,1,(g,e,R,n,hU,Z)=>{for(let i=0;i<2;i++){g.save();e.save();g.translate(i,0);e.translate(i,0);brickUnit(g,e,R,0,1);g.restore();e.restore()}
-  g.fillStyle='rgba(0,0,0,.3)';g.fillRect(.03,.465,1.44,.1);g.fillStyle='#1e4a3a';g.fillRect(.04,.47,1.42,.085);g.fillStyle='#c8a654';g.fillRect(.04,.47,1.42,.006);g.fillRect(.04,.549,1.42,.006);
-  ftxt(g,128,'БИБЛИОТЕКА',.75,.513,.062,'#f2d27a','700 ');
-  g.fillStyle='#d8d2c4';g.fillRect(1.56,.55,.32,.35);g.fillStyle='#5a3a24';g.fillRect(1.59,.58,.26,.32);g.fillStyle='#7a5234';g.fillRect(1.6,.6,.115,.29);g.fillRect(1.725,.6,.115,.29);g.fillStyle='rgba(255,230,160,.5)';g.fillRect(1.62,.62,.08,.08);g.fillRect(1.745,.62,.08,.08);
-  g.fillStyle='#c9c9c9';g.fillRect(1.705,.74,.008,.05);g.fillRect(1.735,.74,.008,.05);g.fillStyle='#b8b4aa';g.fillRect(1.54,.535,.36,.02);g.fillStyle='rgba(240,246,250,.9)';g.fillRect(1.54,.53,.36,.008);
-  g.fillStyle='#eae4d0';g.fillRect(1.885,.66,.07,.05);ftxt(g,128,'книги',1.92,.685,.016,'#333','700 ');g.fillStyle='#8a8478';g.fillRect(1.54,.9,.36,.03)},4180);
+  g.fillStyle='#8a7a6a';g.fillRect(.06,.55,.36,.35);brickRed(g,R,.06,.55,.36,.35);
+  g.fillStyle='rgba(0,0,0,.3)';g.fillRect(.52,.425,1.46,.14);g.fillStyle='#1e4a3a';g.fillRect(.53,.43,1.44,.125);g.fillStyle='#c8a654';g.fillRect(.53,.43,1.44,.008);g.fillRect(.53,.547,1.44,.008);
+  ftxt(g,128,'БИБЛИОТЕКА',1.25,.491,.1,'#ffe08a','900 ');
+  g.fillStyle='#d8d2c4';g.fillRect(.08,.55,.32,.35);g.fillStyle='#5a3a24';g.fillRect(.11,.58,.26,.32);g.fillStyle='#7a5234';g.fillRect(.12,.6,.115,.29);g.fillRect(.245,.6,.115,.29);g.fillStyle='rgba(255,230,160,.5)';g.fillRect(.14,.62,.08,.08);g.fillRect(.265,.62,.08,.08);
+  g.fillStyle='#c9c9c9';g.fillRect(.225,.74,.008,.05);g.fillRect(.255,.74,.008,.05);g.fillStyle='#b8b4aa';g.fillRect(.06,.535,.36,.02);g.fillStyle='rgba(240,246,250,.9)';g.fillRect(.06,.53,.36,.008);
+  g.fillStyle='#8a7a6a';g.fillRect(0,.9,1,.1);g.fillStyle='rgba(240,246,250,.85)';g.fillRect(0,.985,1,.015)},4182);
  TX.brLib0=L2[0];TX.brLib1=L2[1];}
-T[199]={h:2.6,segs:['brLib0',['brA','brB'],'brTop'],side:'brA'};T[200]={h:2.6,segs:['brLib1',['brA','brB'],'brTop'],side:'brA',act:'library'};
+T[200]={h:2.6,segs:['brLib0',['brA','brB'],'brTop'],side:'brA',act:'library'};T[199]={h:2.6,segs:['brLib1',['brA','brB'],'brTop'],side:'brA'};
 T[112]={h:1.25,segs:['annexW','annexTop']};
 TX.stepGr=SQ((g,e,R)=>{g.fillStyle='#8a8680';g.fillRect(0,0,1,1);speck(g,R,500,['#7a766e','#a29e96','#6a665e'],.6,0,0,1,1,.008);g.fillStyle='rgba(0,0,0,.25)';g.fillRect(0,.9,1,.1)},4175);
 TX.stepGrTop=SQ((g,e,R)=>{g.fillStyle='#a8a49c';g.fillRect(0,0,1,1);speck(g,R,500,['#9a968e','#bcb8b0','#8a867e'],.6,0,0,1,1,.008);g.fillStyle='rgba(240,246,250,.5)';for(let i=0;i<6;i++)g.fillRect(R(),R(),.2,.05);g.fillStyle='rgba(0,0,0,.2)';g.fillRect(0,0,1,.02)},4176);
@@ -1323,7 +1324,7 @@ T[18]={h:2.8,segs:['admL',['admM','admM','admMF'],'admAttic']};
 T[20]={h:2.7,segs:['admDoor2','admM','admT'],act:'admin'};
 T[107]={h:3.8,segs:['admTowL','admTowM','admTowU','admTowTop'],trans:true};
 T[55]={h:2.3,segs:['dkLow','dkUp','dkTop'],trans:true};
-T[56]={h:2.3,segs:['dkDoor','dkSign','dkTop'],act:'dk',trans:true};
+T[56]={h:2.3,segs:['dkDoor','dkSign','dkTop'],act:'dk',trans:true};T[202]={h:1.8,segs:['dkLow','dkUp'],trans:true};
 T[16]={h:2.0,segs:['tbcL2','tbcU2'],act:'tbc'};T[19]={h:2.0,segs:['tbcD2','tbcU2'],act:'tbc'};T[17]={h:2.0,segs:['tbcL2','tbcU2'],act:'cafe'};
 for(let i=0;i<9;i++)T[130+i]={h:2.75,segs:['tbcF'+i],stretch:true,trans:true,side:'tbcSideF',act:i===3?'cafe':i===4?'tbc':null};
 T[190]={h:.5,segs:['lawnFence'],stretch:true,trans:true,side:'lawnFence'};
@@ -1398,8 +1399,8 @@ function cityF(fx,fy){const x=fx-OX,s=x+.5*fy,u=fy-.5*x,A=s/1.118,B=u/1.118;
   if(A>=14.8&&A<15.45&&B>=-1&&B<8.05)return A<14.85?11:14;            // тротуар у кирпичного дома
   if(A>=14.8&&A<15.45&&B>=14.35&&B<19.9)return A<14.85?11:14;         // такой же у южного кирпичного дома
   if(A>=20.6&&A<22.4&&B>=-1.5&&B<20.6)return 1;
-  if(A>=28.6&&A<30.4&&B>=12.6&&B<20.6)return 1;                      // проезд во двор у дома 4                      // поперечная улица через проспект во дворы
-  if(A>=-6.2&&A<-3&&B>=7.3&&B<16.2)return(B>=10.3&&B<13.2)?10:1;     // площадка у ДК: парковка и дорожка к ступеням
+  if(A>=28.6&&A<30.4&&B>=-1.5&&B<20.6)return 1;                      // проезд во двор у дома 4                      // поперечная улица через проспект во дворы
+  if(A>=-6.2&&A<-2.9&&B>=7.2&&B<15.6)return A<-4.7?10:1;     // площадка у ДК: парковка и дорожка к ступеням
   if(A>=-3.6&&A<-0.2&&B>=15.5&&B<20.5&&A+B<17.1)return 1;             // стык парковки у горисполкома с дорогой
   if(A>=-3&&A<-1.2&&B<18&&fy>1)return 1;                              // проезд у ДК
   {const t=(-(A+2)+(B-17))/1.4142,q=((A+2)+(B-17))/1.4142;if(t>-1.5&&Math.abs(q)<.9)return 1}   // улица по диагонали между ДК и горисполкомом
@@ -1407,7 +1408,7 @@ function cityF(fx,fy){const x=fx-OX,s=x+.5*fy,u=fy-.5*x,A=s/1.118,B=u/1.118;
   if(A>=RING[0]&&A<RING[2]&&B>=7&&B<RING[3])return 1;
   if(A>=-1.25&&A<13&&B>=16.37&&B<18.32)return 1;if(A>=-1.25&&A<RING[0]&&B>=7&&B<16.37)return 1;if(A>=RING[2]&&A<13&&B>=7&&B<16.37)return 1;
   if(u>=AVE[0]&&u<AVE[1]&&A>=-3&&A<14.6)return 1;                    // проспект пересекает полосы плитки   // съезд с кольца на дорогу у ДК                     // парковка
-  if(A>=-5&&A<13&&B>=2.9&&B<21)return 10;
+  if(A>=-5&&A<13&&B>=(A<1?5:2.9)&&B<21)return 10;
   if(u>=AVE[0]&&u<AVE[1]&&A>=-5&&s<R2[1])return 1;
   if(A>=(B>11?13:14.6)&&A<36.3){if((B>=8.05&&B<9.1)||(B>=13.45&&B<14.35))return 14;if((B>=7.95&&B<8.05)||(B>=14.35&&B<14.45))return 11;                           // тротуары
     if(B>=9.1&&B<9.9)return(B<9.2||B>=9.8)?11:0;if(B>=12.65&&B<13.45)return(B<12.75||B>=13.35)?11:0}  // газоны с бордюром
@@ -1448,7 +1449,7 @@ function buildCity(){
   {const v=mkOBB(L,42.9,AXB-3,2,6,106,'вокзал');for(let j=0;j<6;j++)oset(v,0,j,120+j,4);DOORS.station=obbFront(v,0,3,4);DOORS.station2=obbFront(v,0,2,4);
    mkOBB(L,42.9,AXB-7,2,4,21,'вокзал');mkOBB(L,42.9,AXB+3,2,4,21,'вокзал')}
   // ДК «Железнодорожник» в начале Ленинградского проспекта
-  {const d=mkOBB(L,-12,AXB-4,6,8,55,'ДК');oset(d,5,4,56);DOORS.dk=obbFront(d,5,4,2,1.3);for(let k=0;k<3;k++){const o=mkOBB(L,-6,AXB-.7,1,1,191+k,'ступени',1.2-k*.36,2.4);o.nosolid=1}}
+  {const d=mkOBB(L,-12,AXB-4,6,8,55,'ДК');oset(d,5,4,56);DOORS.dk=obbFront(d,5,4,2,1.3);mkOBB(L,-10.5,AXB+4,3,4,202,'ДК',1,.875);for(let k=0;k<3;k++){const o=mkOBB(L,-6,AXB-.7,1,1,191+k,'ступени',1.2-k*.36,2.4);o.nosolid=1}}
   // центральная площадь: ТБЦ на севере, горисполком на юге, газон посередине
   {const t=mkOBB(L,1,1.0,9,3,16,'ТБЦ',1,.85);for(let i=0;i<9;i++)oset(t,i,2,130+i,3);DOORS.tbc=obbFront(t,4,2,3);DOORS.cafe=obbFront(t,3,2,3)}
   {const a=mkOBB(L,2.5,21,6,2,18,'горисполком');oset(a,0,0,109);DOORS.admin=obbFront(a,0,0,1);const tw=mkOBB(L,1.5,21,1,1,108,'горисполком',1,2);oset(tw,0,0,108,1);mkOBB(L,-0.5,22.7,2,3,112,'кафе');for(let k=0;k<3;k++){const o=mkOBB(L,2.3,19.75+k*.38,1,1,191+k,'ступени',2.4,1.25-k*.38);o.nosolid=1}}
@@ -1459,9 +1460,9 @@ function buildCity(){
   kiosk(7.4,3.65,3);kiosk(38.6,2.2,3);
   // по дороге к вокзалу — по три пятиэтажки с каждой стороны; средняя южная — дом 4 с нашим подъездом
   {const h=mkOBB(L,22.5,4.5,6,2,1,'дом');for(const i of[1,4])oset(h,i,0,197)}
-  {const h=mkOBB(L,29.5,4.5,5,2,1,'угловой дом');for(const i of[1,3])oset(h,i,0,197);const w=mkOBB(L,32.5,-1.5,2,6,1,'угловой дом');for(const j of[1,4])oset(w,0,j,197,4)}
+  {const h=mkOBB(L,30.5,4.5,4,2,1,'угловой дом');oset(h,1,0,197);const w=mkOBB(L,32.5,-1.5,2,6,1,'угловой дом');for(const j of[1,4])oset(w,0,j,197,4)}
   mkOBB(L,17,4.5,3,2,111,'угловой дом');mkOBB(L,15.5,-0.5,2,5,111,'угловой дом');{const[x,y]=AW(16.6,5.4);P0.push({k:'ctower',x,y,r:1.15})}
-  {const b=mkOBB(L,15.5,15.9,5,2,111,'угловой дом');oset(b,4,0,199,1);oset(b,3,0,200,1)}mkOBB(L,15.5,17.9,2,2,111,'угловой дом');{const h=mkOBB(L,22.5,15.9,6,2,1,'дом 4');oset(h,4,1,197);oset(h,1,1,6);DOORS.home=obbFront(h,1,1,3)}{const h=mkOBB(L,30.5,15.9,4,2,1,'угловой дом');for(const i of[1,3])oset(h,i,1,197);const w=mkOBB(L,32.5,17.9,2,6,1,'угловой дом');for(const j of[1,4])oset(w,0,j,197,4)}
+  {const b=mkOBB(L,15.5,15.9,5,2,111,'угловой дом');oset(b,1,0,200,1);oset(b,0,0,199,1)}mkOBB(L,15.5,17.9,2,2,111,'угловой дом');{const h=mkOBB(L,22.5,15.9,6,2,1,'дом 4');oset(h,4,1,197);oset(h,1,1,6);DOORS.home=obbFront(h,1,1,3)}{const h=mkOBB(L,30.5,15.9,4,2,1,'угловой дом');for(const i of[1,3])oset(h,i,1,197);const w=mkOBB(L,32.5,17.9,2,6,1,'угловой дом');for(const j of[1,4])oset(w,0,j,197,4)}
   // двор за домом 4: гаражи и ещё две пятиэтажки
   
   mkOBB(L,15.5,22.7,6,2,1,'дом');mkOBB(L,22.5,22.7,6,2,1,'дом');
@@ -1503,7 +1504,7 @@ function buildCity(){
   {const fwd=Math.atan2(2,-1),cols=['carW','carB',0,'carG','car','carW'];for(let k=0;k<6;k++){const o=mkOBB(L,4.4+k*.82,16.37,1,1,194,'парковка',.82,1.95);o.nosolid=1;const sp=cols[k];if(!sp)continue;const[x,y]=AW(4.4+k*.82+.41,17.3);P.push({k:'pcar',spr:sp,x,y,dir:k%2?fwd:fwd+Math.PI,r:.5})}
    const c3=[0,'carW',0,'car'];for(let k=0;k<4;k++){const o=mkOBB(L,9.3+k*.9,16.37,1,1,194,'парковка',.9,1.95);o.nosolid=1;const sp=c3[k];if(!sp)continue;const[x,y]=AW(9.3+k*.9+.45,17.3);P.push({k:'pcar',spr:sp,x,y,dir:k%2?fwd:fwd+Math.PI,r:.5})}
    {const cs=['carB',0,'carW','car','carG',0,'carB'],xs=[1,1.9,2.8,6.3,7.2,8.1,9.0];xs.forEach((a,k)=>{const o=mkOBB(L,a,5,1,1,194,'парковка',.9,1.6);o.nosolid=1;const sp=cs[k];if(!sp)return;const[x,y]=AW(a+.45,5.85);P.push({k:'pcar',spr:sp,x,y,dir:k%2?fwd+Math.PI:fwd,r:.5})})}
-   {const lf=FA+Math.PI,cs=['carW',0,'carG','carB',0,'car'],bs=[7.4,8.3,9.2,13.3,14.2,15.1];bs.forEach((b,k)=>{const o=mkOBB(L,-5.95,b,1,1,201,'парковка',1.8,.9);o.nosolid=1;const sp=cs[k];if(!sp)return;const[x,y]=AW(-5.05,b+.45);P.push({k:'pcar',spr:sp,x,y,dir:k%2?lf:FA,r:.5})})}
+   {const lf=FA+Math.PI,cs=['carW','carG',0,'carB',0,0,'car',0,'carW'];cs.forEach((sp,k)=>{const b=7.35+k*.9,o=mkOBB(L,-4.7,b,1,1,201,'парковка',1.8,.9);o.nosolid=1;if(!sp)return;const[x,y]=AW(-3.8,b+.45);P.push({k:'pcar',spr:sp,x,y,dir:k%2?lf:FA,r:.5})})}
    const c2=['carG',0,'carB',0];for(let k=0;k<4;k++){const o=mkOBB(L,1.12+k*.82,16.37,1,1,194,'парковка',.82,1.95);o.nosolid=1;const sp=c2[k];if(!sp)continue;const[x,y]=AW(1.12+k*.82+.41,17.3);P.push({k:'pcar',spr:sp,x,y,dir:fwd,r:.5})}}
   // деревья: городской парк и лес вдоль берега
   const TR=rng(77),okT=(x,y)=>x>1.3&&y>1.3&&x<CW-1.3&&y<CH-1.3&&!L.map[(y|0)*CW+(x|0)]&&cityF(x,y)<0&&L.fb[(y|0)*CW+(x|0)]===0&&!obbBlocks(L,x,y,.6)&&!P.some(p=>Math.hypot(p.x-x,p.y-y)<(p.k==='rotunda'?p.r+.9:1.1));
@@ -2649,7 +2650,7 @@ TX.garage2=mkTex((g,e,R)=>{g.fillStyle='#64686a';g.fillRect(0,0,64,64);for(let x
 TX.slush=mkTex((g,e,R)=>{g.fillStyle='#a8a59c';g.fillRect(0,0,64,64);noise(g,R,700,['#8f8a7e','#c4c2ba','#7d776a','#b8b4aa'],.6);
   for(let i=0;i<4;i++){const x=R()*64,y=R()*64,w=6+R()*12,h=3+R()*5;ell(g,x,y,w,h,'#6c7880');ell(g,x-w*.3,y-h*.3,w*.3,h*.25,'#9fb0bc')}},134);
 T[83]={h:1.3,segs:['banyaDoor','roofW'],act:'banya'};T[84]={h:1.3,segs:['banyaWall','roofW']};T[85]={h:.95,segs:['garage2'],act:'garage'};
-MAPCOL[83]='#d9784a';Object.assign(MAPCOL,{201:'#3c3d40',199:'#d8b49a',200:'#d8b49a',197:'#c9c3b4',194:'#3c3d40',191:'#a8a49c',192:'#a8a49c',193:'#a8a49c',111:'#d8b49a',112:'#d9c8a6',108:'#d9b896',109:'#2f5aa8',110:'#2f5aa8',135:'#c4a87a',136:'#c4a87a',137:'#c4a87a',138:'#c4a87a',190:'#161616',106:'#eceff0',107:'#d9b896',115:'#8a8478',120:'#fff',121:'#fff',122:'#fff',123:'#fff',124:'#fff',125:'#fff',130:'#c4a87a',131:'#ff5a4a',132:'#c4a87a',133:'#e8d27a',134:'#c4a87a'});MAPCOL[84]='#8a5a3a';MAPCOL[85]='#c9ccd0';
+MAPCOL[83]='#d9784a';Object.assign(MAPCOL,{202:'#dcc48a',201:'#3c3d40',199:'#d8b49a',200:'#d8b49a',197:'#c9c3b4',194:'#3c3d40',191:'#a8a49c',192:'#a8a49c',193:'#a8a49c',111:'#d8b49a',112:'#d9c8a6',108:'#d9b896',109:'#2f5aa8',110:'#2f5aa8',135:'#c4a87a',136:'#c4a87a',137:'#c4a87a',138:'#c4a87a',190:'#161616',106:'#eceff0',107:'#d9b896',115:'#8a8478',120:'#fff',121:'#fff',122:'#fff',123:'#fff',124:'#fff',125:'#fff',130:'#c4a87a',131:'#ff5a4a',132:'#c4a87a',133:'#e8d27a',134:'#c4a87a'});MAPCOL[84]='#8a5a3a';MAPCOL[85]='#c9ccd0';
 PLACE.banya='Баня «Лёгкий пар»';PLACE.garage='Гараж №17 во дворе';
 LABELS.push([OX+14,45.2,'Баня'],[...A2W(28,19.6),'Гараж']);
 VAR.lev=[{jacket:'#3e3a2e',pants:'#26262a',hat:'ushanka',hatCol:'#26221e',quilt:1,belt:1,shoe:'#0d0d0d'}];SP.lev=VAR.lev.map(humanSet);
@@ -3550,7 +3551,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Во дворе дома 4 больше нет гаража и ларька; гараж №17 и дядя Толя — у гаражей в промзоне','Проход между домом 4 и угловым домом шире, через него проезд во двор','В угловом кирпичном доме — библиотека: вывеска на углу и вход после третьего окна','ДК отодвинут, у входа ступени, по сторонам парковка','Остановка «Центр» перенесена от ТБЦ к газону на площади','Убрана плитка, выпиравшая на стыке парковки у горисполкома и дороги'];
+const CHANGES=['Проезд во двор продолжен через проспект на северную сторону','Библиотека перенесена на угол кирпичного дома у площади','Убран выступ плитки у дороги возле ДК','Парковка у ДК — один ровный ряд перед зданием','У ДК пристроено крыло пониже'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
