@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.039';
+const BUILD='G001.040';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -3634,7 +3634,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Город стал вдвое больше: новые районы за ТБЦ и за ДК, в сторону Байкала карта не росла','Новые улицы: Строителей, Северная, Космонавтов, Лесная, Заречная, Октябрьская; ул. Мира и проспект 60 лет СССР тянутся дальше на север','Стадион «Локомотив» за ТБЦ, школы №1 и №3, детсады, Северный и Западный микрорайоны','Частный сектор, гаражный кооператив и котельная, лес вокруг новых кварталов','Это черновая застройка — её можно переложить по клеткам карты (A1…U16)'];
+const CHANGES=['Края тротуаров на косых улицах ровные, без лесенки','Убрана улица за ДК (Октябрьская)','Тротуар перед ДК шире, парковка у ДК компактнее','У левого торца ТБЦ тротуар вдоль дороги, лишние деревья убраны','ТБЦ вдвое глубже, стадион отодвинут','Карта снова показывается целиком: сетка A1…U16'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
