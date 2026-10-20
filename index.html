@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.033';
+const BUILD='G001.034';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1387,6 +1387,7 @@ function cityF(fx,fy){const x=fx-OX,s=x+.5*fy,u=fy-.5*x,A=s/1.118,B=u/1.118;
   if(B>=5&&B<8.1&&A<12.95&&fy>1)return 1;                     // улица вдоль ТБЦ
   if(A>=12.95&&A<14.8&&u<AVE[1]&&fy>1)return 1;                     // ул. Мира, шире
   if(A>=14.8&&A<15.45&&B>=-1&&B<8.05)return A<14.85?11:14;            // тротуар у кирпичного дома
+  if(A>=14.8&&A<15.45&&B>=14.35&&B<19.9)return A<14.85?11:14;         // такой же у южного кирпичного дома
   if(A>=20.6&&A<22.4&&B>=-1.5&&B<20.6)return 1;                      // поперечная улица через проспект во дворы
   if(A>=-3&&A<-1.2&&B<18&&fy>1)return 1;                              // проезд у ДК
   {const t=(-(A+2)+(B-17))/1.4142,q=((A+2)+(B-17))/1.4142;if(t>-1.5&&Math.abs(q)<.9)return 1}   // улица по диагонали между ДК и горисполкомом
@@ -1399,7 +1400,7 @@ function cityF(fx,fy){const x=fx-OX,s=x+.5*fy,u=fy-.5*x,A=s/1.118,B=u/1.118;
   if(A>=(B>11?13:14.6)&&A<36.3){if((B>=8.05&&B<9.1)||(B>=13.45&&B<14.35))return 14;if((B>=7.95&&B<8.05)||(B>=14.35&&B<14.45))return 11;                           // тротуары
     if(B>=9.1&&B<9.9)return(B<9.2||B>=9.8)?11:0;if(B>=12.65&&B<13.45)return(B<12.75||B>=13.35)?11:0}  // газоны с бордюром
   if(s>=R2[1]&&s<48&&u>=5&&u<20)return 10;
-  if(B>=19&&B<20.6&&s>=MIRA[1]&&A<32.4)return 1;
+  if(B>=19&&B<20.6&&A>=20.6&&A<32.4)return 1;
   if(A>=34.5&&A<36.3&&B>=-2&&B<24.5){if(A>=34.9&&A<35.8)return 14;if((A>=34.85&&A<34.9)||(A>=35.8&&A<35.85))return 11}   // тротуар вдоль улицы у путей, газоны по бокам
   return-1}
 const isBaikal=(x,y)=>x-OX+.5*y>=67,isBeach=(x,y)=>!isBaikal(x,y)&&x-OX+.5*y>=63.5;
@@ -3535,7 +3536,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Подъезд, 2-й этаж: проход вниз — тёмный проём, заходишь — и ты на лестнице','Во дворе убраны ряды гаражей-контейнеров, остался один гараж дяди Толи','Между угловым кирпичным домом и пятиэтажкой — улица через проспект в оба двора','Улица Мира шире, у кирпичного дома тротуар','ТБЦ отодвинут, ларёк стоит перед ним'];
+const CHANGES=['Убран кусок дворового проезда, упиравшийся в кирпичный дом','У южного кирпичного дома тротуар — как напротив, у северного'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
