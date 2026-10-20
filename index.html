@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.034';
+const BUILD='G001.035';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1303,11 +1303,20 @@ TX.vokRearTop=SQ((g,e,R)=>{g.clearRect(0,0,1,1);g.fillStyle='#ebe9e3';g.fillRect
 /* --- типы клеток --- */
 T[1]={h:2.6,segs:[['pnLA','pnLB','pnLC'],['pnA','pnB','pnC'],'pnTop']};
 T[111]={h:2.6,segs:[['brLA','brLB'],['brA','brB'],'brTop']};
+{const L2=stripU(2,1,(g,e,R,n,hU,Z)=>{for(let i=0;i<2;i++){g.save();e.save();g.translate(i,0);e.translate(i,0);brickUnit(g,e,R,0,1);g.restore();e.restore()}
+  g.fillStyle='rgba(0,0,0,.3)';g.fillRect(.03,.465,1.44,.1);g.fillStyle='#1e4a3a';g.fillRect(.04,.47,1.42,.085);g.fillStyle='#c8a654';g.fillRect(.04,.47,1.42,.006);g.fillRect(.04,.549,1.42,.006);
+  ftxt(g,128,'БИБЛИОТЕКА',.75,.513,.062,'#f2d27a','700 ');
+  g.fillStyle='#d8d2c4';g.fillRect(1.56,.55,.32,.35);g.fillStyle='#5a3a24';g.fillRect(1.59,.58,.26,.32);g.fillStyle='#7a5234';g.fillRect(1.6,.6,.115,.29);g.fillRect(1.725,.6,.115,.29);g.fillStyle='rgba(255,230,160,.5)';g.fillRect(1.62,.62,.08,.08);g.fillRect(1.745,.62,.08,.08);
+  g.fillStyle='#c9c9c9';g.fillRect(1.705,.74,.008,.05);g.fillRect(1.735,.74,.008,.05);g.fillStyle='#b8b4aa';g.fillRect(1.54,.535,.36,.02);g.fillStyle='rgba(240,246,250,.9)';g.fillRect(1.54,.53,.36,.008);
+  g.fillStyle='#eae4d0';g.fillRect(1.885,.66,.07,.05);ftxt(g,128,'книги',1.92,.685,.016,'#333','700 ');g.fillStyle='#8a8478';g.fillRect(1.54,.9,.36,.03)},4180);
+ TX.brLib0=L2[0];TX.brLib1=L2[1];}
+T[199]={h:2.6,segs:['brLib0',['brA','brB'],'brTop'],side:'brA'};T[200]={h:2.6,segs:['brLib1',['brA','brB'],'brTop'],side:'brA',act:'library'};
 T[112]={h:1.25,segs:['annexW','annexTop']};
 TX.stepGr=SQ((g,e,R)=>{g.fillStyle='#8a8680';g.fillRect(0,0,1,1);speck(g,R,500,['#7a766e','#a29e96','#6a665e'],.6,0,0,1,1,.008);g.fillStyle='rgba(0,0,0,.25)';g.fillRect(0,.9,1,.1)},4175);
 TX.stepGrTop=SQ((g,e,R)=>{g.fillStyle='#a8a49c';g.fillRect(0,0,1,1);speck(g,R,500,['#9a968e','#bcb8b0','#8a867e'],.6,0,0,1,1,.008);g.fillStyle='rgba(240,246,250,.5)';for(let i=0;i<6;i++)g.fillRect(R(),R(),.2,.05);g.fillStyle='rgba(0,0,0,.2)';g.fillRect(0,0,1,.02)},4176);
 TX.parkTop=SQ((g,e,R)=>{g.fillStyle='#3c3d40';g.fillRect(0,0,1,1);speck(g,R,400,['#333437','#45464a','#2e2f32'],.6,0,0,1,1,.008);g.fillStyle='rgba(235,238,240,.85)';g.fillRect(0,0,.035,1);g.fillRect(.965,0,.035,1);g.fillStyle='rgba(240,246,250,.35)';for(let i=0;i<5;i++)g.fillRect(R(),R(),.25,.04)},4178);
 T[194]={h:.012,segs:['parkTop'],stretch:true,top:'parkTop'};
+TX.parkTopV=SQ((g,e,R)=>{g.fillStyle='#3c3d40';g.fillRect(0,0,1,1);speck(g,R,400,['#333437','#45464a','#2e2f32'],.6,0,0,1,1,.008);g.fillStyle='rgba(235,238,240,.85)';g.fillRect(0,0,1,.035);g.fillRect(0,.965,1,.035)},4181);T[201]={h:.012,segs:['parkTopV'],stretch:true,top:'parkTopV'};
 for(let k=0;k<3;k++)T[191+k]={h:.07*(k+1),segs:['stepGr'],stretch:true,top:'stepGrTop'};
 T[6]={h:2.6,segs:['pnDoor',['pnA','pnB','pnC'],'pnTop'],act:'home'};T[197]={h:2.6,segs:['pnDoor',['pnA','pnB','pnC'],'pnTop']};
 T[18]={h:2.8,segs:['admL',['admM','admM','admMF'],'admAttic']};
@@ -1388,7 +1397,10 @@ function cityF(fx,fy){const x=fx-OX,s=x+.5*fy,u=fy-.5*x,A=s/1.118,B=u/1.118;
   if(A>=12.95&&A<14.8&&u<AVE[1]&&fy>1)return 1;                     // ул. Мира, шире
   if(A>=14.8&&A<15.45&&B>=-1&&B<8.05)return A<14.85?11:14;            // тротуар у кирпичного дома
   if(A>=14.8&&A<15.45&&B>=14.35&&B<19.9)return A<14.85?11:14;         // такой же у южного кирпичного дома
-  if(A>=20.6&&A<22.4&&B>=-1.5&&B<20.6)return 1;                      // поперечная улица через проспект во дворы
+  if(A>=20.6&&A<22.4&&B>=-1.5&&B<20.6)return 1;
+  if(A>=28.6&&A<30.4&&B>=12.6&&B<20.6)return 1;                      // проезд во двор у дома 4                      // поперечная улица через проспект во дворы
+  if(A>=-6.2&&A<-3&&B>=7.3&&B<16.2)return(B>=10.3&&B<13.2)?10:1;     // площадка у ДК: парковка и дорожка к ступеням
+  if(A>=-3.6&&A<-0.2&&B>=15.5&&B<20.5&&A+B<17.1)return 1;             // стык парковки у горисполкома с дорогой
   if(A>=-3&&A<-1.2&&B<18&&fy>1)return 1;                              // проезд у ДК
   {const t=(-(A+2)+(B-17))/1.4142,q=((A+2)+(B-17))/1.4142;if(t>-1.5&&Math.abs(q)<.9)return 1}   // улица по диагонали между ДК и горисполкомом
   if(A>=2.7&&A<9.3&&B>=7&&B<14.57)return 14;                         // тротуар вокруг газона
@@ -1436,7 +1448,7 @@ function buildCity(){
   {const v=mkOBB(L,42.9,AXB-3,2,6,106,'вокзал');for(let j=0;j<6;j++)oset(v,0,j,120+j,4);DOORS.station=obbFront(v,0,3,4);DOORS.station2=obbFront(v,0,2,4);
    mkOBB(L,42.9,AXB-7,2,4,21,'вокзал');mkOBB(L,42.9,AXB+3,2,4,21,'вокзал')}
   // ДК «Железнодорожник» в начале Ленинградского проспекта
-  {const d=mkOBB(L,-11,AXB-4,6,8,55,'ДК');oset(d,5,4,56);DOORS.dk=obbFront(d,5,4,2)}
+  {const d=mkOBB(L,-12,AXB-4,6,8,55,'ДК');oset(d,5,4,56);DOORS.dk=obbFront(d,5,4,2,1.3);for(let k=0;k<3;k++){const o=mkOBB(L,-6,AXB-.7,1,1,191+k,'ступени',1.2-k*.36,2.4);o.nosolid=1}}
   // центральная площадь: ТБЦ на севере, горисполком на юге, газон посередине
   {const t=mkOBB(L,1,1.0,9,3,16,'ТБЦ',1,.85);for(let i=0;i<9;i++)oset(t,i,2,130+i,3);DOORS.tbc=obbFront(t,4,2,3);DOORS.cafe=obbFront(t,3,2,3)}
   {const a=mkOBB(L,2.5,21,6,2,18,'горисполком');oset(a,0,0,109);DOORS.admin=obbFront(a,0,0,1);const tw=mkOBB(L,1.5,21,1,1,108,'горисполком',1,2);oset(tw,0,0,108,1);mkOBB(L,-0.5,22.7,2,3,112,'кафе');for(let k=0;k<3;k++){const o=mkOBB(L,2.3,19.75+k*.38,1,1,191+k,'ступени',2.4,1.25-k*.38);o.nosolid=1}}
@@ -1449,9 +1461,9 @@ function buildCity(){
   {const h=mkOBB(L,22.5,4.5,6,2,1,'дом');for(const i of[1,4])oset(h,i,0,197)}
   {const h=mkOBB(L,29.5,4.5,5,2,1,'угловой дом');for(const i of[1,3])oset(h,i,0,197);const w=mkOBB(L,32.5,-1.5,2,6,1,'угловой дом');for(const j of[1,4])oset(w,0,j,197,4)}
   mkOBB(L,17,4.5,3,2,111,'угловой дом');mkOBB(L,15.5,-0.5,2,5,111,'угловой дом');{const[x,y]=AW(16.6,5.4);P0.push({k:'ctower',x,y,r:1.15})}
-  mkOBB(L,15.5,15.9,5,2,111,'угловой дом');mkOBB(L,15.5,17.9,2,2,111,'угловой дом');{const h=mkOBB(L,22.5,15.9,6,2,1,'дом 4');oset(h,4,1,197);oset(h,1,1,6);DOORS.home=obbFront(h,1,1,3)}{const h=mkOBB(L,29.5,15.9,5,2,1,'угловой дом');for(const i of[1,3])oset(h,i,1,197);const w=mkOBB(L,32.5,17.9,2,6,1,'угловой дом');for(const j of[1,4])oset(w,0,j,197,4)}
+  {const b=mkOBB(L,15.5,15.9,5,2,111,'угловой дом');oset(b,4,0,199,1);oset(b,3,0,200,1)}mkOBB(L,15.5,17.9,2,2,111,'угловой дом');{const h=mkOBB(L,22.5,15.9,6,2,1,'дом 4');oset(h,4,1,197);oset(h,1,1,6);DOORS.home=obbFront(h,1,1,3)}{const h=mkOBB(L,30.5,15.9,4,2,1,'угловой дом');for(const i of[1,3])oset(h,i,1,197);const w=mkOBB(L,32.5,17.9,2,6,1,'угловой дом');for(const j of[1,4])oset(w,0,j,197,4)}
   // двор за домом 4: гаражи и ещё две пятиэтажки
-  {const g=mkOBB(L,27.5,20.65,1,1,85,'гараж');oset(g,0,0,85,1);DOORS.garage=obbFront(g,0,0,1);kiosk(29.9,20.65,1)}
+  
   mkOBB(L,15.5,22.7,6,2,1,'дом');mkOBB(L,22.5,22.7,6,2,1,'дом');
   // 5-й микрорайон и школа
   mkOBB(L,24,-9.4,7,2,1,'дом');mkOBB(L,24,-4.6,6,2,1,'дом');mkOBB(L,32.2,-10,2,4,1,'дом');mkOBB(L,26,0.6,4,2,2,'школа');
@@ -1459,7 +1471,7 @@ function buildCity(){
   {const m=mkOBB(L,38.6,-1.6,5,3,11,'рынок');oset(m,2,2,10);DOORS.market=obbFront(m,2,2,3)}
   mkOBB(L,38.8,-13.6,5,2,1,'дом');mkOBB(L,38.8,-7.8,5,2,1,'дом');
   // промзона за поворотом проспекта
-  mkOBB(L,39,20.8,3,3,2,'склад');mkOBB(L,39.4,26.2,4,2,2,'склад');mkOBB(L,43.4,21,1,4,3,'гаражи');
+  mkOBB(L,39,20.8,3,3,2,'склад');mkOBB(L,39.4,26.2,4,2,2,'склад');{const g=mkOBB(L,43.4,21,1,4,3,'гаражи');oset(g,0,1,85,2);DOORS.garage=obbFront(g,0,1,2)}
   // 19-й квартал за ул. Мира
   rect(L,8,23,5,2,1);rect(L,9,27,4,2,1);rect(L,15,29,3,2,1);rect(L,9,31,5,2,1);rect(L,4,35,4,1,3);
   // Шанхай: щитовые дома, бараки, сараи
@@ -1473,7 +1485,7 @@ function buildCity(){
   const P=P0,solid=(x,y)=>solidAt(L,x,y)||obbBlocks(L,x,y,.3)||P0.some(p=>p.k==='ctower'&&Math.hypot(p.x-x,p.y-y)<p.r+.3),put=(a,b,o)=>{const[x,y]=AW(a,b);if(!solid(x,y)&&cityF(x,y)!==1)P.push(Object.assign({x,y},o))};
   for(const[a,b]of[[39.6,7],[41.6,24.8],[31.5,19.3],[12.4,4.6],[17,-2],[44,-4],[-2.5,5],[37,-9],[11.6,19.6]])put(a,b,{k:'barrel'});
   for(const[x,y]of[[SX+6.5,41.5],[SX+14.5,40.5],[46.5+SX,34.5],[5,33],[10,20],[6,41]])P.push({k:'barrel',x,y});
-  for(let a=-4;a<=35.5;a+=3.6)if(a<-1.5||(a>2.5&&a<9.5)||a>13)put(a,AVE[0]/1.118-.35,{k:'lamp'});
+  for(let a=-4;a<=35.5;a+=3.6)if((a<-1.5&&a>-3.9)||(a>2.5&&a<9.5)||a>13)put(a,AVE[0]/1.118-.35,{k:'lamp'});
   for(let b=-16;b<=22;b+=4.6)put(R2[0]/1.118-.4,b,{k:'lamp'});
   for(let a=16.4;a<=35.5;a+=3.6)put(a,13.05,{k:'lamp'});for(let a=-2;a<=12.5;a+=3.6)put(a,4.85,{k:'lamp'});for(let b=9;b<=15;b+=4.5)put(-3.35,b,{k:'lamp'});for(let t=1.5;t<=8;t+=3.2)put(-2-.707*t+.75,17+.707*t+.75,{k:'lamp'});
   for(let b=-24;b<=22;b+=5)put(HWY[0]/1.118-.25,b,{k:'lamp'});
@@ -1491,6 +1503,7 @@ function buildCity(){
   {const fwd=Math.atan2(2,-1),cols=['carW','carB',0,'carG','car','carW'];for(let k=0;k<6;k++){const o=mkOBB(L,4.4+k*.82,16.37,1,1,194,'парковка',.82,1.95);o.nosolid=1;const sp=cols[k];if(!sp)continue;const[x,y]=AW(4.4+k*.82+.41,17.3);P.push({k:'pcar',spr:sp,x,y,dir:k%2?fwd:fwd+Math.PI,r:.5})}
    const c3=[0,'carW',0,'car'];for(let k=0;k<4;k++){const o=mkOBB(L,9.3+k*.9,16.37,1,1,194,'парковка',.9,1.95);o.nosolid=1;const sp=c3[k];if(!sp)continue;const[x,y]=AW(9.3+k*.9+.45,17.3);P.push({k:'pcar',spr:sp,x,y,dir:k%2?fwd:fwd+Math.PI,r:.5})}
    {const cs=['carB',0,'carW','car','carG',0,'carB'],xs=[1,1.9,2.8,6.3,7.2,8.1,9.0];xs.forEach((a,k)=>{const o=mkOBB(L,a,5,1,1,194,'парковка',.9,1.6);o.nosolid=1;const sp=cs[k];if(!sp)return;const[x,y]=AW(a+.45,5.85);P.push({k:'pcar',spr:sp,x,y,dir:k%2?fwd+Math.PI:fwd,r:.5})})}
+   {const lf=FA+Math.PI,cs=['carW',0,'carG','carB',0,'car'],bs=[7.4,8.3,9.2,13.3,14.2,15.1];bs.forEach((b,k)=>{const o=mkOBB(L,-5.95,b,1,1,201,'парковка',1.8,.9);o.nosolid=1;const sp=cs[k];if(!sp)return;const[x,y]=AW(-5.05,b+.45);P.push({k:'pcar',spr:sp,x,y,dir:k%2?lf:FA,r:.5})})}
    const c2=['carG',0,'carB',0];for(let k=0;k<4;k++){const o=mkOBB(L,1.12+k*.82,16.37,1,1,194,'парковка',.82,1.95);o.nosolid=1;const sp=c2[k];if(!sp)continue;const[x,y]=AW(1.12+k*.82+.41,17.3);P.push({k:'pcar',spr:sp,x,y,dir:fwd,r:.5})}}
   // деревья: городской парк и лес вдоль берега
   const TR=rng(77),okT=(x,y)=>x>1.3&&y>1.3&&x<CW-1.3&&y<CH-1.3&&!L.map[(y|0)*CW+(x|0)]&&cityF(x,y)<0&&L.fb[(y|0)*CW+(x|0)]===0&&!obbBlocks(L,x,y,.6)&&!P.some(p=>Math.hypot(p.x-x,p.y-y)<(p.k==='rotunda'?p.r+.9:1.1));
@@ -1542,7 +1555,7 @@ function buildInteriors(){
   mkNPC('muzh',13.5,9.6,'trainer','Тренер по боксу',DK,'dk').v=0;mkNPC('babka',10.5,7.35,'dkcash','Вахтёрша',DK,'dk');
   mkNPC('muzh',3.5,5.2,'mih','Бригадир Михалыч',STATION);mkNPC('babka',5.5,3.4,'','',STATION);mkNPC('mil',12.5,5.3,'','',STATION);mkNPC('zhen',10.5,1.5,'','',STATION)}
 const STOPS=(()=>{const st=(n,a,b,aa,ab)=>{const p=A2W(a,b),q=A2W(aa,ab);return{n,x:p[0],y:p[1],ax:q[0],ay:q[1],a:FA+Math.PI/2}};
-  return[{n:'Шанхай',x:OX+12.5,y:36.2,ax:OX+12.5,ay:36.9,a:Math.PI/2},st('Центр, ТБЦ',12.7,4.75,13.0,4.85),st('Вокзал',38.4,5,39,5.6),st('5-й микрорайон',15.2,-5,15.8,-5),st('Пляж и промзона',38.4,19.4,38.9,19.7)]})();
+  return[{n:'Шанхай',x:OX+12.5,y:36.2,ax:OX+12.5,ay:36.9,a:Math.PI/2},st('Центр, площадь',9.0,12.6,8.9,13.3),st('Вокзал',38.4,5,39,5.6),st('5-й микрорайон',15.2,-5,15.8,-5),st('Пляж и промзона',38.4,19.4,38.9,19.7)]})();
 function moveCar(x,y){const c=CITY.props.find(p=>p.k==='car');let cx=x+1.3,cy=y;if(solidAt(CITY,cx,cy))cx=x-1.3;if(c){c.x=cx;c.y=cy}else CITY.props.push({k:'car',x:cx,y:cy,r:.45});G.carPos=[cx,cy]}
 function busHTML(st){const h=G.min/60,open=h>=6&&h<23,p=shopPrice(300);
   return`<div class="card"><div class="stamp">ПАЗ</div><h2>Остановка «${st.n}»</h2><p class="sub">${open?'Жёлтый ПАЗик ходит с 06:00 до 23:00. Ждать 0–20 минут, ехать 20.':'Автобусы не ходят. Последний ушёл в 23:00.'}</p><div class="rows">`+
@@ -1998,7 +2011,7 @@ function spawn(type){const z=pick(ZONES[type]);const c=emptyCell(z,9)||emptyCell
   const e={type,v:Math.random()*SP[type].length|0,x:c[0],y:c[1],hp:ED[type].hp,st:'idle',tm:0,cd:0,t:Math.random()*5,hit:0,dead:0,wa:Math.random()*6.28,wt:0,fire:0,said:0,strikeT:0,angry:0};
   CITY.enemies.push(e);return e}
 const CIVS=(()=>{const c=(t,a,b,n,nm)=>{const p=A2W(a,b);return[t,p[0],p[1],n,nm]};
-  return[c('babka',25.2,18.6,'nura','Баба Нюра'),c('babka',31.5,18.5),['babka',OX+4.5,41.5],c('muzh',26.6,19.9,'tolya','Дядя Толя'),c('muzh',38.9,20.2),['muzh',OX+9.5,42],
+  return[c('babka',25.2,18.6,'nura','Баба Нюра'),c('babka',31.5,18.5),['babka',OX+4.5,41.5],c('muzh',45.1,22.9,'tolya','Дядя Толя'),c('muzh',38.9,20.2),['muzh',OX+9.5,42],
   c('zhen',6.5,4.85),c('zhen',40,8),c('mil',4.9,19.3,'kuzmin','Сержант Кузьмин'),c('mil',41,15)]})();
 function mkNPC(type,x,y,named,name,L,place){L=L||CITY;const e={type,v:Math.random()*SP[type].length|0,x,y,hx:x,hy:y,hp:ED[type].hp,st:'idle',tm:0,cd:0,t:Math.random()*5,hit:0,dead:0,wa:Math.random()*6.28,wt:0,fire:0,said:0,strikeT:0,angry:0,scared:0,named:named||'',name:name||''};
   if(named)e.v=0;e.place=place||'';L.enemies.push(e);return e}
@@ -2013,7 +2026,7 @@ function ensureStory(){const S=G.story;if(!S)return;
   if(S.st===4&&!S.goshaDead&&!CITY.enemies.some(e=>e.type==='gosha'&&!e.dead)){const gp=A2W(40.5,25.2),g=mkNPC('gosha',gp[0],gp[1]);g.named='';g.angry=1;
     for(const[x,y]of[A2W(40,24.4),A2W(41.4,25.7)]){const b=mkNPC('ban',x,y);b.angry=1;b.v=1}}}
 function goalText(){const S=G.story;switch(S.st){
-  case 0:return'Поговори с бабой Нюрой у подъезда';case 1:return'Найди дядю Толю у гаражей во дворе';
+  case 0:return'Поговори с бабой Нюрой у подъезда';case 1:return'Найди дядю Толю у гаражей в промзоне';
   case 2:return'Отнеси Серёге банку тушёнки — он прячется в Шанхае у стеклотары';case 10:return'Скажи Сиплому в «Северянке», где прячется Серёга';
   case 4:return S.betrayed?'Сиплый велел разобраться с Гошей Цементом на промзоне':'Разберись с Гошей Цементом на промзоне — найди доказательства';
   case 5:return'Отдай чёрную тетрадь Гоши: Сиплому в «Северянку» или сержанту Кузьмину у горисполкома';
@@ -2345,6 +2358,7 @@ function interact(){if(!playing())return;const cat=lookCat();if(cat){SND.meow();
   if(a==='kab'){msg(pick(['Табличка: «Приём по вторникам с 14 до 16». Сегодня не вторник.','Дверь заперта. За ней стучит печатная машинка.','«Без стука не входить». Постучал — тишина.']));return}
   if(a==='exit'){let d=LV.exits&&lookTile&&LV.exits[lookTile[0]+','+lookTile[1]];if(typeof d==='string')d=DOORS[d];if(d)goTo(CITY,d[0],d[1],d[2]);return}
   if(a==='toflat'){enterFlat();return}
+  if(a==='library'){msg(pick(['Библиотека. На двери табличка: «Санитарный день».','Закрыто на учёт. За стеклом — стеллажи и фикус.','«Режим работы: 10–18, перерыв 13–14». Сейчас, похоже, перерыв.']));return}
   if(a==='stairs'&&LV===PODEZD){goTo(PODEZD2,2.5,4.2,-Math.PI/2);return}
   if(a==='stairs'){msg(pick(['На втором этаже опять ругаются. Твоя квартира на первом.','Лампочку на лестнице опять выкрутили.','Пахнет кошками и жареной картошкой.']));return}
   if(a==='mail'){if(G.mailDay&&G.day-G.mailDay<3){msg('В ящике только реклама финансовой пирамиды.');return}G.mailDay=G.day;if(Math.random()<.6){const v=price(4000);P.money+=v;SND.coin();msg('Письмо от мамы из Улан-Удэ и перевод: '+fmt(v)+' руб. «Кушай хорошо».','good')}else msg('Квитанция за свет. Платить нечем.');return}
@@ -2635,7 +2649,7 @@ TX.garage2=mkTex((g,e,R)=>{g.fillStyle='#64686a';g.fillRect(0,0,64,64);for(let x
 TX.slush=mkTex((g,e,R)=>{g.fillStyle='#a8a59c';g.fillRect(0,0,64,64);noise(g,R,700,['#8f8a7e','#c4c2ba','#7d776a','#b8b4aa'],.6);
   for(let i=0;i<4;i++){const x=R()*64,y=R()*64,w=6+R()*12,h=3+R()*5;ell(g,x,y,w,h,'#6c7880');ell(g,x-w*.3,y-h*.3,w*.3,h*.25,'#9fb0bc')}},134);
 T[83]={h:1.3,segs:['banyaDoor','roofW'],act:'banya'};T[84]={h:1.3,segs:['banyaWall','roofW']};T[85]={h:.95,segs:['garage2'],act:'garage'};
-MAPCOL[83]='#d9784a';Object.assign(MAPCOL,{197:'#c9c3b4',194:'#3c3d40',191:'#a8a49c',192:'#a8a49c',193:'#a8a49c',111:'#d8b49a',112:'#d9c8a6',108:'#d9b896',109:'#2f5aa8',110:'#2f5aa8',135:'#c4a87a',136:'#c4a87a',137:'#c4a87a',138:'#c4a87a',190:'#161616',106:'#eceff0',107:'#d9b896',115:'#8a8478',120:'#fff',121:'#fff',122:'#fff',123:'#fff',124:'#fff',125:'#fff',130:'#c4a87a',131:'#ff5a4a',132:'#c4a87a',133:'#e8d27a',134:'#c4a87a'});MAPCOL[84]='#8a5a3a';MAPCOL[85]='#c9ccd0';
+MAPCOL[83]='#d9784a';Object.assign(MAPCOL,{201:'#3c3d40',199:'#d8b49a',200:'#d8b49a',197:'#c9c3b4',194:'#3c3d40',191:'#a8a49c',192:'#a8a49c',193:'#a8a49c',111:'#d8b49a',112:'#d9c8a6',108:'#d9b896',109:'#2f5aa8',110:'#2f5aa8',135:'#c4a87a',136:'#c4a87a',137:'#c4a87a',138:'#c4a87a',190:'#161616',106:'#eceff0',107:'#d9b896',115:'#8a8478',120:'#fff',121:'#fff',122:'#fff',123:'#fff',124:'#fff',125:'#fff',130:'#c4a87a',131:'#ff5a4a',132:'#c4a87a',133:'#e8d27a',134:'#c4a87a'});MAPCOL[84]='#8a5a3a';MAPCOL[85]='#c9ccd0';
 PLACE.banya='Баня «Лёгкий пар»';PLACE.garage='Гараж №17 во дворе';
 LABELS.push([OX+14,45.2,'Баня'],[...A2W(28,19.6),'Гараж']);
 VAR.lev=[{jacket:'#3e3a2e',pants:'#26262a',hat:'ushanka',hatCol:'#26221e',quilt:1,belt:1,shoe:'#0d0d0d'}];SP.lev=VAR.lev.map(humanSet);
@@ -2843,7 +2857,7 @@ SND.beep=()=>{tone(430,430,.16,.05,'square');setTimeout(()=>tone(430,430,.2,.05,
 SND.mosq=()=>{if(!AC)return;const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain(),l=AC.createOscillator(),lg=AC.createGain();o.type='sawtooth';o.frequency.value=620;l.frequency.value=9;lg.gain.value=40;l.connect(lg);lg.connect(o.frequency);
   g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.025,t+.3);g.gain.linearRampToValueAtTime(0,t+1.2);o.connect(g);g.connect(master);o.start(t);l.start(t);o.stop(t+1.3);l.stop(t+1.3)};
 Object.assign(PLACE,{n18:'Кв. 18 — Пётр Ильич',n19:'Кв. 19 — тётя Зина',n20:'Кв. 20 — Валера',down:'Лестница вниз',kab:'Кабинет'});
-PLACE.stairs='Лестница — на второй этаж';
+PLACE.stairs='Лестница — на второй этаж';PLACE.library='Библиотека';
 
 /* --- клетки новых помещений --- */
 T[140]={h:2.4,segs:['nbDoor18'],stretch:true,stop:true,act:'n18'};T[141]={h:2.4,segs:['nbDoor19'],stretch:true,stop:true,act:'n19'};T[142]={h:2.4,segs:['nbDoor20'],stretch:true,stop:true,act:'n20'};
@@ -2903,7 +2917,7 @@ const NB={
     rum:['Валерка из двадцатой опять пропил пальто. Зимой, дурак!','Сиплый у меня самогон берёт для своих. Говорит, лучше магазинного.','Баня в Шанхае по четвергам самая жаркая — дед-банщик не жалеет дров.','На рынке барыга из-под прилавка такое продаёт, что лучше не спрашивать.']},
   n20:{t:'Валера, кв. 20',sub:'Дверь открывается на цепочку. Небритое лицо, тельняшка, запах перегара.',hi:['О, сосед! Выручай, трубы горят…','Братан, есть чё? Я верну, честно.'],
     req:[['samogon','Принеси бутылочку, а я тебе секрет скажу','отдать самогон',()=>P.inv.samogon>0,()=>{P.inv.samogon--;const c=emptyCell([30,27,7,4],0)||emptyCell(null,0);if(c)CITY.items.push({kind:'money',x:c[0],y:c[1],v:price(3500)});G.valTip=c;
-        return'Валера оживился: «Я заначку закопал во дворе, у гаражей. Мне уже не надо, а тебе пригодится». Ищи в снегу возле гаражей.'}],
+        return'Валера оживился: «Я заначку закопал во дворе за домом 4. Мне уже не надо, а тебе пригодится». Ищи в снегу во дворе.'}],
       ['money','Дай в долг до получки, сосед','дать '+'денег',()=>P.money>=price(400),()=>{P.money-=price(400);if(!P.has.kastet){P.has.kastet=true;return'«Держи, мне он ни к чему». Валера сунул тебе кастет.'}P.ammo+=4;return'Валера вынес из-под дивана четыре патрона: «Только не спрашивай, откуда»'}],
       ['shoo','Отстань от него','захлопнуть дверь',()=>true,()=>'Валера обиделся и заругался через дверь.']],
     rum:['Я в депо работал, пока не сократили. А теперь кому я нужен…','Гоша Цемент мне должен. Ну, то есть я ему. Неважно.','В ДК по пятницам дискотека, там Ленка из пятого микрорайона — во девка!','Видал я, как Лёва-кладовщик ночью вагон в тупик загонял. Ты никому, понял?']}};
@@ -3536,7 +3550,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Убран кусок дворового проезда, упиравшийся в кирпичный дом','У южного кирпичного дома тротуар — как напротив, у северного'];
+const CHANGES=['Во дворе дома 4 больше нет гаража и ларька; гараж №17 и дядя Толя — у гаражей в промзоне','Проход между домом 4 и угловым домом шире, через него проезд во двор','В угловом кирпичном доме — библиотека: вывеска на углу и вход после третьего окна','ДК отодвинут, у входа ступени, по сторонам парковка','Остановка «Центр» перенесена от ТБЦ к газону на площади','Убрана плитка, выпиравшая на стыке парковки у горисполкома и дороги'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
