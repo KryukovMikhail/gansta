@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.041';
+const BUILD='G001.042';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1347,7 +1347,7 @@ T[241]={h:3.65,segs:['clinA'],stretch:true};T[242]={h:3.65,segs:['clinAD'],stret
 for(let i=0;i<11;i++)T[230+i]={h:2.75,segs:['tbcF'+i],stretch:true,trans:true,side:'tbcSideF',act:i===4?'cafe':i===5?'tbc':null};
 T[190]={h:.5,segs:['lawnFence'],stretch:true,trans:true,side:'lawnFence'};
 TX.lawnFence=face(1,.5,(g,e,R,w,h,s,Z)=>{g.clearRect(0,0,1,.5);g.fillStyle='#161616';g.fillRect(0,Z(.46),1,.035);g.fillRect(0,Z(.12),1,.03);for(let x=.02;x<1;x+=.1){g.fillRect(x,Z(.5),.022,.5);g.beginPath();g.moveTo(x-.01,Z(.48));g.lineTo(x+.011,Z(.53));g.lineTo(x+.032,Z(.48));g.fill()}g.fillStyle='rgba(255,255,255,.18)';g.fillRect(0,Z(.46),1,.008);g.fillStyle='#eef3f6';g.fillRect(0,Z(.465),1,.012)},4501,128);
-T[115]={h:.55,segs:['stoneWall'],top:'stoneTop',trans:true};T[245]={h:.2,segs:['stoneWall'],top:'stoneTop',trans:true};
+T[115]={h:.55,segs:['stoneWall'],top:'stoneTop',trans:true};T[245]={h:.5,segs:['stoneWall'],top:'stoneTop',trans:true};
 T[21]={h:1.3,segs:['vokBrick','vokBrickTop'],act:'station',trans:true};
 for(let i=0;i<6;i++)T[120+i]={h:VOK_H,segs:['vokF'+i],stretch:true,trans:true,side:'vokS'+i,act:'station'};
 T[106]={h:1.4,segs:['vokRear','vokRearTop'],act:'station',trans:true};
@@ -1408,7 +1408,7 @@ const SQ5=Math.sqrt(5),FA=Math.atan2(1,2),A2W=(a,b)=>[(2*a-b)/SQ5+OX,(a+2*b)/SQ5
 const RAILB=[52.4,55.6],RT1=53.2,RT2=54.8,HWY=[56,58.6],FOREST=[58.6,63.5],R2=[40.6,42.6],AVE=[11.07,14.14],MIRA=[14.76,16.32];
 // новые улицы (G001.039): [A0,A1,B0,B1]; тротуары по 0.9 м с обеих сторон
 const NST=[[-17.8,36.3,-19.6,-17.8,'ул. Строителей'],[-12,36.3,-31,-29.2,'ул. Северная'],[-17.8,-16,-40,45,'ул. Космонавтов'],[-34,-32.2,-22,26,'ул. Лесная'],[-34,-16,22,23.8,'ул. Заречная']],
-  STAD=[1.6,11.6,-16.6,-6.3];
+  STAD=[0,0,0,0];   // стадиона нет
 function newF(A,B){for(const r of NST)if(A>=r[0]&&A<r[1]&&B>=r[2]&&B<r[3])return 1;
   if(A>=STAD[0]&&A<STAD[1]&&B>=STAD[2]&&B<STAD[3])return(A>=STAD[0]+1.5&&A<STAD[1]-1.5&&B>=STAD[2]+1.4&&B<STAD[3]-1.4)?-1:4;
   for(const r of NST){if(r[1]-r[0]>r[3]-r[2]){if(A>=r[0]-.9&&A<r[1]+.9&&((B>=r[2]-.9&&B<r[2])||(B>=r[3]&&B<r[3]+.9)))return 14}
@@ -1427,11 +1427,13 @@ function cityF(fx,fy){const x=fx-OX,fw=fy-OY,s=x+.5*fw,u=fw-.5*x,A=s/1.118,B=u/1
   if(A>=14.8&&A<15.45&&B>=14.35&&B<19.9)return A<14.85?11:14;         // такой же у южного кирпичного дома
   if(A>=20.6&&A<22.4&&B>=-1.5&&B<20.6)return 1;
   if(A>=28.6&&A<30.4&&B>=-1.5&&B<20.6)return 1;                      // проезд во двор у дома 4                      // поперечная улица через проспект во дворы
-  if(A>=-6.2&&A<-1.2&&B>=7.2&&B<15.6)return A<-3.6?15:1;     // тротуар у ДК, парковка поперёк, проезд     // площадка у ДК: парковка и дорожка к ступеням
+  if(A>=-6.2&&A<-1.2&&B>=7.2&&B<15.6)return A<-3.6?15:1;
+  if(A>=-6.2&&A<-3.6&&B>=15.6&&A+B<13.73)return 15;                   // тротуар ДК доходит до косой улицы
+  if(A>=-3.6&&A<-1.2&&B>=15.6&&B<18.32)return 1;       // перекрёсток у ДК     // тротуар у ДК, парковка поперёк, проезд     // площадка у ДК: парковка и дорожка к ступеням
   if(A>=-3.6&&A<-1.25&&B>=16.37&&B<18.32&&A+B>=13)return 1;           // полоса у горисполкома доходит до косой улицы             // стык парковки у горисполкома с дорогой
   if(A>=-3&&A<-1.2&&B<18&&fy>1)return 1;                              // проезд у ДК
   if(A>=-1.2&&A<-.1&&B>=-16.9&&B<5)return 14;                         // тротуар у ТБЦ вдоль проезда
-  {const t=(-(A+2)+(B-17))/1.4142,q=((A+2)+(B-17))/1.4142;if(t>-1.5){if(Math.abs(q)<.9)return 1;if(q>=.9&&q<1.8&&B>=18.32)return 14;if(q<=-.9&&q>-1.8&&A<-3.2&&B>=15.6)return 14}}   // улица по диагонали между ДК и горисполкомом
+  {const t=(-(A+2)+(B-17))/1.4142,q=((A+2)+(B-17))/1.4142;if(t>-1.5){if(Math.abs(q)<.9)return 1;if(q>=.9&&q<1.8&&B>=18.32)return 14;if(q<=-.9&&q>-1.8&&A<-3.6)return 14}}   // улица по диагонали между ДК и горисполкомом
   if(A>=2.7&&A<9.3&&B>=7&&B<14.57)return 14;                         // тротуар вокруг газона
   if(A>=RING[0]&&A<RING[2]&&B>=7&&B<RING[3])return 1;
   if(A>=-1.25&&A<13&&B>=16.37&&B<18.32)return 1;if(A>=-1.25&&A<RING[0]&&B>=7&&B<16.37)return 1;if(A>=RING[2]&&A<13&&B>=7&&B<16.37)return 1;
@@ -1447,6 +1449,8 @@ function cityF(fx,fy){const x=fx-OX,fw=fy-OY,s=x+.5*fw,u=fw-.5*x,A=s/1.118,B=u/1
   if(B>=19&&B<20.6&&A>=20.6&&A<32.4)return 1;
   if(A>=34.5&&A<36.3&&B>=-2&&B<24.5){if(A>=34.9&&A<35.8)return 14;if((A>=34.85&&A<34.9)||(A>=35.8&&A<35.85))return 11}   // тротуар вдоль улицы у путей, газоны по бокам
   return newF(A,B)}
+// рельеф (G001.042): за ДК косая улица уходит в гору — высота растёт по мере удаления от перекрёстка
+const hAtAB=(A,B)=>{const t=(-(A+2)+(B-17))/1.4142;return t<9?0:t<12?(t-9)*(t-9)/60:.15+.1*(t-12)},hAt=(x,y)=>{const[a,b]=W2A(x,y);return hAtAB(a,b)};
 const swAt=(x,y)=>isRaisedF(cityF(x,y))?SW_H:0;
 const isBaikal=(x,y)=>x-OX+.5*(y-OY)>=67,isBeach=(x,y)=>!isBaikal(x,y)&&x-OX+.5*(y-OY)>=63.5;
 /* ---------- город в повёрнутой системе: A — вдоль Ленинградского проспекта к Байкалу, B — вдоль путей на юго-запад ---------- */
@@ -1483,7 +1487,7 @@ function buildCity(){
   // ДК «Железнодорожник» в начале Ленинградского проспекта
   {const d=mkOBB(L,-12,AXB-4,6,8,55,'ДК');oset(d,5,4,56);DOORS.dk=obbFront(d,5,4,2,1.3);mkOBB(L,-10.5,AXB+4,3,4,202,'ДК',1,.875);mkOBB(L,-10.5,AXB-7.5,3,4,202,'ДК',1,.875);for(let k=0;k<3;k++){const o=mkOBB(L,-6,AXB-.7,1,1,191+k,'ступени',1.2-k*.36,2.4);o.nosolid=1}}
   // центральная площадь: ТБЦ на севере, горисполком на юге, газон посередине
-  {const t=mkOBB(L,0.5,-5.7,11,9,16,'ТБЦ',1,.85);for(let i=0;i<11;i++)oset(t,i,8,230+i,3);DOORS.tbc=obbFront(t,5,8,3);DOORS.cafe=obbFront(t,4,8,3);mkOBB(L,0.44,-5.76,1,1,245,'цоколь ТБЦ',11.12,7.77)}
+  {const t=mkOBB(L,0.5,-5.7,11,9,16,'ТБЦ',1,.85);for(let i=0;i<11;i++)oset(t,i,8,230+i,3);DOORS.tbc=obbFront(t,5,8,3);DOORS.cafe=obbFront(t,4,8,3);mkOBB(L,0,-6.2,1,1,245,'цоколь ТБЦ',12,8.1)}
   {const a=mkOBB(L,2.5,21,6,2,18,'горисполком');oset(a,0,0,109);DOORS.admin=obbFront(a,0,0,1);const tw=mkOBB(L,1.5,21,1,1,108,'горисполком',1,2);oset(tw,0,0,108,1);mkOBB(L,-0.5,22.7,2,3,112,'кафе');for(let k=0;k<3;k++){const o=mkOBB(L,2.3,19.75+k*.38,1,1,191+k,'ступени',2.4,1.25-k*.38);o.nosolid=1}}
   // заборчик вокруг газона
   {const F=.08;mkOBB(L,LAWN[0],LAWN[1],5,1,190,'ограда',1,F);mkOBB(L,LAWN[0],LAWN[3]-F,5,1,190,'ограда',1,F);mkOBB(L,LAWN[0],LAWN[1],1,5,190,'ограда',F,1);mkOBB(L,LAWN[2]-F,LAWN[1],1,5,190,'ограда',F,1)}
@@ -1509,8 +1513,6 @@ function buildCity(){
    mkOBB(L,39.9,24.55,1,1,244,'переход',1,1);mkOBB(L,39.2,25.45,2,2,243,'поликлиника',1.2,1.1)}
   mkOBB(L,42.2,25.8,3,2,2,'склад',.8,.9);{const g=mkOBB(L,43.4,21,1,4,3,'гаражи');oset(g,0,1,85,2);DOORS.garage=obbFront(g,0,1,2)}
   /* ---------- новые районы G001.039 (черновик: потом разложим по плану игрока) ---------- */
-  // стадион «Локомотив» за ТБЦ: беговая дорожка, ограда, трибуна
-  {const[a0,a1,b0,b1]=STAD,F=.08;mkOBB(L,a0,b0,10,1,190,'ограда',(a1-a0)/10,F);mkOBB(L,a0,b1-F,4,1,190,'ограда',1.12,F);mkOBB(L,a1-4.48,b1-F,4,1,190,'ограда',1.12,F);mkOBB(L,a0,b0,1,12,190,'ограда',F,(b1-b0)/12);mkOBB(L,a1-F,b0,1,12,190,'ограда',F,(b1-b0)/12);}
   // школа №1 и детсад за ДК, у ул. Октябрьской
   mkOBB(L,-13.5,-12.5,6,2,2,'школа №1');mkOBB(L,-13.5,-6,4,2,2,'детсад');
   // новый микрорайон за 5-м: пятиэтажки по обе стороны ул. Строителей
@@ -2654,7 +2656,7 @@ const MAPCOL={1:'#6d7178',6:'#5fd16a',2:'#8a5240',7:'#5fb6d1',3:'#55574f',4:'#e6
 const FLCOL=['#dfe5ea','#3c3d40','#9fbccb','#a8adb2','#cfd5da','#ddd','#ddd','#ddd','#8f8f94','#e3dccb','#cdbfae','#bdbcb6','#ddd','#ddd','#5a5b5f','#6a6b6f'];FLCOL[20]=FLCOL[21]='#a4a6aa';
 MAPCOL[55]='#d9c48e';MAPCOL[241]=MAPCOL[242]='#e3cf98';MAPCOL[243]='#8a3a2a';MAPCOL[244]='#c9ccd0';MAPCOL[245]='#8a8478';MAPCOL[56]='#24497a';
 const LABELS=(()=>{const l=(a,b,t)=>{const p=A2W(a,b);return[p[0],p[1],t]};return[[6+DXO,12.8+DYO,'Городской парк'],l(-7.5,6.4,'ДК «Железнодорожник»'),l(5.5,.4,'ТБЦ'),l(5.5,21.2,'Горисполком'),l(6,9.6,'Центральная площадь'),l(40.5,9.6,'Памятник'),l(46.3,11.27,'Вокзал'),l(41,-2.6,'Рынок'),
-  [OX+9.5,38.1+OY,'ШАНХАЙ'],[OX+52,38+OY,'Пляж'],[OX+55,43+OY,'БАЙКАЛ'],l(25.5,11.27,'Ленинградский пр.'),l(37.2,-6,'пр. 60 лет СССР'),l(36.5,23.6,'Промзона'),l(6.6,-9.8,'Стадион «Локомотив»'),l(-10.5,-13.6,'Школа №1'),l(-11.5,-4.8,'Детсад'),l(9,-18.7,'ул. Строителей'),l(12,-30.1,'ул. Северная'),l(-16.9,-8,'ул. Космонавтов'),l(-33.1,-2,'ул. Лесная'),l(-25,22.9,'ул. Заречная'),l(-24,1.5,'Западный мкр'),l(-41,2,'Частный сектор'),l(-9,40,'Частный сектор'),l(22,-41,'Гаражи'),l(20.5,-22.2,'Северный мкр'),l(40.4,24.4,'Поликлиника'),l(28,-6.4,'5-й мкр'),l(13.9,-9,'ул. Мира'),l(25.5,13.2,'Дом'),l(48.3,-6,'пути'),l(51.2,6,'автодорога'),l(54.6,-4,'лес'),[8+DXO,33.4+DYO,'19-й квартал']]})();
+  [OX+9.5,38.1+OY,'ШАНХАЙ'],[OX+52,38+OY,'Пляж'],[OX+55,43+OY,'БАЙКАЛ'],l(25.5,11.27,'Ленинградский пр.'),l(37.2,-6,'пр. 60 лет СССР'),l(36.5,23.6,'Промзона'),l(-10.5,-13.6,'Школа №1'),l(-11.5,-4.8,'Детсад'),l(9,-18.7,'ул. Строителей'),l(12,-30.1,'ул. Северная'),l(-16.9,-8,'ул. Космонавтов'),l(-33.1,-2,'ул. Лесная'),l(-25,22.9,'ул. Заречная'),l(-24,1.5,'Западный мкр'),l(-41,2,'Частный сектор'),l(-9,40,'Частный сектор'),l(22,-41,'Гаражи'),l(20.5,-22.2,'Северный мкр'),l(40.4,24.4,'Поликлиника'),l(28,-6.4,'5-й мкр'),l(13.9,-9,'ул. Мира'),l(25.5,13.2,'Дом'),l(48.3,-6,'пути'),l(51.2,6,'автодорога'),l(54.6,-4,'лес'),[8+DXO,33.4+DYO,'19-й квартал']]})();
 let MAPGRID=true,MAPMENU=false;
 function drawCityMap(c,sc,opt){opt=opt||{};const g=c.getContext('2d'),L=CITY;g.clearRect(0,0,c.width,c.height);
   g.drawImage(cityMapLayer(sc),0,0);
@@ -3147,11 +3149,12 @@ function glWallMat(tex){const U=GL3.U;return new THREE.ShaderMaterial({uniforms:
     void main(){vec4 c=texture2D(map,vUv);if(c.a<.3)discard;float f=fogAt(vD);vec3 col;
       if(c.a<.8){col=c.rgb;f*=.45;}else col=min(c.rgb*(uL*vK+lmAt(vW)),1.);gl_FragColor=vec4(mix(col,uFogC,f),1.);}`})}
 /* --- стены: сетка тайлов в локальных координатах, rot — поворот в мир --- */
-function glWalls(groups,gw,gh,map,ori,pv,toW,rot){
+let GLWB=0;
+function glWalls(groups,gw,gh,map,ori,pv,toW,rot,hb){
   const nbt=(i,j)=>i<0||j<0||i>=gw||j>=gh?0:map[j*gw+i],wt=(D,k,c)=>{let n=D.segs[Math.min(k,D.segs.length-1)];if(Array.isArray(n))n=n[pv[c]%n.length];return TX[n]};
   const quad=(tex,l,r,z0,z1,u0,u1,v0,v1,nx,ny,k)=>{let g=groups.get(tex);if(!g){g={p:[],u:[],n:[],k:[]};groups.set(tex,g)}
-    const pts=[[l,z0,u0,v0],[r,z0,u1,v0],[r,z1,u1,v1],[l,z1,u0,v1]];for(const idx of[0,1,2,0,2,3]){const q=pts[idx];g.p.push(q[0][0],q[1],q[0][1]);g.u.push(q[2],q[3]);g.n.push(nx,0,ny);g.k.push(k)}};
-  for(let j=0;j<gh;j++)for(let i=0;i<gw;i++){const c=j*gw+i,t=map[c];if(!t)continue;const D=T[t];if(!D||!D.segs)continue;const dh=D.h,od=ori[c];
+    const pts=[[l,z0,u0,v0],[r,z0,u1,v0],[r,z1,u1,v1],[l,z1,u0,v1]];for(const idx of[0,1,2,0,2,3]){const q=pts[idx];g.p.push(q[0][0],q[1]+GLWB,q[0][1]);g.u.push(q[2],q[3]);g.n.push(nx,0,ny);g.k.push(k)}};
+  for(let j=0;j<gh;j++)for(let i=0;i<gw;i++){const c=j*gw+i,t=map[c];if(!t)continue;const D=T[t];if(!D||!D.segs)continue;GLWB=hb?hb(i,j):0;const dh=D.h,od=ori[c];
     for(let dir=1;dir<=4;dir++){const di=dir===2?1:dir===4?-1:0,dj=dir===3?1:dir===1?-1:0,n=nbt(i+di,j+dj);let z0=0;
       if(n){const Dn=T[n];if(D.grp&&Dn.grp===D.grp)continue;if(Dn.trans&&D.trans&&Dn.h>=dh)continue;if(!Dn.trans){if(Dn.h>=dh)continue;z0=Dn.h}}
       const lp=dir===1?[i+1,j]:dir===2?[i+1,j+1]:dir===3?[i,j+1]:[i,j],rp=dir===1?[i,j]:dir===2?[i+1,j]:dir===3?[i+1,j+1]:[i,j+1];
@@ -3159,17 +3162,17 @@ function glWalls(groups,gw,gh,map,ori,pv,toW,rot){
       if(D.stretch||(useSide&&D.sideTall)){const opp=od&&((dir+1)%4+1)===od,tex=TX[useSide?(opp&&D.sideBack?D.sideBack:D.side):D.segs[0]];quad(tex,l,r,z0,dh,0,1,1-z0/dh,0,wn[0],wn[1],k)}
       else for(let s=Math.floor(z0);s<dh;s++){const zb=Math.max(s,z0),zt=Math.min(s+1,dh);if(zt-zb<.001)continue;const tex=useSide?TX[D.side]:wt(D,s,c);quad(tex,l,r,zb,zt,0,1,1-(zb-s),1-(zt-s),wn[0],wn[1],k)}}
     if(D.top&&dh<1.2){const tex=TX[D.top],a=toW(i,j),b=toW(i+1,j),cc=toW(i+1,j+1),d=toW(i,j+1);let g=groups.get(tex);if(!g){g={p:[],u:[],n:[],k:[]};groups.set(tex,g)}
-      const pts=[[a,0,0],[d,0,1],[cc,1,1],[b,1,0]];for(const idx of[0,1,2,0,2,3]){const q=pts[idx];g.p.push(q[0][0],dh,q[0][1]);g.u.push(q[1],q[2]);g.n.push(0,1,0);g.k.push(1.05)}}}}
-function glFloorMat(up){const U=GL3.U;
-  return new THREE.ShaderMaterial({uniforms:{uIdx:{value:GL3.idxTex},uAtlas:{value:GL3.atlasTex},uL:U.uL,uFogC:U.uFogC,uFogD:U.uFogD,uLM:U.uLM,uMap:U.uMap,uR:{value:new THREE.Vector2(RT1,RT2)},uUp:{value:up?1:0},uSW:{value:GL3.swTex}},
+      const pts=[[a,0,0],[d,0,1],[cc,1,1],[b,1,0]];for(const idx of[0,1,2,0,2,3]){const q=pts[idx];g.p.push(q[0][0],dh+GLWB,q[0][1]);g.u.push(q[1],q[2]);g.n.push(0,1,0);g.k.push(1.05)}}}}
+function glFloorMat(up,outer){const U=GL3.U;
+  return new THREE.ShaderMaterial({uniforms:{uIdx:{value:GL3.idxTex},uAtlas:{value:GL3.atlasTex},uL:U.uL,uFogC:U.uFogC,uFogD:U.uFogD,uLM:U.uLM,uMap:U.uMap,uR:{value:new THREE.Vector2(RT1,RT2)},uUp:{value:up?1:0},uOut:{value:outer?1:0},uSW:{value:GL3.swTex}},
     vertexShader:`varying vec2 vW;varying float vD;void main(){vec4 wp=modelMatrix*vec4(position,1.);vW=wp.xz;vec4 mv=viewMatrix*wp;vD=-mv.z;gl_Position=projectionMatrix*mv;}`,
     fragmentShader:`precision highp float;uniform sampler2D uIdx,uAtlas;uniform vec2 uR;${GLSL_FOG}varying vec2 vW;varying float vD;
-      uniform float uUp;uniform sampler2D uSW;
+      uniform float uUp,uOut;uniform sampler2D uSW;
       float swAt(vec2 p){float x=p.x-${OX}.,fw=p.y-${OY}.,A=(x+.5*fw)/1.118,B=(fw-.5*x)/1.118;vec2 q=(vec2(A,B)-vec2(${SWM[0]}.,${SWM[1]}.))/vec2(${SWM[2]}.,${SWM[3]}.);if(q.x<0.||q.y<0.||q.x>1.||q.y>1.)return 0.;vec4 m=texture2D(uSW,q);return m.r>.5?1.:(m.g>.5?2.:0.);}
       vec3 slot(float i,vec2 p){vec2 f=clamp(fract(p),.004,.996);float sx=mod(i,4.),sy=floor(i/4.+.01);return texture2D(uAtlas,(vec2(sx,sy)+f)/4.).rgb;}
       float idxAt(vec2 p){if(p.x>=0.&&p.y>=0.&&p.x<uMap.x&&p.y<uMap.y)return floor(texture2D(uIdx,p/uMap).r*255.+.5);return(p.x-${OX}.+.5*(p.y-${OY}.)>=67.)?2.:0.;}
       float roadish(float i){return(i==1.||i==20.||i==21.)?1.:0.;}
-      void main(){vec2 p=vW;float idx=idxAt(p);
+      void main(){vec2 p=vW;if(uOut>.5&&p.x>=0.&&p.y>=0.&&p.x<uMap.x&&p.y<uMap.y)discard;float idx=idxAt(p);
         vec2 eA=vec2(.894,.447)*.085,eB=vec2(-.447,.894)*.085;
         if(uUp>.5){if(swAt(p)!=1.)discard;if(idx!=14.&&idx!=15.)idx=15.;}
         vec3 c;
@@ -3203,8 +3206,8 @@ function glRotunda(sc,p){const U=GL3.U,mk=(t,rep)=>{const tx=glTex(t);if(rep){tx
   const fr=new THREE.PlaneGeometry(1.3,1.4);fr.translate(0,.7,0);const uv2=fr.attributes.uv;for(let i=0;i<uv2.count;i++)uv2.setY(i,1-uv2.getY(i));
   const m3=new THREE.Mesh(fr,vehMat(TX.rotFront));const a=p.face;m3.position.set(p.x+Math.cos(a)*(Rr+.06),0,p.y+Math.sin(a)*(Rr+.06));m3.rotation.y=Math.PI/2-a;m3.frustumCulled=false;sc.add(m3)}
 function glBuildCity(L){const sc=new THREE.Scene(),groups=new Map();
-  glWalls(groups,L.w,L.h,L.map,L.ori,L.pv,(x,y)=>[x,y],(a,b)=>[a,b]);
-  for(const o of L.obbs)glWalls(groups,o.na,o.nb,o.map,o.ori,o.pv,(i,j)=>A2W(o.a0+i*o.sa,o.b0+j*o.sb),(a,b)=>[(2*a-b)/SQ5,(a+2*b)/SQ5]);
+  glWalls(groups,L.w,L.h,L.map,L.ori,L.pv,(x,y)=>[x,y],(a,b)=>[a,b],(i,j)=>hAt(i+.5,j+.5)-.05);
+  for(const o of L.obbs){const hb=Math.min(...[[0,0],[1,0],[0,1],[1,1]].map(([u,v])=>hAtAB(o.a0+u*o.na*o.sa,o.b0+v*o.nb*o.sb)));glWalls(groups,o.na,o.nb,o.map,o.ori,o.pv,(i,j)=>A2W(o.a0+i*o.sa,o.b0+j*o.sb),(a,b)=>[(2*a-b)/SQ5,(a+2*b)/SQ5],()=>hb)}GLWB=0;
   for(const p of L.props){if(p.k==='rotunda')glRotunda(sc,p);if(p.k==='ctower')glCTower(sc,p)}
   for(const[tex,g]of groups){const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(g.p,3));geo.setAttribute('uv',new THREE.Float32BufferAttribute(g.u,2));
     geo.setAttribute('normal',new THREE.Float32BufferAttribute(g.n,3));geo.setAttribute('aK',new THREE.Float32BufferAttribute(g.k,1));const m=new THREE.Mesh(geo,glWallMat(tex));m.frustumCulled=false;sc.add(m)}
@@ -3213,18 +3216,21 @@ function glBuildCity(L){const sc=new THREE.Scene(),groups=new Map();
   for(let y=0;y<ih;y++)for(let x=0;x<iw;x++){const fx=(x+.5)/R,fy=(y+.5)/R,ci=(fy|0)*L.w+(fx|0),f=cityF(fx,fy);id[(y*iw+x)*4]=f>=0?f:L.fb[ci]}
   if(GL3.idxTex)GL3.idxTex.dispose();GL3.idxTex=new THREE.DataTexture(id,iw,ih,THREE.RGBAFormat);const it=GL3.idxTex;it.magFilter=it.minFilter=THREE.NearestFilter;it.generateMipmaps=false;it.needsUpdate=true;
   glAtlas();
-  const fl=new THREE.Mesh(new THREE.PlaneGeometry(700,700),glFloorMat());fl.rotation.x=-Math.PI/2;fl.position.set(CW/2,0,CH/2);fl.frustumCulled=false;sc.add(fl);
+  const fl=new THREE.Mesh(new THREE.PlaneGeometry(700,700),glFloorMat(0,1));fl.rotation.x=-Math.PI/2;fl.position.set(CW/2,0,CH/2);fl.frustumCulled=false;sc.add(fl);
+  // пол города — сетка с рельефом (подъём за ДК)
+  const terr=yo=>{const g=new THREE.PlaneGeometry(L.w,L.h,L.w*2,L.h*2);g.rotateX(-Math.PI/2);g.translate(L.w/2,0,L.h/2);const p=g.attributes.position;for(let i=0;i<p.count;i++)p.setY(i,yo+hAt(p.getX(i),p.getZ(i)));p.needsUpdate=true;return g};GL3.terr=terr;
+  {const m=new THREE.Mesh(terr(0),glFloorMat());m.frustumCulled=false;sc.add(m)}
   // тротуары чуть выше дороги: второй слой пола и бордюр по краю
   {// маска тротуаров в повёрнутой сетке A/B (0 — нет, 1 — тротуар, 2 — проезжая часть), чтобы край и бордюр шли ровно вдоль улиц
    const D=12,a0=SWM[0],b0=SWM[1],na=SWM[2]*D,nb=SWM[3]*D,P=[],UV=[],N=[],K=[],rg=new Uint8Array(na*nb),md=new Uint8Array(na*nb*4);
    for(let j=0;j<nb;j++)for(let i=0;i<na;i++){const[x,y]=A2W(a0+(i+.5)/D,b0+(j+.5)/D);if(!(x>0&&y>0&&x<L.w&&y<L.h))continue;const f=cityF(x,y),k=(j*na+i)*4;if(isRaisedF(f)){rg[j*na+i]=1;md[k]=255}else if(f===1||f===20||f===21)md[k+1]=255}
    // маска с линейной фильтрацией: край тротуара — изолиния 0.5, на диагоналях ровная
    if(GL3.swTex)GL3.swTex.dispose();GL3.swTex=new THREE.DataTexture(md,na,nb,THREE.RGBAFormat);{const t=GL3.swTex;t.magFilter=t.minFilter=THREE.LinearFilter;t.generateMipmaps=false;t.needsUpdate=true}
-   const up=new THREE.Mesh(new THREE.PlaneGeometry(L.w,L.h),glFloorMat(1));up.rotation.x=-Math.PI/2;up.position.set(L.w/2,SW_H,L.h/2);up.frustumCulled=false;sc.add(up);
+   const up=new THREE.Mesh(terr(SW_H),glFloorMat(1));up.frustumCulled=false;sc.add(up);
    // бордюр — марширующие квадраты по той же маске
    const v=(i,j)=>i>=0&&j>=0&&i<na&&j<nb?rg[j*na+i]:0,G2W=(gi,gj)=>A2W(a0+(gi+.5)/D,b0+(gj+.5)/D);
    const q=(e0,e1,gA,gB)=>{const p0=G2W(e0[0],e0[1]),p1=G2W(e1[0],e1[1]),ax=Math.abs(e1[0]-e0[0])>=Math.abs(e1[1]-e0[1])?0:1,u0=e0[ax]/D*4,u1=e1[ax]/D*4,l=Math.hypot(gA,gB)||1,na2=-gA/l,nb2=-gB/l,n=[(2*na2-nb2)/SQ5,(na2+2*nb2)/SQ5];
-     for(const[a,b]of[[0,0],[1,0],[1,1],[0,0],[1,1],[0,1]]){const pp=a?p1:p0;P.push(pp[0],b*SW_H,pp[1]);UV.push(a?u1:u0,1-b);N.push(n[0],0,n[1]);K.push(1-.22*n[1]*n[1])}};
+     for(const[a,b]of[[0,0],[1,0],[1,1],[0,0],[1,1],[0,1]]){const pp=a?p1:p0;P.push(pp[0],b*SW_H+hAt(pp[0],pp[1]),pp[1]);UV.push(a?u1:u0,1-b);N.push(n[0],0,n[1]);K.push(1-.22*n[1]*n[1])}};
    const SEG=[[],[[3,0]],[[0,1]],[[3,1]],[[1,2]],[[3,0],[1,2]],[[0,2]],[[3,2]],[[2,3]],[[0,2]],[[0,1],[2,3]],[[1,2]],[[1,3]],[[0,1]],[[3,0]],[]];
    for(let j=-1;j<nb;j++)for(let i=-1;i<na;i++){const v0=v(i,j),v1=v(i+1,j),v2=v(i+1,j+1),v3=v(i,j+1),c=v0|v1<<1|v2<<2|v3<<3;if(c===0||c===15)continue;
      const E=[[i+.5,j],[i+1,j+.5],[i+.5,j+1],[i,j+.5]],gA=v1+v2-v0-v3,gB=v2+v3-v0-v1;for(const[e0,e1]of SEG[c])q(E[e0],E[e1],gA,gB)}
@@ -3251,7 +3257,7 @@ function glRender(L,LW,fogD,H2,list){const r=GL3.r,cam=GL3.cam,U=GL3.U;
   U.uL.value=LW;U.uFogC.value.set(FR/255,FG/255,FB/255);U.uFogD.value=fogD;
   const C=LV.comb,d=GL3.lmData;if(C){for(let i=0,n=C.length/3;i<n;i++){const o=i*4,k=i*3;d[o]=Math.min(255,C[k]*127.5);d[o+1]=Math.min(255,C[k+1]*127.5);d[o+2]=Math.min(255,C[k+2]*127.5)}GL3.lmTex.needsUpdate=true}
   let n=0;for(const s of list){if(!s.tex||s.veh)continue;const dx=s.x-P.x,dy=s.y-P.y;if(dx*dx+dy*dy>1600||dx*Math.cos(P.a)+dy*Math.sin(P.a)<.15)continue;const m=GL3.spr[n]||glSprite();n++;m.visible=true;
-    m.position.set(s.x,(s.z||0)+swAt(s.x,s.y),s.y);m.scale.set(s.h,s.h,1);m.quaternion.copy(cam.quaternion);const u=m.material.uniforms;u.map.value=glTex(s.tex);u.uFlip.value=s.flip?1:0;u.uFlash.value=s.flash?1:0;
+    m.position.set(s.x,(s.z||0)+swAt(s.x,s.y)+hAt(s.x,s.y),s.y);m.scale.set(s.h,s.h,1);m.quaternion.copy(cam.quaternion);const u=m.material.uniforms;u.map.value=glTex(s.tex);u.uFlip.value=s.flip?1:0;u.uFlash.value=s.flash?1:0;
     const lk=lightAt(s.x,s.y);if(lk>=0)u.uLt.value.set(L+C[lk],L+C[lk+1],L+C[lk+2]);else u.uLt.value.set(L,L,L)}
   for(let i=n;i<GL3.spr.length;i++)GL3.spr[i].visible=false;
   glVehicles();r.render(GL3.scene,cam);return GL3.c}
@@ -3367,11 +3373,11 @@ function glVehicles(){const seen=new Set();GL3.veh=GL3.veh||new Map();
   for(const p of LV.props){const kind=vehKind(p);if(!kind)continue;let m=GL3.veh.get(p);
     if(!m||m.userData.kind!==kind){if(m)GL3.scene.remove(m);const M=vehModel(kind);m=new THREE.Mesh(M.geo,M.mat);m.userData.kind=kind;m.frustumCulled=false;GL3.scene.add(m);GL3.veh.set(p,m)}
     const a=p.hd!==undefined?p.hd:p.dir!==undefined?p.dir:p.k==='wagonX'?FA+Math.PI/2:p.a!==undefined?p.a:FA;
-    m.position.set(p.x,0,p.y);m.rotation.y=-a;m.visible=true;seen.add(p)}
+    m.position.set(p.x,hAt(p.x,p.y),p.y);m.rotation.y=-a;m.visible=true;seen.add(p)}
   for(const[p,m]of GL3.veh)if(!seen.has(p)){GL3.scene.remove(m);GL3.veh.delete(p)}}
 
 function render(){
-  CAMZ=LV.camz+(LV===PODEZD?(P.gz||0):0);if(LV===CITY&&GL3.ok){const t=swAt(P.x,P.y);P.swz=(P.swz||0)+(t-(P.swz||0))*.25;CAMZ+=P.swz}FLOORS[0]=isSummer()?TX.grass:isSpring()?TX.slush:TX.snow;FLOORS[2]=isSummer()?TX.water:TX.ice;FLOORS[8]=isSummer()?TX.grass:TX.snow;const out=LV.outdoor,WX=G.wx||{k:'snow'},L=out?lightLevel()*(WX.k==='blizzard'?.8:WX.k==='clear'?1.05:1):(LV.amb?LV.amb():.8),dirX=Math.cos(P.a),dirY=Math.sin(P.a),pl=(W/2)/F,plX=-dirY*pl,plY=dirX*pl;
+  CAMZ=LV.camz+(LV===PODEZD?(P.gz||0):0);if(LV===CITY&&GL3.ok){const t=swAt(P.x,P.y);P.swz=(P.swz||0)+(t-(P.swz||0))*.25;CAMZ+=P.swz+hAt(P.x,P.y)}FLOORS[0]=isSummer()?TX.grass:isSpring()?TX.slush:TX.snow;FLOORS[2]=isSummer()?TX.water:TX.ice;FLOORS[8]=isSummer()?TX.grass:TX.snow;const out=LV.outdoor,WX=G.wx||{k:'snow'},L=out?lightLevel()*(WX.k==='blizzard'?.8:WX.k==='clear'?1.05:1):(LV.amb?LV.amb():.8),dirX=Math.cos(P.a),dirY=Math.sin(P.a),pl=(W/2)/F,plX=-dirY*pl,plY=dirX*pl;
   const shk=P.shake*(Math.random()-.5)*H*.05;
   const H2=H/2+P.bob+P.pitch*H+shk+(P.recoil*H*.01);
   Object.assign(CAM,{ok:1,dirX,dirY,plX,plY,H2,inv:1/(plX*dirY-dirX*plY)});
@@ -3634,7 +3640,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['ТБЦ втрое глубже и стоит на каменном цоколе, трибуна за ним убрана','Парковка у ДК снова поперёк, проезжая часть уже, тротуар шире','Тротуар горисполкома плавно переходит в косую улицу, вдоль неё тротуары без острых углов','Газоны у проспекта и ул. Мира заменены тротуаром','Убран переход через ул. Мира','Тротуар вдоль поликлиники продолжен до конца здания'];
+const CHANGES=['Косая улица за ДК уходит в гору: в городе появился рельеф','Цоколь ТБЦ выше и заметно выступает от стен','Стадиона за ТБЦ больше нет','Перекрёсток у ДК ровный и с этой стороны: тротуар ДК плавно переходит в косую улицу'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
