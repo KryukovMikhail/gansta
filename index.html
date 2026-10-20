@@ -244,7 +244,7 @@ body.touch #wpn{bottom:calc(8px + env(safe-area-inset-bottom,0px));font-size:11p
 </script>
 <script>
 'use strict';
-const BUILD='G001.032';
+const BUILD='G001.033';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1384,19 +1384,21 @@ function cityF(fx,fy){const x=fx-OX,s=x+.5*fy,u=fy-.5*x,A=s/1.118,B=u/1.118;
   if(s>=50.8&&s<RAILB[0]&&u>2&&u<22)return 11;
   if(s>=R2[0]&&s<R2[1]&&fy<38.6)return 1;
   if(A>=LAWN[0]&&A<LAWN[2]&&B>=LAWN[1]&&B<LAWN[3])return(A<LAWN[0]+.25||A>=LAWN[2]-.25||B<LAWN[1]+.25||B>=LAWN[3]-.25)?11:-1;
-  if(B>=5&&B<8.1&&A<MIRA[0]/1.118&&fy>1)return 1;                     // улица вдоль ТБЦ
+  if(B>=5&&B<8.1&&A<12.95&&fy>1)return 1;                     // улица вдоль ТБЦ
+  if(A>=12.95&&A<14.8&&u<AVE[1]&&fy>1)return 1;                     // ул. Мира, шире
+  if(A>=14.8&&A<15.45&&B>=-1&&B<8.05)return A<14.85?11:14;            // тротуар у кирпичного дома
+  if(A>=20.6&&A<22.4&&B>=-1.5&&B<20.6)return 1;                      // поперечная улица через проспект во дворы
   if(A>=-3&&A<-1.2&&B<18&&fy>1)return 1;                              // проезд у ДК
   {const t=(-(A+2)+(B-17))/1.4142,q=((A+2)+(B-17))/1.4142;if(t>-1.5&&Math.abs(q)<.9)return 1}   // улица по диагонали между ДК и горисполкомом
   if(A>=2.7&&A<9.3&&B>=7&&B<14.57)return 14;                         // тротуар вокруг газона
   if(A>=RING[0]&&A<RING[2]&&B>=7&&B<RING[3])return 1;
   if(A>=-1.25&&A<13&&B>=16.37&&B<18.32)return 1;if(A>=-1.25&&A<RING[0]&&B>=7&&B<16.37)return 1;if(A>=RING[2]&&A<13&&B>=7&&B<16.37)return 1;
   if(u>=AVE[0]&&u<AVE[1]&&A>=-3&&A<14.6)return 1;                    // проспект пересекает полосы плитки   // съезд с кольца на дорогу у ДК                     // парковка
-  if(A>=-5&&A<13&&B>=4.5&&B<21)return 10;
+  if(A>=-5&&A<13&&B>=2.9&&B<21)return 10;
   if(u>=AVE[0]&&u<AVE[1]&&A>=-5&&s<R2[1])return 1;
   if(A>=(B>11?13:14.6)&&A<36.3){if((B>=8.05&&B<9.1)||(B>=13.45&&B<14.35))return 14;if((B>=7.95&&B<8.05)||(B>=14.35&&B<14.45))return 11;                           // тротуары
     if(B>=9.1&&B<9.9)return(B<9.2||B>=9.8)?11:0;if(B>=12.65&&B<13.45)return(B<12.75||B>=13.35)?11:0}  // газоны с бордюром
   if(s>=R2[1]&&s<48&&u>=5&&u<20)return 10;
-  if(s>=MIRA[0]&&s<MIRA[1]&&u<AVE[1])return 1;
   if(B>=19&&B<20.6&&s>=MIRA[1]&&A<32.4)return 1;
   if(A>=34.5&&A<36.3&&B>=-2&&B<24.5){if(A>=34.9&&A<35.8)return 14;if((A>=34.85&&A<34.9)||(A>=35.8&&A<35.85))return 11}   // тротуар вдоль улицы у путей, газоны по бокам
   return-1}
@@ -1435,20 +1437,20 @@ function buildCity(){
   // ДК «Железнодорожник» в начале Ленинградского проспекта
   {const d=mkOBB(L,-11,AXB-4,6,8,55,'ДК');oset(d,5,4,56);DOORS.dk=obbFront(d,5,4,2)}
   // центральная площадь: ТБЦ на севере, горисполком на юге, газон посередине
-  {const t=mkOBB(L,1,1.5,9,3,16,'ТБЦ');for(let i=0;i<9;i++)oset(t,i,2,130+i,3);DOORS.tbc=obbFront(t,4,2,3);DOORS.cafe=obbFront(t,3,2,3)}
+  {const t=mkOBB(L,1,1.0,9,3,16,'ТБЦ',1,.85);for(let i=0;i<9;i++)oset(t,i,2,130+i,3);DOORS.tbc=obbFront(t,4,2,3);DOORS.cafe=obbFront(t,3,2,3)}
   {const a=mkOBB(L,2.5,21,6,2,18,'горисполком');oset(a,0,0,109);DOORS.admin=obbFront(a,0,0,1);const tw=mkOBB(L,1.5,21,1,1,108,'горисполком',1,2);oset(tw,0,0,108,1);mkOBB(L,-0.5,22.7,2,3,112,'кафе');for(let k=0;k<3;k++){const o=mkOBB(L,2.3,19.75+k*.38,1,1,191+k,'ступени',2.4,1.25-k*.38);o.nosolid=1}}
   // заборчик вокруг газона
   {const F=.08;mkOBB(L,LAWN[0],LAWN[1],5,1,190,'ограда',1,F);mkOBB(L,LAWN[0],LAWN[3]-F,5,1,190,'ограда',1,F);mkOBB(L,LAWN[0],LAWN[1],1,5,190,'ограда',F,1);mkOBB(L,LAWN[2]-F,LAWN[1],1,5,190,'ограда',F,1)}
   // ларьки
   const kiosk=(a,b,dir)=>{const k=mkOBB(L,a,b,1,1,4,'ларёк');const c=AW(a+.5,b+.5);KSPEC.push({x:c[0],y:c[1],dir,o:k})};
-  kiosk(11.2,3.2,3);kiosk(38.6,2.2,3);
+  kiosk(7.4,3.65,3);kiosk(38.6,2.2,3);
   // по дороге к вокзалу — по три пятиэтажки с каждой стороны; средняя южная — дом 4 с нашим подъездом
   {const h=mkOBB(L,22.5,4.5,6,2,1,'дом');for(const i of[1,4])oset(h,i,0,197)}
   {const h=mkOBB(L,29.5,4.5,5,2,1,'угловой дом');for(const i of[1,3])oset(h,i,0,197);const w=mkOBB(L,32.5,-1.5,2,6,1,'угловой дом');for(const j of[1,4])oset(w,0,j,197,4)}
-  mkOBB(L,17,4.5,4,2,111,'угловой дом');mkOBB(L,15.5,-0.5,2,5,111,'угловой дом');{const[x,y]=AW(16.6,5.4);P0.push({k:'ctower',x,y,r:1.15})}
-  mkOBB(L,15.5,15.9,6,2,111,'угловой дом');mkOBB(L,15.5,17.9,2,2,111,'угловой дом');{const h=mkOBB(L,22.5,15.9,6,2,1,'дом 4');oset(h,4,1,197);oset(h,1,1,6);DOORS.home=obbFront(h,1,1,3)}{const h=mkOBB(L,29.5,15.9,5,2,1,'угловой дом');for(const i of[1,3])oset(h,i,1,197);const w=mkOBB(L,32.5,17.9,2,6,1,'угловой дом');for(const j of[1,4])oset(w,0,j,197,4)}
+  mkOBB(L,17,4.5,3,2,111,'угловой дом');mkOBB(L,15.5,-0.5,2,5,111,'угловой дом');{const[x,y]=AW(16.6,5.4);P0.push({k:'ctower',x,y,r:1.15})}
+  mkOBB(L,15.5,15.9,5,2,111,'угловой дом');mkOBB(L,15.5,17.9,2,2,111,'угловой дом');{const h=mkOBB(L,22.5,15.9,6,2,1,'дом 4');oset(h,4,1,197);oset(h,1,1,6);DOORS.home=obbFront(h,1,1,3)}{const h=mkOBB(L,29.5,15.9,5,2,1,'угловой дом');for(const i of[1,3])oset(h,i,1,197);const w=mkOBB(L,32.5,17.9,2,6,1,'угловой дом');for(const j of[1,4])oset(w,0,j,197,4)}
   // двор за домом 4: гаражи и ещё две пятиэтажки
-  {const g=mkOBB(L,22.5,20.65,7,1,3,'гаражи');oset(g,5,0,85,1);DOORS.garage=obbFront(g,5,0,1);kiosk(29.9,20.65,1)}
+  {const g=mkOBB(L,27.5,20.65,1,1,85,'гараж');oset(g,0,0,85,1);DOORS.garage=obbFront(g,0,0,1);kiosk(29.9,20.65,1)}
   mkOBB(L,15.5,22.7,6,2,1,'дом');mkOBB(L,22.5,22.7,6,2,1,'дом');
   // 5-й микрорайон и школа
   mkOBB(L,24,-9.4,7,2,1,'дом');mkOBB(L,24,-4.6,6,2,1,'дом');mkOBB(L,32.2,-10,2,4,1,'дом');mkOBB(L,26,0.6,4,2,2,'школа');
@@ -1782,11 +1784,7 @@ function nbDoor(g,e,R,s,Z,num,style){const x0=.07,x1=.93,yt=Z(2.08);g.fillStyle=
   if(style!==2){g.fillStyle='#e9e3cf';rr(g,.44,Z(1.86),.12,.07,.008);ftxt(g,s,String(num),.5,Z(1.825),.055,'#222','700 ')}else ftxt(g,s,String(num),.5,Z(1.83),.09,'#f4f0e0','italic 800 ');
   ell(g,.5,Z(1.55),.015,.015,'#c9c9c9');g.fillStyle='#b8b8b8';rr(g,.8,Z(1.06),.035,.17,.01);g.fillStyle='#e8e8e8';g.fillRect(.77,Z(1.0),.08,.022);g.fillStyle='#e8e2d0';rr(g,.95,Z(1.4),.04,.06,.006);ell(g,.97,Z(1.37),.008,.008,'#c83a2a')}
 [18,19,20].forEach((n,i)=>{TX['nbDoor'+n]=wallU((g,e,R,w,h,s,Z)=>{podWall3(g,R,h);nbDoor(g,e,R,s,Z,n,i)},5001+i)});
-TX.stairsDown=wallU((g,e,R,w,h,s,Z)=>{podWall3(g,R,h);g.fillStyle='#14120e';g.fillRect(.06,Z(2.1),.88,2.1);
-  for(let k=0;k<8;k++){const y=Z(.2+k*.24),x0=.06+k*.012,x1=.94-k*.012;g.fillStyle=`rgb(${120-k*11},${114-k*11},${104-k*10})`;g.fillRect(x0,y,x1-x0,.06);g.fillStyle=`rgb(${80-k*8},${76-k*8},${70-k*7})`;g.fillRect(x0,y+.06,x1-x0,.18)}
-  g.fillStyle=lgr(g,0,Z(2.1),0,Z(0),['rgba(0,0,0,.85)','rgba(0,0,0,.2)','rgba(0,0,0,0)']);g.fillRect(.06,Z(2.1),.88,2.1);
-  g.strokeStyle='#5a3a24';g.lineWidth=.03;g.beginPath();g.moveTo(.02,Z(1.0));g.lineTo(.4,Z(2.0));g.stroke();g.strokeStyle='#1e1e20';g.lineWidth=.012;for(let k=0;k<5;k++){const x=.06+k*.08;g.beginPath();g.moveTo(x,Z(1.0+k*.2));g.lineTo(x,Z(.1+k*.15));g.stroke()}
-  ftxt(g,s,'↓ 1 этаж',.65,Z(2.25),.06,'rgba(30,30,30,.7)','700 ')},5004);
+TX.stairsDown=wallU((g,e,R,w,h,s,Z)=>{podWall3(g,R,h);g.fillStyle='#c4beb0';g.fillRect(.02,Z(2.14),.96,2.14);g.fillStyle='#0c0c0e';g.fillRect(.06,Z(2.1),.88,2.1)},5004);
 /* --- рынок под навесом --- */
 TX.tentLow=SQ((g,e,R)=>{g.fillStyle='#8a7050';g.fillRect(0,0,1,1);for(let x=0;x<1;x+=.125){g.fillStyle=`rgb(${130+R()*30|0},${104+R()*24|0},${72+R()*20|0})`;g.fillRect(x+.004,0,.117,1);g.fillStyle='rgba(0,0,0,.2)';g.fillRect(x,0,.004,1)}
   graf(g,128,'ПРОДАМ',.4,.4,.08,'rgba(30,30,30,.7)',-.05,'700 ');g.fillStyle='#5a5a5a';g.fillRect(0,.9,1,.1)},5101);
@@ -2203,7 +2201,7 @@ function update(dt){
   if(run&&m>.1)P.st-=10*dt;
   const mx=(dx*f-dy*s)*spd,my=(dy*f+dx*s)*spd;
   FREEZ=LV===PODEZD?(P.gz||0):-1;if(free(P.x+mx,P.y,.22))P.x+=mx;if(free(P.x,P.y+my,.22))P.y+=my;FREEZ=-1;
-  if(LV===PODEZD){const gt=groundAt(LV,P.x,P.y);P.gz=(P.gz||0)+(gt-(P.gz||0))*Math.min(1,dt*12);if(P.y<1.55&&P.gz>1.3&&!G.fade){goTo(PODEZD2,2.5,4.2,-Math.PI/2);P.gz=0}}else P.gz=0;
+  if(LV===PODEZD){const gt=groundAt(LV,P.x,P.y);P.gz=(P.gz||0)+(gt-(P.gz||0))*Math.min(1,dt*12);if(P.y<1.55&&P.gz>1.3&&!G.fade){goTo(PODEZD2,2.5,4.2,-Math.PI/2);P.gz=0}}else{P.gz=0;if(LV===PODEZD2&&P.y>4.62&&P.x>2&&P.x<3&&!G.fade){goTo(PODEZD,7,2.3,Math.PI/2);P.gz=1.5}}
   const moving=Math.hypot(mx,my)>0.0005;P.moving=moving;
   if(moving){const pp=P.phase;P.phase+=dt*(run?11:9)*Math.min(1,m);if(Math.floor(pp/Math.PI)!==Math.floor(P.phase/Math.PI))SND.step(LV.outdoor);P.bob=Math.sin(P.phase)*1.1*(H/180)}else P.bob*=.85;
   if(P.charging)P.charge+=dt;
@@ -3537,7 +3535,7 @@ function msgIntro(){curPlace=null;openModal(`<div class="card"><div class="stamp
   <p>Дома тепло: холодильник, плита, диван. На диване игра сохраняется. В Шанхае топят баню, а на льду Байкала мужики сидят у лунок.</p>
   <div class="cardFoot"><span class="cash">В кармане: <b>${fmt(P.money)}</b> руб.</span><button class="btn" data-a="close">Начать</button></div></div>`)}
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Крайние дома у вокзала стали угловыми — второе крыло идёт вдоль улицы у путей','Вдоль этой улицы тротуар с газонами с обеих сторон','Дорога перед ТБЦ шире, у ТБЦ парковочные места; тротуар у газона уже','Проход на лестнице в подъезде — просто тёмный проём'];
+const CHANGES=['Подъезд, 2-й этаж: проход вниз — тёмный проём, заходишь — и ты на лестнице','Во дворе убраны ряды гаражей-контейнеров, остался один гараж дяди Толи','Между угловым кирпичным домом и пятиэтажкой — улица через проспект в оба двора','Улица Мира шире, у кирпичного дома тротуар','ТБЦ отодвинут, ларёк стоит перед ним'];
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
