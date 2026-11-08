@@ -2,7 +2,7 @@
    Игра открывается сразу из кэша, даже на плохом интернете. Новая сборка скачивается в фоне
    новым сервис-воркером и ждёт: игра показывает плашку «Обновить», и по нажатию она включается.
    VERSION поднимается при каждом релизе вместе с BUILD в index.html и version.json. */
-const VERSION = 'gansta-G001.047';
+const VERSION = 'gansta-G001.048';
 const CORE = ['./', 'index.html', 'three.min.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'icon-180.png'];
 
 self.addEventListener('install', e => {

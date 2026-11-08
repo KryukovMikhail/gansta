@@ -278,7 +278,7 @@ body.lefty #bBag{left:calc(196px + env(safe-area-inset-left,0px))}
 <script src="three.min.js"></script>
 <script>
 'use strict';
-const BUILD='G001.047';
+const BUILD='G001.048';
 const $=id=>document.getElementById(id);
 $('build').textContent='сборка '+BUILD;
 const cv=$('view'),ctx=cv.getContext('2d');
@@ -1027,12 +1027,22 @@ TX.radWall=face(1,2.4,(g,e,R,w,h,s,Z)=>{for(let k=0;k<3;k++){g.save();g.translat
   g.fillStyle='#3a3a3a';for(let i=0;i<5;i++)ell(g,.3+R()*.4,Z(.95),.008,.004,'#d8c8a0')},3131,128);
 TX.doorOut=face(1,2.4,(g,e,R,w,h,s,Z)=>{for(let k=0;k<3;k++){g.save();g.translate(0,h-1-k);podBase(g,R,k===0);g.restore()}
   g.fillStyle='#3a5a3a';rr(g,.3,Z(2.32),.4,.1,.01);ftxt(g,s,'ВЫХОД',.5,Z(2.27),.06,'#e8f8e0','800 ');e.fillStyle='#fff';e.fillRect(.3,Z(2.32),.4,.1);
-  g.fillStyle='#2e1e14';g.fillRect(.1,Z(2.12),.8,2.12);g.fillStyle=lgr(g,.13,0,.87,0,['#4a3020','#6a4430','#4a3020']);g.fillRect(.13,Z(2.09),.74,2.07);grainV(g,R,.13,Z(2.09),.74,2.07,'#3e2818','#7a5236',22);
-  for(const[y0,hh]of[[1.95,.8],[.95,.8]]){g.strokeStyle='rgba(20,10,5,.45)';g.lineWidth=.012;g.strokeRect(.2,Z(y0),.6,hh);g.strokeStyle='rgba(255,220,180,.12)';g.strokeRect(.215,Z(y0)+.012,.57,hh-.024)}
-  g.fillStyle='#8a8e92';g.fillRect(.2,Z(2.04),.6,.03);g.fillStyle='#5a5e62';g.fillRect(.66,Z(2.05),.12,.05);
-  g.fillStyle='#b8bcc0';g.fillRect(.76,Z(1.12),.035,.03);g.fillRect(.79,Z(1.12),.02,.14);g.fillStyle='#d8dcdf';g.fillRect(.765,Z(1.16),.06,.018);
-  g.fillStyle='#2a2a2a';g.beginPath();g.arc(.78,Z(1.3),.012,0,7);g.fill();
-  g.fillStyle='rgba(0,0,0,.25)';g.fillRect(.13,Z(.18),.74,.16);graf(g,s,'ВИТЯ',.4,Z(.6),.06,'rgba(20,20,20,.6)',-.1,'700 ');graf(g,s,'КИНО',.55,Z(1.55),.05,'rgba(200,200,190,.5)',.05,'700 ')},3132,128);
+  // железная дверь подъезда: тёмно-серый лист в уголковой коробке, шире прежней деревянной
+  const x0=.03,x1=.97,top=2.16;
+  g.fillStyle='#1c1e20';g.fillRect(x0,Z(top),x1-x0,top);                                                   // коробка из уголка
+  g.fillStyle=lgr(g,x0+.04,0,x1-.04,0,['#34383c','#4a4f54','#3c4045','#2e3236']);g.fillRect(x0+.035,Z(top-.035),x1-x0-.07,top-.035);
+  for(let k=0;k<260;k++){const v=R();g.fillStyle=v<.5?'rgba(0,0,0,.08)':'rgba(255,255,255,.05)';g.fillRect(x0+.04+R()*(x1-x0-.08),Z(top-.04)+R()*(top-.06),.004+R()*.012,.002)}   // зернистая краска по металлу
+  for(const[y0,hh]of[[2.0,.86],[.98,.84]]){g.fillStyle='rgba(0,0,0,.18)';g.fillRect(.13,Z(y0),.74,hh);g.fillStyle='rgba(255,255,255,.07)';g.fillRect(.13,Z(y0),.74,.008);g.fillRect(.13,Z(y0),.008,hh);
+    g.fillStyle='rgba(0,0,0,.35)';g.fillRect(.13,Z(y0)+hh-.008,.74,.008);g.fillRect(.862,Z(y0),.008,hh)}           // выштамповка на листе
+  g.fillStyle='rgba(0,0,0,.4)';g.fillRect(x0+.035,Z(top-.035),.012,top-.035);                                  // тень у петель
+  for(const y of[1.85,.45]){g.fillStyle='#1a1c1e';g.fillRect(x0+.012,Z(y),.03,.12);g.fillStyle='#5a5e62';g.fillRect(x0+.016,Z(y)+.01,.02,.1)}  // петли
+  for(let k=0;k<4;k++)for(const yy of[top-.08,.1]){g.fillStyle='#5c6166';g.beginPath();g.arc(.12+k*.253,Z(yy),.008,0,7);g.fill()}            // заклёпки
+  g.fillStyle='#24272a';rr(g,.75,Z(1.32),.07,.26,.01);g.fillStyle='#8c9196';g.fillRect(.735,Z(1.12),.11,.022);g.fillStyle='#b4b9be';g.fillRect(.735,Z(1.12),.11,.006);  // накладка замка и ручка-скоба
+  g.fillStyle='#c9a24a';g.beginPath();g.arc(.785,Z(1.24),.011,0,7);g.fill();g.fillStyle='#1a1a1a';g.fillRect(.783,Z(1.25),.004,.014);                      // личинка замка
+  g.fillStyle='#2a2d30';rr(g,.38,Z(1.66),.24,.12,.01);g.fillStyle='#7d8287';for(let r=0;r<3;r++)for(let c=0;c<4;c++){g.beginPath();g.arc(.42+c*.053,Z(1.63)+r*.035,.007,0,7);g.fill()}  // домофон
+  g.fillStyle='rgba(110,70,40,.35)';for(let k=0;k<9;k++){const rx=x0+.04+R()*(x1-x0-.08),ry=Z(.05+R()*.3);g.fillRect(rx,ry,.02+R()*.05,.01+R()*.03)}  // ржавчина снизу
+  g.fillStyle='rgba(0,0,0,.3)';g.fillRect(x0+.035,Z(.16),x1-x0-.07,.13);
+  graf(g,s,'ВИТЯ',.4,Z(.6),.06,'rgba(205,205,195,.45)',-.1,'700 ');graf(g,s,'КИНО',.55,Z(1.48),.05,'rgba(200,200,190,.4)',.05,'700 ')},3132,128);
 TX.mailTall=face(1,2.4,(g,e,R,w,h,s,Z)=>{for(let k=0;k<3;k++){g.save();g.translate(0,h-1-k);podBase(g,R,k===0);g.restore()}
   g.fillStyle='#2e4a72';g.fillRect(.06,Z(1.6),.88,.62);for(let r=0;r<4;r++)for(let c=0;c<5;c++){const x=.08+c*.172,y=Z(1.58)+r*.15;g.fillStyle=lgr(g,0,y,0,y+.14,['#3e5e8a','#2a4670']);g.fillRect(x,y,.16,.14);g.fillStyle='#14243a';g.fillRect(x+.02,y+.02,.12,.018);
     ftxt(g,s,String(1+r*5+c+(r>2?0:0)),x+.13,y+.1,.03,'#e8e8e8','700 ');if(r*5+c===16-1){g.fillStyle='#f4f0e2';g.fillRect(x+.03,y+.016,.07,.03)}g.fillStyle='#8a8a8a';g.fillRect(x+.03,y+.09,.02,.02)}
@@ -1447,7 +1457,7 @@ const OY=33,CW=102,CH=46+OY,OX=42,DXO=OX-20,DYO=OY-3;   // G001.039: карта 
 const SQ5=Math.sqrt(5),FA=Math.atan2(1,2),A2W=(a,b)=>[(2*a-b)/SQ5+OX,(a+2*b)/SQ5+OY],W2A=(x,y)=>{x-=OX;y-=OY;return[(2*x+y)/SQ5,(-x+2*y)/SQ5]},LAWN=[3.5,8.77,8.5,13.77],RING=[0.9,6.97,11.1,16.37],AVE_B=12.6/1.118;
 const RAILB=[52.4,55.6],RT1=53.2,RT2=54.8,HWY=[56,58.6],FOREST=[58.6,63.5],R2=[40.6,42.6],AVE=[11.07,14.14],MIRA=[14.76,16.32];
 // новые улицы (G001.039): [A0,A1,B0,B1]; тротуары по 0.9 м с обеих сторон
-const NST=[[-34,36.3,-19.6,-17.8,'ул. Строителей'],[-12,36.3,-31,-29.2,'ул. Северная'],[-17.8,-16,-40,-17.8,'ул. Космонавтов'],[-34,-32.2,-22,26,'ул. Лесная'],[-34,-14.8,22,23.8,'ул. Заречная'],[-16.6,-14.8,-17.8,23.8,'проезд за ДК']],
+const NST=[[-34,36.3,-19.6,-17.8,'ул. Строителей'],[-12,36.3,-31,-29.2,'ул. Северная'],[-17.8,-16,-40,-17.8,'ул. Космонавтов'],[-34,-32.2,-22,26,'ул. Лесная'],[-16.6,-14.8,-17.8,30.4,'проезд за ДК']],   // G001.048: западная часть Заречной убрана, проезд за ДК выходит на косой проспект
   STAD=[0,0,0,0];   // стадиона нет
 function newF(A,B){for(const r of NST)if(A>=r[0]&&A<r[1]&&B>=r[2]&&B<r[3])return 1;
   if(A>=STAD[0]&&A<STAD[1]&&B>=STAD[2]&&B<STAD[3])return(A>=STAD[0]+1.5&&A<STAD[1]-1.5&&B>=STAD[2]+1.4&&B<STAD[3]-1.4)?-1:4;
@@ -1473,7 +1483,7 @@ function cityF(fx,fy){const x=fx-OX,fw=fy-OY,s=x+.5*fw,u=fw-.5*x,A=s/1.118,B=u/1
   if(A>=-3.6&&A<-1.25&&B>=16.37&&B<18.32&&A+B>=13)return 1;           // полоса у горисполкома доходит до косой улицы             // стык парковки у горисполкома с дорогой
   if(A>=-3&&A<-1.2&&B<18&&fy>1)return 1;                              // проезд у ДК
   if(A>=-1.2&&A<-.1&&B>=-16.9&&B<5)return 14;                         // тротуар у ТБЦ вдоль проезда
-  {const t=(-(A+2)+(B-17))/1.4142,q=((A+2)+(B-17))/1.4142;if(t>-1.5){if(Math.abs(q)<.9)return(t>=2.5&&t<3.6)?22:1;if(q>=.9&&q<1.8&&B>=18.32)return 14;if(q<=-.9&&q>-1.8&&A<-3.6)return 14}}   // улица по диагонали между ДК и горисполкомом
+  {const t=(-(A+2)+(B-17))/1.4142,q=((A+2)+(B-17))/1.4142;if(t>-1.5){if(Math.abs(q)<.9)return(t>=2.5&&t<3.6)?22:1;if(q>=.9&&q<1.8&&B>=18.32)return 14;if(q<=-.9&&q>-1.8&&A<-3.6&&!(A>=-16.6&&A<-14.8))return 14}}   // улица по диагонали между ДК и горисполкомом
   if(A>=2.7&&A<9.3&&B>=7&&B<14.57)return 14;                         // тротуар вокруг газона
   if(A>=RING[0]&&A<RING[2]&&B>=7&&B<RING[3])return 1;
   if(A>=-1.25&&A<13&&B>=16.37&&B<18.32)return 1;if(A>=-1.25&&A<RING[0]&&B>=7&&B<16.37)return 1;if(A>=RING[2]&&A<13&&B>=7&&B<16.37)return 1;
@@ -1566,10 +1576,10 @@ function buildCity(){
   // Западный микрорайон между ул. Космонавтов и Лесной
   for(const a of[-30,-25.5,-21])for(const b of[-14,-5,4,13])if(!(a===-21&&b===-14))mkOBB(L,a,b,2,6,1,'дом');mkOBB(L,-22,-14.5,3,5,2,'школа №3');
   {const h=rotOBB(mkOBB(L,-10.06,28.74,4,2,249,'кирпичный дом',1,1.1),-Math.PI/4);oset(h,1,0,250,1);oset(h,2,0,250,1)}   // 4 этажа, E12, вдоль косой улицы
-  {const sc=rotOBB(mkOBB(L,-9.07,33.97,8,3,253,'школа №11',1,1),-Math.PI/4);oset(sc,3,0,254,1);oset(sc,4,0,254,1)}   // школа №11, три этажа, светлый кирпич
+  {const sc=rotOBB(mkOBB(L,-16.42,35.1,8,3,253,'школа №11',1,1),-Math.PI/4);oset(sc,3,0,254,1);oset(sc,4,0,254,1)}   // школа №11, три этажа, светлый кирпич
   // частный сектор: за ул. Лесной и за ул. Заречной
   {const R=rng(391);for(let a=-46;a<=-36;a+=3.6)for(let b=-15;b<=20;b+=3.2){if(2*a-b<-88||a+2*b<-68)continue;mkOBB(L,a+R()*.4,b+R()*.4,2,1,R()<.5?12:13,'дом',1.1,1.4)}
-   for(let a=-31;a<=-23;a+=3.6)for(let b=26;b<=40;b+=3.2){if(2*a-(b+1.4)<-88||Math.abs(a+b+1.8-15)<3.6)continue;mkOBB(L,a+R()*.4,b+R()*.4,2,1,R()<.5?12:13,'дом',1.1,1.4)}}
+}
   const rect=(L,x,y,w,h,t)=>rect0(L,x,y+OY,w,h,t);
   // 19-й квартал за ул. Мира
   {const rq=(x,y,w,h,t)=>rect(L,x+DXO,y,w,h,t);rq(8,23,5,2,1);rq(9,27,4,2,1);rq(15,29,3,2,1);rq(9,31,5,2,1);rq(4,35,4,1,3)}
@@ -1589,7 +1599,7 @@ function buildCity(){
   for(let a=16.4;a<=35.5;a+=3.6)put(a,13.05,{k:'lamp'});for(let a=-2;a<=12.5;a+=3.6)put(a,4.85,{k:'lamp'});for(let b=9;b<=15;b+=4.5)put(-3.85,b,{k:'lamp'});for(let t=1.5;t<=8;t+=3.2)put(-2-.707*t+.75,17+.707*t+.75,{k:'lamp'});
   for(let b=-24;b<=22;b+=5)put(HWY[0]/1.118-.25,b,{k:'lamp'});
   for(const[a,b]of[[0.55,4.75],[10.5,4.75],[1.1,16.1],[10.9,16.1]])put(a,b,{k:'lamp'});
-  for(let a=-15;a<=35;a+=4.2){put(a,-17.35,{k:'lamp'});put(a+2.1,-28.75,{k:'lamp'})}for(let b=-26;b<=-20;b+=4.6)put(-15.55,b,{k:'lamp'});for(let b=-20;b<=25;b+=4.6)put(-31.75,b,{k:'lamp'});for(let a=-31;a<=-17;a+=4.6)put(a,24.25,{k:'lamp'});for(let b=-15;b<=21;b+=4.6)put(-14.45,b,{k:'lamp'});for(let a=-31;a<=-19;a+=4.2)put(a,-17.35,{k:'lamp'});
+  for(let a=-15;a<=35;a+=4.2){put(a,-17.35,{k:'lamp'});put(a+2.1,-28.75,{k:'lamp'})}for(let b=-26;b<=-20;b+=4.6)put(-15.55,b,{k:'lamp'});for(let b=-20;b<=25;b+=4.6)put(-31.75,b,{k:'lamp'});for(let b=-15;b<=28;b+=4.6)put(-14.45,b,{k:'lamp'});for(let a=-31;a<=-19;a+=4.2)put(a,-17.35,{k:'lamp'});
   {const[x,y]=AW(40.5,AXB);P.push({k:'monument',x,y,r:.4})}
   {const[x,y]=AW(-1.3,26.2),[sx,sy]=AW(-2.4,23.9);P.push({k:'rotunda',x,y,r:2.65,face:Math.atan2(sy-y,sx-x)-.6})}
   L.lights=P.filter(p=>p.k==='lamp').map(p=>({x:p.x+.15,y:p.y,r:4.6,c:[1,.62,.28],i:1.15})).concat(P.filter(p=>p.k==='barrel').map(p=>({x:p.x,y:p.y,r:3.4,c:[1,.5,.18],i:1.25,fire:1})));
@@ -1611,6 +1621,8 @@ function buildCity(){
   for(let n=0,k=0;n<30&&k<3000;k++){const x=DXO+13+TR()*30,y=DYO+1.5+TR()*10;if(!okT(x,y))continue;P.push({k:TR()<.5?'pine':'birch',x,y,r:.22});n++}
   for(let n=0,k=0;n<340&&k<9000;k++){const x=1.5+TR()*(CW-3),y=1.5+TR()*(CH-3);if(!(x-OX<-19||y-OY<-2)||!okT(x,y))continue;const[a,b]=W2A(x,y);if(newF(a,b)!==-1)continue;P.push({k:TR()<.6?'pine':'birch',x,y,r:.22});n++}   // новые районы: лес и деревья во дворах
   for(let n=0,k=0;n<160&&k<8000;k++){const y=1.5+TR()*(CH-3.5),s=FOREST[0]+.4+TR()*(FOREST[1]-FOREST[0]-.8),x=s-.5*(y-OY)+OX;if(!okT(x,y))continue;P.push({k:TR()<.65?'pine':'birch',x,y,r:.22});n++}
+  // G001.048: парк за ДК — там, где были деревянные дома у Заречной
+  {const PR=rng(4821);for(let n=0,k=0;n<70&&k<6000;k++){const[x,y]=AW(-33+PR()*17,24.5+PR()*20);if(!okT(x,y))continue;P.push({k:PR()<.55?'birch':'pine',x,y,r:.22});n++}}
   L.props=P;
   if(!glInit())for(const o of L.obbs)for(let j=0;j<o.nb;j++)for(let i=0;i<o.na;i++){const t=o.map[j*o.na+i];if(!t)continue;const[x,y]=A2W(...OL(o,(i+.5)*o.sa,(j+.5)*o.sb)),c=(y|0)*CW+(x|0);if(!L.map[c])L.map[c]=t}
   return L;
@@ -2703,7 +2715,7 @@ const MAPCOL={1:'#6d7178',6:'#5fd16a',2:'#8a5240',7:'#5fb6d1',3:'#55574f',4:'#e6
 const FLCOL=['#dfe5ea','#3c3d40','#9fbccb','#a8adb2','#cfd5da','#ddd','#ddd','#ddd','#8f8f94','#e3dccb','#cdbfae','#bdbcb6','#ddd','#ddd','#5a5b5f','#6a6b6f'];FLCOL[20]=FLCOL[21]=FLCOL[22]='#a4a6aa';
 MAPCOL[55]='#d9c48e';MAPCOL[241]=MAPCOL[242]='#e3cf98';MAPCOL[243]='#8a3a2a';MAPCOL[244]='#c9ccd0';MAPCOL[245]='#8a8478';MAPCOL[249]=MAPCOL[250]='#8a3a2a';MAPCOL[253]=MAPCOL[254]='#c9866e';MAPCOL[251]='#8a5a3a';MAPCOL[252]='#f0a03a';MAPCOL[56]='#24497a';
 const LABELS=(()=>{const l=(a,b,t)=>{const p=A2W(a,b);return[p[0],p[1],t]};return[[6+DXO,12.8+DYO,'Городской парк'],l(-7.5,6.4,'ДК «Железнодорожник»'),l(5.5,.4,'ТБЦ'),l(5.5,21.2,'Горисполком'),l(6,9.6,'Центральная площадь'),l(40.5,9.6,'Памятник'),l(46.3,11.27,'Вокзал'),l(41,-7.4,'Рынок'),
-  [OX+9.5,38.1+OY,'ШАНХАЙ'],[OX+52,38+OY,'Пляж'],[OX+55,43+OY,'БАЙКАЛ'],l(25.5,11.27,'Ленинградский пр.'),l(37.2,-6,'пр. 60 лет СССР'),l(36.5,23.6,'Промзона'),l(-10.5,-13.6,'Школа №1'),l(-11.5,-4.8,'Детсад'),l(9,-18.7,'ул. Строителей'),l(12,-30.1,'ул. Северная'),l(-16.9,-23.5,'ул. Космонавтов'),l(-33.1,-2,'ул. Лесная'),l(-25,22.9,'ул. Заречная'),l(-24,1.5,'Западный мкр'),l(-41,2,'Частный сектор'),l(-9,40,'Частный сектор'),l(22,-41,'Гаражи'),l(20.5,-22.2,'Северный мкр'),l(40.4,24.4,'Поликлиника'),l(28,-6.4,'5-й мкр'),l(13.9,-9,'ул. Мира'),l(25.5,13.2,'Дом'),l(48.3,-6,'пути'),l(51.2,6,'автодорога'),l(54.6,-4,'лес'),[8+DXO,33.4+DYO,'19-й квартал']]})();
+  [OX+9.5,38.1+OY,'ШАНХАЙ'],[OX+52,38+OY,'Пляж'],[OX+55,43+OY,'БАЙКАЛ'],l(25.5,11.27,'Ленинградский пр.'),l(37.2,-6,'пр. 60 лет СССР'),l(36.5,23.6,'Промзона'),l(-10.5,-13.6,'Школа №1'),l(-11.5,-4.8,'Детсад'),l(9,-18.7,'ул. Строителей'),l(12,-30.1,'ул. Северная'),l(-16.9,-23.5,'ул. Космонавтов'),l(-33.1,-2,'ул. Лесная'),l(-15.7,-8,'проезд за ДК'),l(-24,1.5,'Западный мкр'),l(-41,2,'Частный сектор'),l(-25,31,'Парк'),l(22,-41,'Гаражи'),l(20.5,-22.2,'Северный мкр'),l(40.4,24.4,'Поликлиника'),l(28,-6.4,'5-й мкр'),l(13.9,-9,'ул. Мира'),l(25.5,13.2,'Дом'),l(48.3,-6,'пути'),l(51.2,6,'автодорога'),l(54.6,-4,'лес'),[8+DXO,33.4+DYO,'19-й квартал']]})();
 let MAPGRID=true,MAPMENU=false;
 function drawCityMap(c,sc,opt){opt=opt||{};const g=c.getContext('2d'),L=CITY;g.clearRect(0,0,c.width,c.height);
   g.drawImage(cityMapLayer(sc),0,0);
@@ -3781,7 +3793,7 @@ function summaryHTML(){const s=Object.assign(newStats(),G.stats||{}),r=P.rep||{}
 
 
 /* ---------- PWA: установка на телефон и обновления ---------- */
-const CHANGES=['Игра начинается 1 февраля 1999 года. В углу экрана — дата: один игровой день равен трём календарным, весна приходит в середине апреля, лето — в конце мая', 'Гопники сначала подходят поговорить: можно назвать своих, сослаться на Сиплого, дать на пиво, ударить первым или сдёрнуть', 'Взятки: сержанту можно сунуть бутылку самогона, Кузьмин денег не берёт, в КПЗ можно выкупить изъятый ПМ, плохая слава в городе делает откуп дороже', 'Рабочий поезд в Нижнеангарск с вокзала: копчёный омуль вдвое дешевле, подработка у рыбаков, столовая при аэропорту, рыбнадзор в вагоне', 'В конце игры — итоги: дни, деньги, драки, вагоны, поездки, взятки, репутация', 'Настройки отдельной карточкой: джойстик слева или справа, чувствительность и инверсия обзора, вибрация, размер кнопок, полный экран', 'Кнопка полного экрана прямо на экране игры, экран не гаснет во время игры, поддержка геймпада', 'Игра открывается сразу из кэша, а новая сборка скачивается в фоне. Город рисуется быстрее: кадр больше не копируется из видеокарты']
+const CHANGES=['Дверь подъезда — железная, тёмно-серая и шире прежней: уголковая коробка, выштамповка, домофон, ржавчина снизу', 'Школа №11 стоит вдоль косого проспекта, вплотную к кирпичному дому', 'Проезд за ДК выходит прямо на косой проспект; западная часть ул. Заречной убрана', 'Деревянные дома за Заречной снесены — на их месте парк с соснами и берёзами']
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true}catch(e){return false}};
 const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
